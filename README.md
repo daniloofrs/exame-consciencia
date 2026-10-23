@@ -51,7 +51,18 @@ Substituir pesquisas dispersas na internet e anotações improvisadas no bloco d
 
 ---
 
-## 📄 Documentação de Design
+## 📲 Como Instalar no seu iPhone (Windows)
 
-A especificação completa da arquitetura e das decisões de produto encontra-se em:
-- [`docs/superpowers/specs/2026-10-23-exame-consciencia-ios-design.md`](docs/superpowers/specs/2026-10-23-exame-consciencia-ios-design.md)
+O repositório conta com um pipeline automatizado em [`.github/workflows/build-ios.yml`](.github/workflows/build-ios.yml) que compila o código SwiftUI em servidores macOS da nuvem e gera o instalador `.ipa`:
+
+1. Acesse a aba **[Actions](https://github.com/daniloofrs/exame-consciencia/actions)** deste repositório no GitHub.
+2. Clique na execução mais recente do workflow **"Build iOS App (.ipa)"**.
+3. Na seção **Artifacts** (no final da página), baixe o arquivo **`ExameConsciencia-iOS-IPA`** e extraia o `ExameConsciencia.ipa`.
+4. Instale o arquivo `ExameConsciencia.ipa` no seu iPhone usando **[Sideloadly](https://sideloadly.io/)** ou **[AltStore](https://altstore.io/)** conectado ao computador com seu Apple ID gratuito.
+
+---
+
+## 📄 Documentação de Design e Plano
+
+- Especificação de Design: [`docs/superpowers/specs/2026-10-23-exame-consciencia-ios-design.md`](docs/superpowers/specs/2026-10-23-exame-consciencia-ios-design.md)
+- Plano de Implementação: [`docs/superpowers/plans/2026-10-23-exame-consciencia-ios.md`](docs/superpowers/plans/2026-10-23-exame-consciencia-ios.md)

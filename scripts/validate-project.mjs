@@ -10,6 +10,7 @@ const examViewPath = 'ExameConsciencia/Views/ExaminationView.swift';
 const confessionalViewPath = 'ExameConsciencia/Views/ConfessionalView.swift';
 const privacyViewPath = 'ExameConsciencia/Views/PrivacyBlurView.swift';
 const appEntryPath = 'ExameConsciencia/App/ExameConscienciaApp.swift';
+const workflowPath = '.github/workflows/build-ios.yml';
 const projectYmlPath = 'project.yml';
 
 for (const p of [
@@ -23,7 +24,8 @@ for (const p of [
   examViewPath,
   confessionalViewPath,
   privacyViewPath,
-  appEntryPath
+  appEntryPath,
+  workflowPath
 ]) {
   if (!fs.existsSync(p)) {
     throw new Error(`Missing ${p}`);
