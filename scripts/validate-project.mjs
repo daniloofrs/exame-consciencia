@@ -2,16 +2,14 @@ import fs from 'fs';
 
 const catalogPath = 'ExameConsciencia/Resources/examination_catalog.json';
 const modelsPath = 'ExameConsciencia/Models/ExaminationModels.swift';
+const storePath = 'ExameConsciencia/Services/ExaminationStore.swift';
+const storeTestsPath = 'ExameConscienciaTests/ExaminationStoreTests.swift';
 const projectYmlPath = 'project.yml';
 
-if (!fs.existsSync(projectYmlPath)) {
-  throw new Error(`Missing ${projectYmlPath}`);
-}
-if (!fs.existsSync(modelsPath)) {
-  throw new Error(`Missing ${modelsPath}`);
-}
-if (!fs.existsSync(catalogPath)) {
-  throw new Error(`Missing ${catalogPath}`);
+for (const p of [projectYmlPath, modelsPath, catalogPath, storePath, storeTestsPath]) {
+  if (!fs.existsSync(p)) {
+    throw new Error(`Missing ${p}`);
+  }
 }
 
 const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
