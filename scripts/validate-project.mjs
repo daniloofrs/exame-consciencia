@@ -5,9 +5,26 @@ const modelsPath = 'ExameConsciencia/Models/ExaminationModels.swift';
 const storePath = 'ExameConsciencia/Services/ExaminationStore.swift';
 const storeTestsPath = 'ExameConscienciaTests/ExaminationStoreTests.swift';
 const themePath = 'ExameConsciencia/DesignSystem/LiquidGlassTheme.swift';
+const homeViewPath = 'ExameConsciencia/Views/HomeView.swift';
+const examViewPath = 'ExameConsciencia/Views/ExaminationView.swift';
+const confessionalViewPath = 'ExameConsciencia/Views/ConfessionalView.swift';
+const privacyViewPath = 'ExameConsciencia/Views/PrivacyBlurView.swift';
+const appEntryPath = 'ExameConsciencia/App/ExameConscienciaApp.swift';
 const projectYmlPath = 'project.yml';
 
-for (const p of [projectYmlPath, modelsPath, catalogPath, storePath, storeTestsPath, themePath]) {
+for (const p of [
+  projectYmlPath,
+  modelsPath,
+  catalogPath,
+  storePath,
+  storeTestsPath,
+  themePath,
+  homeViewPath,
+  examViewPath,
+  confessionalViewPath,
+  privacyViewPath,
+  appEntryPath
+]) {
   if (!fs.existsSync(p)) {
     throw new Error(`Missing ${p}`);
   }
