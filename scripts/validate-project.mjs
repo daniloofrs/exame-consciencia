@@ -59,3 +59,25 @@ for (const cat of catalog.categories) {
 }
 
 console.log(`Catalog validation passed: ${catalog.categories.length} categories, ${totalQuestions} questions, ${catalog.prayers.length} prayers`);
+
+// Verify XcodeGen scheme includes ExameConscienciaTests
+const projectYml = fs.readFileSync(projectYmlPath, 'utf8');
+if (!projectYml.includes('testTargets:') || !projectYml.includes('- ExameConscienciaTests')) {
+  throw new Error('project.yml must configure scheme.testTargets with ExameConscienciaTests');
+}
+
+// Verify Swift 6 concurrency safety in HomeView (no static DateFormatter) and NavigationPath pop-to-root
+const homeSwift = fs.readFileSync(homeViewPath, 'utf8');
+if (homeSwift.includes('static let dateFormatter')) {
+  throw new Error('HomeView must not use non-Sendable static DateFormatter in Swift 6');
+}
+if (!homeSwift.includes('NavigationPath')) {
+  throw new Error('HomeView must use NavigationPath to return to root after absolution');
+}
+
+// Verify QuestionCardView resets draftNote on isSelected change
+const examSwift = fs.readFileSync(examViewPath, 'utf8');
+if (!examSwift.includes('.onChange(of: isSelected)')) {
+  throw new Error('ExaminationView QuestionCardView must reset draftNote on .onChange(of: isSelected)');
+}
+

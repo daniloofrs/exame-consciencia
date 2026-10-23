@@ -3,12 +3,14 @@ import UIKit
 
 public struct ConfessionalView: View {
     @Bindable var store: ExaminationStore
+    private let onAbsolutionCompleted: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
     @State private var isShowingActOfContrition = false
     @State private var isConfirmingAbsolution = false
 
-    public init(store: ExaminationStore) {
+    public init(store: ExaminationStore, onAbsolutionCompleted: (() -> Void)? = nil) {
         self.store = store
+        self.onAbsolutionCompleted = onAbsolutionCompleted
     }
 
     public var body: some View {
@@ -45,7 +47,11 @@ public struct ConfessionalView: View {
             Button("Sim, Recebi a Absolvição", role: .destructive) {
                 Haptics.absolutionSuccess()
                 store.completeAbsolution()
-                dismiss()
+                if let onAbsolutionCompleted {
+                    onAbsolutionCompleted()
+                } else {
+                    dismiss()
+                }
             }
             Button("Cancelar", role: .cancel) {}
         } message: {

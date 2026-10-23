@@ -1,7 +1,13 @@
 import SwiftUI
 
+public enum AppRoute: Hashable {
+    case examination
+    case confessional
+}
+
 public struct HomeView: View {
     @Bindable var store: ExaminationStore
+    @State private var navigationPath = NavigationPath()
     @State private var isPrayerExpanded = false
     @State private var isShowingDatePicker = false
     @State private var draftDate = Date()
@@ -11,7 +17,7 @@ public struct HomeView: View {
     }
 
     public var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ZStack {
                 CandlelightBackground()
 
@@ -31,6 +37,24 @@ public struct HomeView: View {
                 }
             }
             .navigationBarHidden(true)
+            .navigationDestination(for: AppRoute.self) { route in
+                switch route {
+                case .examination:
+                    ExaminationView(
+                        store: store,
+                        onOpenConfessional: {
+                            navigationPath.append(AppRoute.confessional)
+                        }
+                    )
+                case .confessional:
+                    ConfessionalView(
+                        store: store,
+                        onAbsolutionCompleted: {
+                            navigationPath = NavigationPath()
+                        }
+                    )
+                }
+            }
             .sheet(isPresented: $isShowingDatePicker) {
                 datePickerSheet
             }
@@ -71,7 +95,7 @@ public struct HomeView: View {
                         .foregroundStyle(CandlelightPalette.warmAmber)
 
                     if let lastDate = store.lastConfessionDate {
-                        Text(Self.dateFormatter.string(from: lastDate))
+                        Text(lastDate.formatted(.dateTime.day().month(.wide).year().locale(Locale(identifier: "pt_BR"))))
                             .font(.headline)
                             .foregroundStyle(CandlelightPalette.ivory)
 
@@ -152,9 +176,7 @@ public struct HomeView: View {
 
     private var actionButtonsSection: some View {
         VStack(spacing: 14) {
-            NavigationLink {
-                ExaminationView(store: store)
-            } label: {
+            NavigationLink(value: AppRoute.examination) {
                 HStack(spacing: 12) {
                     Image(systemName: "checklist")
                         .font(.title3.weight(.semibold))
@@ -186,9 +208,7 @@ public struct HomeView: View {
             .simultaneousGesture(TapGesture().onEnded { Haptics.impactLight() })
 
             if store.totalSelectedCount > 0 {
-                NavigationLink {
-                    ConfessionalView(store: store)
-                } label: {
+                NavigationLink(value: AppRoute.confessional) {
                     LiquidGlassCard(isHighlighted: true, padding: 16) {
                         HStack(spacing: 12) {
                             Image(systemName: "cross.case.fill")
@@ -281,12 +301,4 @@ public struct HomeView: View {
         }
         .preferredColorScheme(.dark)
     }
-
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "pt_BR")
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
-    }()
 }

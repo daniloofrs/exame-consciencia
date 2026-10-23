@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Unit Tests on iOS Simulator
         run: |
-          SIMULATOR_ID=$(xcrun simctl list devices available | grep -E "iPhone 16|iPhone 15" | head -n 1 | sed -E 's/.*\(([0-9A-F-]+)\).*/\1/')
+          SIMULATOR_ID=$(xcrun simctl list devices available iPhone | grep -E "\([0-9A-F-]{36}\)" | head -n 1 | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
           echo "Using Simulator UDID: $SIMULATOR_ID"
           xcodebuild test \
             -project ExameConsciencia.xcodeproj \

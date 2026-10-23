@@ -2,12 +2,14 @@ import SwiftUI
 
 public struct ExaminationView: View {
     @Bindable var store: ExaminationStore
+    private let onOpenConfessional: (() -> Void)?
     @State private var selectedCategoryIndex = 0
     @State private var newCustomEntryText = ""
     @FocusState private var isCustomFieldFocused: Bool
 
-    public init(store: ExaminationStore) {
+    public init(store: ExaminationStore, onOpenConfessional: (() -> Void)? = nil) {
         self.store = store
+        self.onOpenConfessional = onOpenConfessional
     }
 
     private var categories: [ExaminationCategory] {
@@ -253,9 +255,7 @@ public struct ExaminationView: View {
 
                 Spacer()
 
-                NavigationLink {
-                    ConfessionalView(store: store)
-                } label: {
+                NavigationLink(value: AppRoute.confessional) {
                     HStack(spacing: 8) {
                         Image(systemName: "cross.fill")
                             .font(.caption.weight(.bold))
@@ -343,20 +343,19 @@ private struct QuestionCardView: View {
                         if isEditingNote || !note.isEmpty {
                             TextField(
                                 "Nota opcional (ex: frequência ou circunstância)",
-                                text: Binding(
-                                    get: { isEditingNote ? draftNote : note },
-                                    set: { newValue in
-                                        draftNote = newValue
-                                        onUpdateNote(newValue)
-                                    }
-                                )
+                                text: $draftNote
                             )
                             .font(.caption)
                             .foregroundStyle(CandlelightPalette.parchment)
                             .padding(9)
                             .background(RoundedRectangle(cornerRadius: 10).fill(Color.white.opacity(0.06)))
                             .onAppear {
-                                draftNote = note
+                                if draftNote != note {
+                                    draftNote = note
+                                }
+                            }
+                            .onChange(of: draftNote) { _, newValue in
+                                onUpdateNote(newValue)
                             }
                         } else {
                             Button {
@@ -372,6 +371,12 @@ private struct QuestionCardView: View {
                     }
                     .padding(.leading, 36)
                 }
+            }
+        }
+        .onChange(of: isSelected) { _, selected in
+            if !selected {
+                draftNote = ""
+                isEditingNote = false
             }
         }
     }
