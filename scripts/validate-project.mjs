@@ -4,9 +4,10 @@ const catalogPath = 'ExameConsciencia/Resources/examination_catalog.json';
 const modelsPath = 'ExameConsciencia/Models/ExaminationModels.swift';
 const storePath = 'ExameConsciencia/Services/ExaminationStore.swift';
 const storeTestsPath = 'ExameConscienciaTests/ExaminationStoreTests.swift';
+const themePath = 'ExameConsciencia/DesignSystem/LiquidGlassTheme.swift';
 const projectYmlPath = 'project.yml';
 
-for (const p of [projectYmlPath, modelsPath, catalogPath, storePath, storeTestsPath]) {
+for (const p of [projectYmlPath, modelsPath, catalogPath, storePath, storeTestsPath, themePath]) {
   if (!fs.existsSync(p)) {
     throw new Error(`Missing ${p}`);
   }
