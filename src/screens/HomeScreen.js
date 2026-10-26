@@ -64,7 +64,7 @@ export default function HomeScreen({
       {/* Header com Tipografia Solene de Missal */}
       <View style={styles.header}>
         <View style={styles.crossIconContainer}>
-          <Ionicons name="cross" size={24} color={CandlelightPalette.warmAmber} />
+          <Text style={styles.crossSymbol}>†</Text>
         </View>
         <Text style={styles.title}>EXAME DE CONSCIÊNCIA</Text>
         <Text style={styles.latinMotto}>«Cor contritum et humiliatum, Deus, non despicies»</Text>
@@ -415,6 +415,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
+  },
+  crossSymbol: {
+    fontSize: 26,
+    color: CandlelightPalette.warmAmber,
+    fontFamily: Typography.serif,
+    lineHeight: 28,
   },
   title: {
     fontFamily: Typography.title,
