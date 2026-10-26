@@ -14,7 +14,7 @@ import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import LiquidGlassCard from '../components/LiquidGlassCard';
 import AmberPill from '../components/AmberPill';
-import { CandlelightPalette } from '../theme/colors';
+import { CandlelightPalette, Typography } from '../theme/colors';
 import { formatConfessionDate, calculateDaysSince } from '../services/storage';
 
 export default function HomeScreen({
@@ -23,12 +23,14 @@ export default function HomeScreen({
   onNavigateToConfessional,
 }) {
   const [isPrayerExpanded, setIsPrayerExpanded] = useState(false);
+  const [isStepsModalVisible, setIsStepsModalVisible] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [manualDaysInput, setManualDaysInput] = useState('');
 
   const lastDate = store.lastConfessionDate;
   const daysSince = calculateDaysSince(lastDate);
   const prayer = store.catalog.prayers?.find((p) => p.id === 'espirito-santo');
+  const confessionSteps = store.catalog.confessionGuide || [];
   const totalSelected = store.totalSelectedCount;
 
   const handleOpenDatePicker = () => {
@@ -59,26 +61,24 @@ export default function HomeScreen({
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Header Badge & Title */}
+      {/* Header com Tipografia Solene de Missal */}
       <View style={styles.header}>
-        <AmberPill
-          text="Sacramento da Penitência"
-          icon="flame"
-          isSelected={false}
-          style={styles.badge}
-        />
-        <Text style={styles.title}>Exame de Consciência</Text>
+        <View style={styles.crossIconContainer}>
+          <Ionicons name="cross" size={24} color={CandlelightPalette.warmAmber} />
+        </View>
+        <Text style={styles.title}>EXAME DE CONSCIÊNCIA</Text>
+        <Text style={styles.latinMotto}>«Cor contritum et humiliatum, Deus, non despicies»</Text>
         <Text style={styles.subtitle}>
-          Recolha-se na presença de Deus e examine o coração com sinceridade.
+          Recolha-se na presença de Deus e examine o coração com sinceridade para o Sacramento da Penitência.
         </Text>
       </View>
 
-      {/* Card da Última Confissão (Opção B) */}
+      {/* Card da Última Confissão */}
       <LiquidGlassCard isHighlighted={true} style={styles.sectionSpacing}>
         <View style={styles.confessionCardRow}>
           <View style={styles.iconCircle}>
             <Ionicons
-              name="calendar-outline"
+              name="calendar-clear-outline"
               size={22}
               color={CandlelightPalette.warmAmber}
             />
@@ -112,7 +112,36 @@ export default function HomeScreen({
         </View>
       </LiquidGlassCard>
 
-      {/* Oração ao Espírito Santo */}
+      {/* Os 5 Passos para uma Boa Confissão (Guia Catequético) */}
+      <TouchableOpacity
+        onPress={() => {
+          Haptics.selectionAsync();
+          setIsStepsModalVisible(true);
+        }}
+        activeOpacity={0.8}
+        style={styles.sectionSpacing}
+      >
+        <LiquidGlassCard isHighlighted={false}>
+          <View style={styles.guideCardRow}>
+            <View style={styles.guideBadge}>
+              <Text style={styles.guideBadgeText}>V</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.guideTitle}>Os 5 Passos da Boa Confissão</Text>
+              <Text style={styles.guideSubtitle}>
+                Exame, Contrição, Firme Propósito, Confissão e Penitência
+              </Text>
+            </View>
+            <Ionicons
+              name="book-outline"
+              size={20}
+              color={CandlelightPalette.warmAmber}
+            />
+          </View>
+        </LiquidGlassCard>
+      </TouchableOpacity>
+
+      {/* Oração ao Espírito Santo antes do Exame */}
       {prayer && (
         <LiquidGlassCard isHighlighted={false} style={styles.sectionSpacing}>
           <TouchableOpacity
@@ -124,7 +153,7 @@ export default function HomeScreen({
             activeOpacity={0.8}
           >
             <Ionicons
-              name="sparkles"
+              name="flame"
               size={20}
               color={CandlelightPalette.warmAmber}
               style={{ marginRight: 10 }}
@@ -135,7 +164,7 @@ export default function HomeScreen({
             </View>
             <Ionicons
               name={isPrayerExpanded ? 'chevron-up-circle' : 'chevron-down-circle'}
-              size={24}
+              size={22}
               color={CandlelightPalette.warmAmber}
             />
           </TouchableOpacity>
@@ -165,7 +194,7 @@ export default function HomeScreen({
             style={styles.primaryButton}
           >
             <Ionicons
-              name="checkbox-outline"
+              name="reader-outline"
               size={24}
               color={CandlelightPalette.obsidian}
               style={{ marginRight: 12 }}
@@ -177,7 +206,7 @@ export default function HomeScreen({
                   : 'Iniciar Exame de Consciência'}
               </Text>
               <Text style={styles.primaryButtonSubtext}>
-                Os Dez Mandamentos, Preceitos e Pecados Capitais
+                Mandamentos, Preceitos e Pecados Capitais
               </Text>
             </View>
             <Ionicons
@@ -211,7 +240,7 @@ export default function HomeScreen({
                   </Text>
                   <Text style={styles.shortcutSubtext}>
                     {totalSelected}{' '}
-                    {totalSelected === 1 ? 'item anotado' : 'itens anotados'}{' '}
+                    {totalSelected === 1 ? 'item apontado' : 'itens apontados'}{' '}
                     para confessar
                   </Text>
                 </View>
@@ -235,12 +264,58 @@ export default function HomeScreen({
           style={{ marginRight: 6 }}
         />
         <Text style={styles.footerText}>
-          100% offline e privado. Seus apontamentos são destruídos assim que
+          100% offline e sigiloso. Seus apontamentos são destruídos assim que
           você recebe a absolvição.
         </Text>
       </View>
 
-      {/* Modal para Ajustar Data */}
+      {/* Modal: Os 5 Passos da Boa Confissão */}
+      <Modal
+        visible={isStepsModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsStepsModalVisible(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.stepsModalContainer}>
+            <View style={styles.modalHeaderRow}>
+              <Text style={styles.stepsModalTitle}>5 PASSOS PARA UMA BOA CONFISSÃO</Text>
+              <TouchableOpacity
+                onPress={() => setIsStepsModalVisible(false)}
+                style={styles.modalCloseBtn}
+              >
+                <Ionicons name="close" size={24} color={CandlelightPalette.ivory} />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.stepsModalSubtitle}>
+              Segundo o ensinamento tradicional da Santa Igreja Católica:
+            </Text>
+
+            <ScrollView style={styles.stepsScroll} showsVerticalScrollIndicator={false}>
+              {confessionSteps.map((step) => (
+                <View key={step.number} style={styles.stepItemRow}>
+                  <View style={styles.stepNumberBadge}>
+                    <Text style={styles.stepNumberText}>{step.number}</Text>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.stepItemTitle}>{step.title}</Text>
+                    <Text style={styles.stepItemDesc}>{step.description}</Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+
+            <TouchableOpacity
+              onPress={() => setIsStepsModalVisible(false)}
+              style={styles.stepsUnderstoodBtn}
+            >
+              <Text style={styles.stepsUnderstoodBtnText}>Compreendi</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal para Ajustar Data da Última Confissão */}
       <Modal
         visible={isDatePickerVisible}
         transparent={true}
@@ -249,7 +324,7 @@ export default function HomeScreen({
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Última Confissão</Text>
+            <Text style={styles.modalTitle}>ÚLTIMA CONFISSÃO</Text>
             <Text style={styles.modalSubtitle}>
               Há quantos dias (aproximadamente) foi a sua última confissão?
             </Text>
@@ -307,7 +382,7 @@ export default function HomeScreen({
                 onPress={handleClearDate}
                 style={styles.clearDateBtn}
               >
-                <Text style={styles.clearDateText}>Limpar registro de data</Text>
+                <Text style={styles.clearDateText}>Limpar registro</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -323,97 +398,155 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 60 : 36,
-    paddingBottom: 40,
+    paddingTop: Platform.OS === 'ios' ? 64 : 44,
+    paddingBottom: 48,
   },
   header: {
-    marginBottom: 22,
+    alignItems: 'center',
+    marginBottom: 24,
   },
-  badge: {
-    alignSelf: 'flex-start',
-    marginBottom: 8,
+  crossIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.bronzeBorder,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 14,
   },
   title: {
-    fontSize: 30,
-    fontWeight: 'bold',
+    fontFamily: Typography.title,
+    fontSize: 22,
     color: CandlelightPalette.ivory,
-    letterSpacing: -0.5,
+    letterSpacing: 2.2,
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  latinMotto: {
+    fontFamily: Typography.serif,
+    fontStyle: 'italic',
+    fontSize: 13,
+    color: CandlelightPalette.warmAmber,
+    textAlign: 'center',
+    marginBottom: 10,
+    opacity: 0.9,
   },
   subtitle: {
     fontSize: 14,
+    fontFamily: Typography.serif,
     color: CandlelightPalette.mutedText,
-    marginTop: 6,
+    textAlign: 'center',
     lineHeight: 20,
+    paddingHorizontal: 12,
   },
   sectionSpacing: {
-    marginTop: 14,
+    marginBottom: 16,
   },
   confessionCardRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(245, 158, 11, 0.16)',
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.bronzeBorder,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
   confessionCardText: {
     flex: 1,
   },
   confessionCardLabel: {
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: 10,
+    fontFamily: Typography.title,
+    letterSpacing: 1.2,
     color: CandlelightPalette.warmAmber,
-    letterSpacing: 0.8,
+    marginBottom: 2,
   },
   confessionDateText: {
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 17,
+    fontFamily: Typography.subheading,
     color: CandlelightPalette.ivory,
-    marginTop: 2,
   },
   confessionDaysText: {
     fontSize: 12,
-    color: 'rgba(254, 243, 199, 0.85)',
-    marginTop: 1,
+    color: CandlelightPalette.mutedText,
+    marginTop: 2,
   },
   confessionHintText: {
     fontSize: 11,
     color: CandlelightPalette.mutedText,
     marginTop: 2,
+    fontStyle: 'italic',
   },
   adjustButton: {
     paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 20,
+    paddingVertical: 6,
+    borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.borderDefault,
   },
   adjustButtonText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: Typography.subheading,
     color: CandlelightPalette.parchment,
+  },
+  guideCardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  guideBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(217, 119, 6, 0.20)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.bronzeBorder,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  guideBadgeText: {
+    fontFamily: Typography.title,
+    fontSize: 13,
+    color: CandlelightPalette.warmAmber,
+  },
+  guideTitle: {
+    fontFamily: Typography.subheading,
+    fontSize: 15,
+    color: CandlelightPalette.ivory,
+    letterSpacing: 0.5,
+  },
+  guideSubtitle: {
+    fontSize: 11,
+    color: CandlelightPalette.mutedText,
+    marginTop: 2,
   },
   prayerHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   prayerTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 15,
+    fontFamily: Typography.subheading,
     color: CandlelightPalette.ivory,
+    letterSpacing: 0.5,
   },
   prayerSubtitle: {
     fontSize: 12,
     color: CandlelightPalette.mutedText,
-    marginTop: 1,
+    marginTop: 2,
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: CandlelightPalette.borderDefault,
     marginVertical: 12,
   },
   prayerBodyContainer: {
@@ -421,16 +554,20 @@ const styles = StyleSheet.create({
   },
   prayerBodyText: {
     fontSize: 14,
+    fontFamily: Typography.serif,
     color: CandlelightPalette.parchment,
     lineHeight: 22,
+    fontStyle: 'italic',
   },
   actionsContainer: {
-    marginTop: 20,
+    marginTop: 8,
+    marginBottom: 20,
   },
   primaryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 18,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
     borderRadius: 20,
     shadowColor: CandlelightPalette.warmAmber,
     shadowOffset: { width: 0, height: 6 },
@@ -440,12 +577,13 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: Typography.title,
+    letterSpacing: 0.8,
     color: CandlelightPalette.obsidian,
   },
   primaryButtonSubtext: {
     fontSize: 11,
-    color: 'rgba(7, 8, 13, 0.85)',
+    color: 'rgba(7, 8, 13, 0.80)',
     marginTop: 2,
   },
   confessionalShortcutRow: {
@@ -454,126 +592,214 @@ const styles = StyleSheet.create({
   },
   shortcutTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontFamily: Typography.subheading,
+    letterSpacing: 0.5,
     color: CandlelightPalette.ivory,
   },
   shortcutSubtext: {
     fontSize: 12,
-    color: CandlelightPalette.parchment,
-    marginTop: 1,
+    color: CandlelightPalette.warmAmber,
+    marginTop: 2,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 28,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
+    marginTop: 8,
   },
   footerText: {
     fontSize: 11,
     color: CandlelightPalette.mutedText,
-    flex: 1,
+    textAlign: 'center',
     lineHeight: 16,
+    flex: 1,
   },
   modalBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: 'rgba(0, 0, 0, 0.82)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 24,
+  },
+  stepsModalContainer: {
+    width: '100%',
+    maxHeight: '80%',
+    backgroundColor: '#0E1118',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: CandlelightPalette.bronzeBorder,
+    padding: 22,
+  },
+  modalHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  stepsModalTitle: {
+    fontFamily: Typography.title,
+    fontSize: 15,
+    letterSpacing: 1.2,
+    color: CandlelightPalette.warmAmber,
+  },
+  modalCloseBtn: {
+    padding: 4,
+  },
+  stepsModalSubtitle: {
+    fontSize: 12,
+    fontFamily: Typography.serif,
+    fontStyle: 'italic',
+    color: CandlelightPalette.mutedText,
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  stepsScroll: {
+    marginBottom: 16,
+  },
+  stepItemRow: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  stepNumberBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.bronzeBorder,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+    marginTop: 2,
+  },
+  stepNumberText: {
+    fontFamily: Typography.title,
+    fontSize: 12,
+    color: CandlelightPalette.warmAmber,
+  },
+  stepItemTitle: {
+    fontFamily: Typography.subheading,
+    fontSize: 14,
+    color: CandlelightPalette.ivory,
+    marginBottom: 3,
+  },
+  stepItemDesc: {
+    fontSize: 12,
+    fontFamily: Typography.serif,
+    color: CandlelightPalette.parchment,
+    lineHeight: 17,
+    opacity: 0.85,
+  },
+  stepsUnderstoodBtn: {
+    backgroundColor: CandlelightPalette.warmAmber,
+    paddingVertical: 12,
+    borderRadius: 16,
+    alignItems: 'center',
+  },
+  stepsUnderstoodBtnText: {
+    fontFamily: Typography.title,
+    fontSize: 13,
+    letterSpacing: 0.8,
+    color: CandlelightPalette.obsidian,
   },
   modalContainer: {
     width: '100%',
-    backgroundColor: '#12141D',
-    borderRadius: 22,
+    backgroundColor: '#0E1118',
+    borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.3)',
-    padding: 22,
+    borderColor: CandlelightPalette.bronzeBorder,
+    padding: 24,
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: CandlelightPalette.ivory,
+    fontFamily: Typography.title,
+    fontSize: 16,
+    letterSpacing: 1.5,
+    color: CandlelightPalette.warmAmber,
     marginBottom: 6,
   },
   modalSubtitle: {
     fontSize: 13,
     color: CandlelightPalette.mutedText,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+    lineHeight: 18,
   },
   daysInput: {
-    width: 140,
-    height: 48,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 12,
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: CandlelightPalette.ivory,
-    textAlign: 'center',
+    width: '100%',
+    height: 52,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: CandlelightPalette.bronzeBorder,
+    color: CandlelightPalette.ivory,
+    fontSize: 22,
+    fontFamily: Typography.subheading,
+    textAlign: 'center',
     marginBottom: 16,
   },
   quickDaysRow: {
     flexDirection: 'row',
-    gap: 6,
-    marginBottom: 20,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 24,
   },
   quickDayPill: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: CandlelightPalette.borderDefault,
   },
   quickDayPillActive: {
-    backgroundColor: CandlelightPalette.warmAmber,
+    backgroundColor: 'rgba(245, 158, 11, 0.20)',
     borderColor: CandlelightPalette.warmAmber,
   },
   quickDayText: {
-    fontSize: 12,
+    fontSize: 13,
     color: CandlelightPalette.parchment,
-    fontWeight: '600',
   },
   quickDayTextActive: {
-    color: CandlelightPalette.obsidian,
+    color: CandlelightPalette.warmAmber,
+    fontFamily: Typography.subheading,
   },
   modalActionsRow: {
     flexDirection: 'row',
-    gap: 12,
     width: '100%',
+    gap: 12,
   },
   modalCancelBtn: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    paddingVertical: 13,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: CandlelightPalette.borderDefault,
     alignItems: 'center',
   },
   modalCancelText: {
+    fontSize: 14,
     color: CandlelightPalette.parchment,
-    fontWeight: '600',
   },
   modalConfirmBtn: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 12,
+    paddingVertical: 13,
+    borderRadius: 16,
     backgroundColor: CandlelightPalette.warmAmber,
     alignItems: 'center',
   },
   modalConfirmText: {
+    fontSize: 14,
+    fontFamily: Typography.subheading,
     color: CandlelightPalette.obsidian,
-    fontWeight: 'bold',
   },
   clearDateBtn: {
     marginTop: 14,
+    paddingVertical: 4,
   },
   clearDateText: {
-    color: '#EF4444',
     fontSize: 12,
-    fontWeight: '600',
+    color: CandlelightPalette.dangerText,
   },
 });

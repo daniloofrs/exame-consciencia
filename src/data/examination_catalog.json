@@ -11,6 +11,12 @@
       "title": "Ato de Contrição",
       "subtitle": "Para rezar no confessionário",
       "body": "Meu Deus, eu me arrependo de todo o coração de Vos ter ofendido, porque sois tão bom e amável. Prometo, com a Vossa graça, esforçar-me para não mais pecar, fugir das ocasiões próximas de pecado e fazer penitência. Meu Jesus, misericórdia!"
+    },
+    {
+      "id": "acao-gracas",
+      "title": "Ação de Graças pós-Confissão",
+      "subtitle": "Louvor após receber a absolvição",
+      "body": "Senhor Jesus Cristo, Redentor meu, agradeço-Vos com toda a minha alma por terdes lavado os meus pecados com o Vosso preciosíssimo Sangue. Concedei-me a Vossa santa graça para que eu permaneça fiel aos Vossos mandamentos até o fim dos meus dias. Virgem Maria, Mãe de Deus, protegei-me e sede minha advogada. Amém."
     }
   ],
   "categories": [
@@ -403,5 +409,38 @@
         }
       ]
     }
-  ]
+  ],
+  "confessionGuide": [
+    {
+      "number": 1,
+      "title": "Exame de Consciência",
+      "description": "Recordar sinceramente com a luz de Deus todos os pecados cometidos por pensamentos, palavras, atos e omissões."
+    },
+    {
+      "number": 2,
+      "title": "Contrição (Dor dos Pecados)",
+      "description": "Arrependimento sincero de coração por ter ofendido a Deus, Sumo Bem e digno de todo o amor, ou pelo temor de seus castigos."
+    },
+    {
+      "number": 3,
+      "title": "Firme Propósito de Emenda",
+      "description": "Vontade resoluta e sincera de não mais cometer o pecado e evitar com coragem as ocasiões que conduzem à queda."
+    },
+    {
+      "number": 4,
+      "title": "Confissão Vocal ao Sacerdote",
+      "description": "Acusar com clareza, sinceridade e humildade todos os pecados graves ou mortais em espécie e número, sem nada ocultar."
+    },
+    {
+      "number": 5,
+      "title": "Satisfação (Penitência)",
+      "description": "Cumprir devotamente as orações ou penitências impostas pelo confessor em reparação às ofensas contra a Majestade Divina."
+    }
+  ],
+  "confessionalDialogue": {
+    "opening": "Abençoai-me, Padre, porque pequei.",
+    "timeTemplate": "A minha última confissão foi há...",
+    "closing": "Destes pecados e de todos os que por fraqueza não me lembro, peço a Deus perdão e a vós, Padre, a penitência e a absolvição.",
+    "absolutionVerse": "Vai em paz, e que o Senhor perdoe todos os teus pecados."
+  }
 }

@@ -13,7 +13,7 @@ import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import LiquidGlassCard from '../components/LiquidGlassCard';
 import AmberPill from '../components/AmberPill';
-import { CandlelightPalette } from '../theme/colors';
+import { CandlelightPalette, Typography } from '../theme/colors';
 
 export default function ExaminationScreen({
   store,
@@ -71,8 +71,25 @@ export default function ExaminationScreen({
           <Ionicons name="chevron-back" size={24} color={CandlelightPalette.warmAmber} />
           <Text style={styles.backBtnText}>Início</Text>
         </TouchableOpacity>
-        <Text style={styles.topBarTitle}>Exame de Consciência</Text>
-        <View style={{ width: 60 }} />
+        <Text style={styles.topBarTitle}>EXAME DE CONSCIÊNCIA</Text>
+        <TouchableOpacity
+          onPress={() => {
+            Haptics.selectionAsync();
+            onNavigateToConfessional();
+          }}
+          style={styles.confessionalBadgeBtn}
+        >
+          <Ionicons
+            name="shield-checkmark"
+            size={18}
+            color={totalSelected > 0 ? CandlelightPalette.warmAmber : CandlelightPalette.mutedText}
+          />
+          {totalSelected > 0 && (
+            <View style={styles.badgeCountCircle}>
+              <Text style={styles.badgeCountText}>{totalSelected}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
       </View>
 
       {/* Horizontal Category Selector */}
@@ -102,27 +119,23 @@ export default function ExaminationScreen({
         </ScrollView>
       </View>
 
-      {/* Main Content Area */}
+      {/* Scrollable Questions Content */}
       <ScrollView
-        style={styles.questionsScrollView}
-        contentContainerStyle={styles.questionsContentContainer}
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
         {/* Category Header */}
-        {currentCategory && (
-          <View style={styles.categoryHeader}>
-            <Text style={styles.stepCounterText}>
-              ETAPA {selectedCategoryIndex + 1} DE {categories.length}
-            </Text>
-            <Text style={styles.categoryTitle}>{currentCategory.title}</Text>
-            <Text style={styles.categorySubtitle}>{currentCategory.subtitle}</Text>
-          </View>
-        )}
+        <View style={styles.categoryHeader}>
+          <Text style={styles.categoryTitle}>{currentCategory?.title}</Text>
+          <Text style={styles.categorySubtitle}>{currentCategory?.subtitle}</Text>
+        </View>
 
         {/* Questions List */}
         {currentCategory?.questions?.map((q) => {
           const isSelected = store.isQuestionSelected(q.id);
-          const currentNote = editingNotes[q.id] !== undefined ? editingNotes[q.id] : store.note(q.id);
+          const currentNote =
+            editingNotes[q.id] !== undefined ? editingNotes[q.id] : store.note(q.id);
 
           return (
             <LiquidGlassCard
@@ -159,12 +172,13 @@ export default function ExaminationScreen({
                 </Text>
               </TouchableOpacity>
 
-              {/* Expandable contextual note field */}
+              {/* Expandable Contextual Note Field */}
               {isSelected && (
                 <View style={styles.noteFieldContainer}>
+                  <View style={styles.noteIndicatorBar} />
                   <TextInput
                     style={styles.noteInput}
-                    placeholder="Adicionar nota (frequência ou circunstância)..."
+                    placeholder="Frequência aproximada ou circunstâncias (opcional)..."
                     placeholderTextColor={CandlelightPalette.mutedText}
                     value={currentNote}
                     onChangeText={(text) => handleUpdateNote(q.id, text)}
@@ -199,7 +213,7 @@ export default function ExaminationScreen({
               activeOpacity={0.7}
             >
               <Text style={styles.stepNavTextPrimary} numberOfLines={1}>
-                Próximo: {categories[selectedCategoryIndex + 1]?.title}
+                {categories[selectedCategoryIndex + 1]?.title}
               </Text>
               <Ionicons
                 name="chevron-forward"
@@ -219,19 +233,18 @@ export default function ExaminationScreen({
               color={CandlelightPalette.warmAmber}
               style={{ marginRight: 8 }}
             />
-            <Text style={styles.customSectionTitle}>
-              Faltas ou Anotações Avulsas
-            </Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.customHeaderTitle}>Outro Pecado ou Falta</Text>
+              <Text style={styles.customHeaderSubtitle}>
+                Acrescente faltas específicas não listadas nas perguntas acima
+              </Text>
+            </View>
           </View>
-          <Text style={styles.customSectionSubtitle}>
-            Adicione qualquer falta específica ou circunstância que não esteja
-            nas perguntas acima:
-          </Text>
 
           <View style={styles.customInputRow}>
             <TextInput
-              style={styles.customTextInput}
-              placeholder="Ex: Impaciência com colega de trabalho..."
+              style={styles.customInput}
+              placeholder="Descreva o pecado ou falta com sobriedade..."
               placeholderTextColor={CandlelightPalette.mutedText}
               value={customText}
               onChangeText={setCustomText}
@@ -239,35 +252,27 @@ export default function ExaminationScreen({
             />
             <TouchableOpacity
               onPress={handleAddCustomEntry}
-              style={[
-                styles.addCustomBtn,
-                !customText.trim() && { opacity: 0.4 },
-              ]}
-              disabled={!customText.trim()}
+              style={styles.customAddBtn}
+              activeOpacity={0.7}
             >
-              <Ionicons
-                name="add-circle"
-                size={34}
-                color={CandlelightPalette.warmAmber}
-              />
+              <Ionicons name="add" size={24} color={CandlelightPalette.obsidian} />
             </TouchableOpacity>
           </View>
 
           {store.customEntries.length > 0 && (
-            <View style={styles.customListContainer}>
-              <View style={styles.divider} />
+            <View style={styles.customEntriesList}>
               {store.customEntries.map((item) => (
-                <View key={item.id} style={styles.customItemRow}>
-                  <View style={styles.bulletDot} />
-                  <Text style={styles.customItemText}>{item.text}</Text>
+                <View key={item.id} style={styles.customEntryItem}>
+                  <Text style={styles.customEntryBullet}>•</Text>
+                  <Text style={styles.customEntryText}>{item.text}</Text>
                   <TouchableOpacity
                     onPress={() => handleRemoveCustomEntry(item.id)}
-                    style={styles.removeCustomBtn}
+                    style={styles.customRemoveBtn}
                   >
                     <Ionicons
-                      name="close-circle"
-                      size={20}
-                      color={CandlelightPalette.mutedText}
+                      name="trash-outline"
+                      size={16}
+                      color={CandlelightPalette.dangerText}
                     />
                   </TouchableOpacity>
                 </View>
@@ -277,41 +282,41 @@ export default function ExaminationScreen({
         </LiquidGlassCard>
       </ScrollView>
 
-      {/* Floating Bottom Summary Bar */}
-      <View style={styles.bottomBarContainer}>
-        <LiquidGlassCard isHighlighted={totalSelected > 0} contentStyle={styles.bottomBarCardContent}>
-          <View style={styles.bottomBarInfo}>
-            <Text style={styles.bottomBarLabel}>Lista para Confissão</Text>
-            <Text style={styles.bottomBarCounter}>
-              {totalSelected}{' '}
-              {totalSelected === 1 ? 'item marcado' : 'itens marcados'}
-            </Text>
-          </View>
-
+      {/* Floating Bottom Bar: Ir ao Confessionário */}
+      {totalSelected > 0 && (
+        <View style={styles.floatingBar}>
           <TouchableOpacity
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
               onNavigateToConfessional();
             }}
-            activeOpacity={0.8}
+            activeOpacity={0.9}
+            style={{ width: '100%' }}
           >
             <LinearGradient
               colors={[CandlelightPalette.warmAmber, CandlelightPalette.sacredBronze]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={styles.bottomBarButton}
+              style={styles.floatingButton}
             >
               <Ionicons
                 name="shield-checkmark"
-                size={16}
+                size={22}
                 color={CandlelightPalette.obsidian}
-                style={{ marginRight: 6 }}
+                style={{ marginRight: 10 }}
               />
-              <Text style={styles.bottomBarButtonText}>Ir ao Confessionário</Text>
+              <Text style={styles.floatingButtonText}>
+                No Confessionário ({totalSelected} {totalSelected === 1 ? 'item' : 'itens'})
+              </Text>
+              <Ionicons
+                name="arrow-forward"
+                size={20}
+                color={CandlelightPalette.obsidian}
+              />
             </LinearGradient>
           </TouchableOpacity>
-        </LiquidGlassCard>
-      </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -319,17 +324,14 @@ export default function ExaminationScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? 56 : 30,
+    paddingTop: Platform.OS === 'ios' ? 60 : 40,
     paddingHorizontal: 16,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
+    paddingBottom: 12,
   },
   backBtn: {
     flexDirection: 'row',
@@ -337,54 +339,70 @@ const styles = StyleSheet.create({
   },
   backBtnText: {
     color: CandlelightPalette.warmAmber,
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: Typography.subheading,
+    marginLeft: 2,
   },
   topBarTitle: {
-    color: CandlelightPalette.ivory,
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: Typography.title,
+    fontSize: 13,
+    color: CandlelightPalette.parchment,
+    letterSpacing: 1.5,
+  },
+  confessionalBadgeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 6,
+  },
+  badgeCountCircle: {
+    backgroundColor: CandlelightPalette.warmAmber,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    marginLeft: 4,
+  },
+  badgeCountText: {
+    fontSize: 11,
+    fontFamily: Typography.title,
+    color: CandlelightPalette.obsidian,
   },
   categoryBarContainer: {
-    backgroundColor: 'rgba(11, 13, 20, 0.75)',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
+    borderBottomColor: CandlelightPalette.borderDefault,
+    paddingBottom: 10,
   },
   categoryScrollContent: {
     paddingHorizontal: 16,
-    paddingVertical: 10,
     gap: 8,
   },
   categoryPill: {
-    marginRight: 8,
+    marginRight: 4,
   },
-  questionsScrollView: {
+  scrollView: {
     flex: 1,
   },
-  questionsContentContainer: {
+  contentContainer: {
     paddingHorizontal: 18,
-    paddingTop: 14,
-    paddingBottom: 120,
+    paddingTop: 16,
+    paddingBottom: 110,
   },
   categoryHeader: {
     marginBottom: 16,
-  },
-  stepCounterText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: CandlelightPalette.warmAmber,
-    letterSpacing: 0.8,
+    paddingHorizontal: 4,
   },
   categoryTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: CandlelightPalette.ivory,
-    marginTop: 2,
+    fontFamily: Typography.title,
+    fontSize: 20,
+    color: CandlelightPalette.warmAmber,
+    letterSpacing: 1,
+    marginBottom: 4,
   },
   categorySubtitle: {
-    fontSize: 13,
-    color: CandlelightPalette.mutedText,
-    marginTop: 2,
+    fontFamily: Typography.serif,
+    fontSize: 14,
+    color: CandlelightPalette.parchment,
+    opacity: 0.85,
+    fontStyle: 'italic',
   },
   questionCard: {
     marginBottom: 12,
@@ -394,15 +412,16 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 7,
+    width: 22,
+    height: 22,
+    borderRadius: 6,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: CandlelightPalette.borderDefault,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     marginTop: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
   },
   checkboxSelected: {
     backgroundColor: CandlelightPalette.warmAmber,
@@ -410,168 +429,170 @@ const styles = StyleSheet.create({
   },
   questionText: {
     flex: 1,
-    fontSize: 14,
-    color: 'rgba(248, 250, 252, 0.85)',
-    lineHeight: 20,
+    fontFamily: Typography.serif,
+    fontSize: 15,
+    color: CandlelightPalette.ivory,
+    lineHeight: 22,
   },
   questionTextSelected: {
-    color: CandlelightPalette.ivory,
-    fontWeight: '500',
+    color: CandlelightPalette.parchment,
   },
   noteFieldContainer: {
-    marginTop: 10,
-    paddingLeft: 36,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(245, 158, 11, 0.15)',
+  },
+  noteIndicatorBar: {
+    width: 3,
+    height: 28,
+    borderRadius: 2,
+    backgroundColor: CandlelightPalette.warmAmber,
+    marginRight: 10,
   },
   noteInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    fontSize: 12,
+    flex: 1,
+    fontSize: 13,
+    fontFamily: Typography.serif,
     color: CandlelightPalette.parchment,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    paddingVertical: 4,
   },
   stepNavRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginTop: 8,
-    marginBottom: 20,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 24,
+    gap: 12,
   },
   stepNavBtnSecondary: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.borderDefault,
   },
   stepNavTextSecondary: {
     fontSize: 13,
+    fontFamily: Typography.subheading,
     color: CandlelightPalette.parchment,
-    fontWeight: '600',
+    marginLeft: 4,
   },
   stepNavBtnPrimary: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    justifyContent: 'flex-end',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     borderRadius: 14,
-    backgroundColor: 'rgba(245, 158, 11, 0.14)',
+    backgroundColor: 'rgba(245, 158, 11, 0.10)',
     borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.35)',
-    gap: 6,
+    borderColor: CandlelightPalette.bronzeBorder,
   },
   stepNavTextPrimary: {
     fontSize: 13,
+    fontFamily: Typography.subheading,
     color: CandlelightPalette.warmAmber,
-    fontWeight: '600',
+    marginRight: 4,
   },
   customSectionCard: {
-    marginTop: 4,
+    marginTop: 8,
+    marginBottom: 24,
   },
   customHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 12,
   },
-  customSectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  customHeaderTitle: {
+    fontFamily: Typography.subheading,
+    fontSize: 15,
     color: CandlelightPalette.ivory,
   },
-  customSectionSubtitle: {
-    fontSize: 12,
+  customHeaderSubtitle: {
+    fontSize: 11,
     color: CandlelightPalette.mutedText,
-    marginTop: 4,
-    marginBottom: 12,
-    lineHeight: 16,
+    marginTop: 2,
   },
   customInputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  customTextInput: {
+  customInput: {
     flex: 1,
-    height: 42,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    fontSize: 13,
-    color: CandlelightPalette.ivory,
+    height: 44,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: CandlelightPalette.borderDefault,
+    paddingHorizontal: 14,
+    fontSize: 13,
+    fontFamily: Typography.serif,
+    color: CandlelightPalette.ivory,
   },
-  addCustomBtn: {
-    padding: 2,
+  customAddBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: CandlelightPalette.warmAmber,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  customListContainer: {
-    marginTop: 8,
+  customEntriesList: {
+    marginTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: CandlelightPalette.borderDefault,
+    paddingTop: 8,
   },
-  divider: {
-    height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    marginVertical: 10,
-  },
-  customItemRow: {
+  customEntryItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 6,
   },
-  bulletDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: CandlelightPalette.warmAmber,
-    marginRight: 10,
+  customEntryBullet: {
+    color: CandlelightPalette.warmAmber,
+    fontSize: 16,
+    marginRight: 8,
   },
-  customItemText: {
+  customEntryText: {
     flex: 1,
     fontSize: 13,
+    fontFamily: Typography.serif,
     color: CandlelightPalette.parchment,
     lineHeight: 18,
   },
-  removeCustomBtn: {
-    padding: 4,
+  customRemoveBtn: {
+    padding: 6,
   },
-  bottomBarContainer: {
+  floatingBar: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 24 : 14,
-    left: 16,
-    right: 16,
+    bottom: 24,
+    left: 20,
+    right: 20,
   },
-  bottomBarCardContent: {
+  floatingButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 12,
+    justifyContent: 'center',
+    paddingVertical: 16,
+    borderRadius: 20,
+    shadowColor: CandlelightPalette.warmAmber,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 8,
   },
-  bottomBarInfo: {
-    flex: 1,
-  },
-  bottomBarLabel: {
-    fontSize: 11,
-    color: CandlelightPalette.mutedText,
-  },
-  bottomBarCounter: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: CandlelightPalette.ivory,
-  },
-  bottomBarButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 999,
-  },
-  bottomBarButtonText: {
-    fontSize: 13,
-    fontWeight: 'bold',
+  floatingButtonText: {
+    fontFamily: Typography.title,
+    fontSize: 15,
+    letterSpacing: 0.8,
     color: CandlelightPalette.obsidian,
   },
 });

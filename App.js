@@ -5,10 +5,17 @@ import {
   Text,
   AppState,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import {
+  useFonts,
+  Cinzel_400Regular,
+  Cinzel_600SemiBold,
+  Cinzel_700Bold,
+} from '@expo-google-fonts/cinzel';
 import CandlelightBackground from './src/components/CandlelightBackground';
 import HomeScreen from './src/screens/HomeScreen';
 import ExaminationScreen from './src/screens/ExaminationScreen';
@@ -21,9 +28,15 @@ import {
   getLastConfessionDate,
   setLastConfessionDate as saveLastConfessionDate,
 } from './src/services/storage';
-import { CandlelightPalette } from './src/theme/colors';
+import { CandlelightPalette, Typography } from './src/theme/colors';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Cinzel_400Regular,
+    Cinzel_600SemiBold,
+    Cinzel_700Bold,
+  });
+
   const [currentScreen, setCurrentScreen] = useState('home'); // 'home' | 'exam' | 'confessional'
   const [selectedQuestionIDs, setSelectedQuestionIDs] = useState(new Set());
   const [questionNotes, setQuestionNotes] = useState({});
@@ -32,7 +45,7 @@ export default function App() {
   const [lastConfessionDate, setLastConfessionDateState] = useState(null);
   const [isAppActive, setIsAppActive] = useState(true);
 
-  // AppState privacy shield (blur screen in app switcher)
+  // AppState privacy shield (simple blur screen in multitasking / app switcher)
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       setIsAppActive(nextAppState === 'active');
@@ -201,6 +214,17 @@ export default function App() {
     setLastConfessionDate,
   };
 
+  if (!fontsLoaded) {
+    return (
+      <CandlelightBackground>
+        <StatusBar style="light" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={CandlelightPalette.warmAmber} />
+        </View>
+      </CandlelightBackground>
+    );
+  }
+
   return (
     <CandlelightBackground>
       <StatusBar style="light" />
@@ -232,11 +256,11 @@ export default function App() {
       {/* Privacy Blur Shield when app is in multitasking or background */}
       {!isAppActive && (
         <View style={[StyleSheet.absoluteFill, styles.privacyShield]}>
-          <BlurView intensity={70} tint="dark" style={StyleSheet.absoluteFill}>
+          <BlurView intensity={85} tint="dark" style={StyleSheet.absoluteFill}>
             <View style={styles.privacyCenter}>
               <Ionicons
                 name="lock-closed"
-                size={54}
+                size={48}
                 color={CandlelightPalette.warmAmber}
               />
               <Text style={styles.privacyTitle}>Exame de Consciência</Text>
@@ -252,6 +276,11 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   privacyShield: {
     zIndex: 9999,
   },
@@ -259,17 +288,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 24,
   },
   privacyTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: Typography.title,
+    fontSize: 22,
+    letterSpacing: 1,
     color: CandlelightPalette.ivory,
-    marginTop: 14,
+    marginTop: 16,
   },
   privacySubtitle: {
     fontSize: 13,
     color: CandlelightPalette.mutedText,
-    marginTop: 4,
+    marginTop: 6,
   },
 });
