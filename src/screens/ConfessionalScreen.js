@@ -504,6 +504,7 @@ export default function ConfessionalScreen({
           <TouchableOpacity
             onPress={handleOpenConfirmModal}
             activeOpacity={0.85}
+            style={styles.absolutionButtonOuter}
           >
             <LinearGradient
               colors={[CandlelightPalette.warmAmber, CandlelightPalette.sacredBronze]}
@@ -511,6 +512,14 @@ export default function ConfessionalScreen({
               end={{ x: 1, y: 1 }}
               style={styles.absolutionButton}
             >
+              {/* Top liquid specular highlight */}
+              <LinearGradient
+                colors={['rgba(255, 255, 255, 0.85)', 'rgba(255, 255, 255, 0.20)', 'transparent']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.95, y: 0 }}
+                style={styles.btnSpecularBar}
+              />
+
               <Ionicons
                 name="shield-checkmark"
                 size={22}
@@ -797,17 +806,33 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 32,
   },
+  absolutionButtonOuter: {
+    width: '100%',
+    borderRadius: 22,
+    overflow: 'hidden',
+    shadowColor: CandlelightPalette.warmAmber,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.42,
+    shadowRadius: 18,
+    elevation: 8,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.45)',
+    borderTopColor: 'rgba(255, 255, 255, 0.85)',
+    borderBottomColor: 'rgba(217, 119, 6, 0.5)',
+  },
   absolutionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    borderRadius: 20,
-    shadowColor: CandlelightPalette.warmAmber,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 16,
-    elevation: 8,
+    position: 'relative',
+  },
+  btnSpecularBar: {
+    position: 'absolute',
+    top: 0,
+    left: 14,
+    right: 14,
+    height: 1.5,
   },
   absolutionButtonText: {
     fontFamily: Typography.title,
