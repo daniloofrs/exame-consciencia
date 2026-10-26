@@ -51,14 +51,24 @@ Substituir pesquisas dispersas na internet e anotações improvisadas no bloco d
 
 ---
 
-## 📲 Como Instalar no seu iPhone (Windows)
+## 📱 Como Rodar no seu iPhone em 1 Minuto (Expo Go)
 
-O repositório conta com um pipeline automatizado em [`.github/workflows/build-ios.yml`](.github/workflows/build-ios.yml) que compila o código SwiftUI em servidores macOS da nuvem e gera o instalador `.ipa`:
+1. **No seu iPhone:**
+   - Abra a **App Store** oficial e instale o aplicativo gratuito **[Expo Go](https://apps.apple.com/app/expo-go/id982107779)**.
+2. **No seu computador (Windows):**
+   - Abra o terminal na pasta do projeto e execute:
+     ```bash
+     npm start
+     ```
+   - Um **QR Code** vai aparecer no seu terminal.
+3. **No iPhone:**
+   - Abra a **Câmera** do iPhone e aponte para o QR Code na tela do computador.
+   - Toque no banner amarelo *"Abrir no Expo"*.
+   - Pronto! O aplicativo vai abrir diretamente no seu iPhone, rodando liso e 100% nativo com a estética Liquid Glass!
 
-1. Acesse a aba **[Actions](https://github.com/daniloofrs/exame-consciencia/actions)** deste repositório no GitHub.
-2. Clique na execução mais recente do workflow **"Build iOS App (.ipa)"**.
-3. Na seção **Artifacts** (no final da página), baixe o arquivo **`ExameConsciencia-iOS-IPA`** e extraia o `ExameConsciencia.ipa`.
-4. Instale o arquivo `ExameConsciencia.ipa` no seu iPhone usando **[Sideloadly](https://sideloadly.io/)** ou **[AltStore](https://altstore.io/)** conectado ao computador com seu Apple ID gratuito.
+---
+
+## 📲 Como Gerar o .ipa para Instalação Permanente (.ipa)
 
 ---
 

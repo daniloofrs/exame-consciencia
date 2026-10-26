@@ -1,0 +1,16 @@
+export const CandlelightPalette = {
+  obsidian: '#07080D',
+  deepSurface: '#0E1017',
+  cardBg: 'rgba(255, 255, 255, 0.04)',
+  cardBgActive: 'rgba(245, 158, 11, 0.08)',
+  warmAmber: '#F59E0B',
+  sacredBronze: '#D97706',
+  parchment: '#FEF3C7',
+  ivory: '#F8FAFC',
+  mutedText: '#94A3B8',
+  borderDefault: 'rgba(255, 255, 255, 0.12)',
+  borderActive: 'rgba(245, 158, 11, 0.55)',
+  dangerBg: 'rgba(239, 68, 68, 0.15)',
+  dangerBorder: 'rgba(239, 68, 68, 0.35)',
+  dangerText: '#FCA5A5',
+};

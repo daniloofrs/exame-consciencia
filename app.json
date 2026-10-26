@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Exame de Consciência",
+    "slug": "exame-consciencia",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#07080D"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "userInterfaceStyle": "dark"
+    }
+  }
+}
