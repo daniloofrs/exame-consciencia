@@ -2,6 +2,7 @@
   "expo": {
     "name": "Exame de Consciência",
     "slug": "exame-consciencia",
+    "owner": "daniloofrs",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,6 +15,11 @@
     "ios": {
       "supportsTablet": false,
       "userInterfaceStyle": "dark"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b0be834c-3d2b-4876-a890-44b2c9a3b706"
+      }
     }
   }
 }
