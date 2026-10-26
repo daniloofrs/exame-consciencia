@@ -4,12 +4,14 @@ import {
   View,
   Text,
   AppState,
-  Platform,
+  Animated,
+  Easing,
   ActivityIndicator,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   useFonts,
   Cinzel_400Regular,
@@ -44,6 +46,44 @@ export default function App() {
   const [confessedItemIDs, setConfessedItemIDs] = useState(new Set());
   const [lastConfessionDate, setLastConfessionDateState] = useState(null);
   const [isAppActive, setIsAppActive] = useState(true);
+
+  // Smooth screen transition animations
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
+
+  const navigateWithTransition = (targetScreen) => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 130,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: -6,
+        duration: 130,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setCurrentScreen(targetScreen);
+      slideAnim.setValue(6);
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 210,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 210,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start();
+    });
+  };
 
   // AppState privacy shield (simple blur screen in multitasking / app switcher)
   useEffect(() => {
@@ -216,62 +256,76 @@ export default function App() {
 
   if (!fontsLoaded) {
     return (
-      <CandlelightBackground>
-        <StatusBar style="light" />
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={CandlelightPalette.warmAmber} />
-        </View>
-      </CandlelightBackground>
+      <SafeAreaProvider>
+        <CandlelightBackground>
+          <StatusBar style="light" />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={CandlelightPalette.warmAmber} />
+          </View>
+        </CandlelightBackground>
+      </SafeAreaProvider>
     );
   }
 
   return (
-    <CandlelightBackground>
-      <StatusBar style="light" />
+    <SafeAreaProvider>
+      <CandlelightBackground>
+        <StatusBar style="light" />
 
-      {currentScreen === 'home' && (
-        <HomeScreen
-          store={store}
-          onNavigateToExam={() => setCurrentScreen('exam')}
-          onNavigateToConfessional={() => setCurrentScreen('confessional')}
-        />
-      )}
+        <Animated.View
+          style={[
+            styles.screenContainer,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          {currentScreen === 'home' && (
+            <HomeScreen
+              store={store}
+              onNavigateToExam={() => navigateWithTransition('exam')}
+              onNavigateToConfessional={() => navigateWithTransition('confessional')}
+            />
+          )}
 
-      {currentScreen === 'exam' && (
-        <ExaminationScreen
-          store={store}
-          onBack={() => setCurrentScreen('home')}
-          onNavigateToConfessional={() => setCurrentScreen('confessional')}
-        />
-      )}
+          {currentScreen === 'exam' && (
+            <ExaminationScreen
+              store={store}
+              onBack={() => navigateWithTransition('home')}
+              onNavigateToConfessional={() => navigateWithTransition('confessional')}
+            />
+          )}
 
-      {currentScreen === 'confessional' && (
-        <ConfessionalScreen
-          store={store}
-          onBack={() => setCurrentScreen('exam')}
-          onAbsolutionComplete={() => setCurrentScreen('home')}
-        />
-      )}
+          {currentScreen === 'confessional' && (
+            <ConfessionalScreen
+              store={store}
+              onBack={() => navigateWithTransition('exam')}
+              onAbsolutionComplete={() => navigateWithTransition('home')}
+            />
+          )}
+        </Animated.View>
 
-      {/* Privacy Blur Shield when app is in multitasking or background */}
-      {!isAppActive && (
-        <View style={[StyleSheet.absoluteFill, styles.privacyShield]}>
-          <BlurView intensity={85} tint="dark" style={StyleSheet.absoluteFill}>
-            <View style={styles.privacyCenter}>
-              <Ionicons
-                name="lock-closed"
-                size={48}
-                color={CandlelightPalette.warmAmber}
-              />
-              <Text style={styles.privacyTitle}>Exame de Consciência</Text>
-              <Text style={styles.privacySubtitle}>
-                Conteúdo protegido em segundo plano
-              </Text>
-            </View>
-          </BlurView>
-        </View>
-      )}
-    </CandlelightBackground>
+        {/* Privacy Blur Shield when app is in multitasking or background */}
+        {!isAppActive && (
+          <View style={[StyleSheet.absoluteFill, styles.privacyShield]}>
+            <BlurView intensity={85} tint="dark" style={StyleSheet.absoluteFill}>
+              <View style={styles.privacyCenter}>
+                <Ionicons
+                  name="lock-closed"
+                  size={48}
+                  color={CandlelightPalette.warmAmber}
+                />
+                <Text style={styles.privacyTitle}>Exame de Consciência</Text>
+                <Text style={styles.privacySubtitle}>
+                  Conteúdo protegido em segundo plano
+                </Text>
+              </View>
+            </BlurView>
+          </View>
+        )}
+      </CandlelightBackground>
+    </SafeAreaProvider>
   );
 }
 
@@ -280,6 +334,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  screenContainer: {
+    flex: 1,
   },
   privacyShield: {
     zIndex: 9999,

@@ -6,24 +6,37 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  LayoutAnimation,
   Platform,
+  UIManager,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LiquidGlassCard from '../components/LiquidGlassCard';
 import AmberPill from '../components/AmberPill';
 import { CandlelightPalette, Typography } from '../theme/colors';
+
+// Enable LayoutAnimation on Android if needed
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+const QUICK_FREQUENCIES = ['1x', '2x', '3x', 'Várias vezes'];
 
 export default function ExaminationScreen({
   store,
   onNavigateToConfessional,
   onBack,
 }) {
+  const insets = useSafeAreaInsets();
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [customText, setCustomText] = useState('');
   const [editingNotes, setEditingNotes] = useState({});
   const categoryScrollRef = useRef(null);
+  const mainScrollRef = useRef(null);
 
   const categories = store.catalog.categories || [];
   const currentCategory = categories[selectedCategoryIndex] || categories[0];
@@ -32,10 +45,18 @@ export default function ExaminationScreen({
   const handleSelectCategory = (index) => {
     Haptics.selectionAsync();
     setSelectedCategoryIndex(index);
+    // Smoothly scroll tab into view
+    categoryScrollRef.current?.scrollTo({
+      x: Math.max(0, index * 105 - 60),
+      animated: true,
+    });
+    // Scroll to top of questions
+    mainScrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   const handleToggleQuestion = (questionId) => {
     Haptics.selectionAsync();
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     store.toggleQuestion(questionId);
   };
 
@@ -44,23 +65,35 @@ export default function ExaminationScreen({
     store.updateNote(questionId, text);
   };
 
+  const handleSetQuickFrequency = (questionId, freq) => {
+    Haptics.selectionAsync();
+    const current = store.note(questionId);
+    const newNote = current ? `${freq} — ${current}` : freq;
+    handleUpdateNote(questionId, newNote);
+  };
+
   const handleAddCustomEntry = () => {
     const trimmed = customText.trim();
     if (!trimmed) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     store.addCustomEntry(trimmed);
     setCustomText('');
   };
 
   const handleRemoveCustomEntry = (id) => {
     Haptics.selectionAsync();
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     store.removeCustomEntry(id);
   };
 
   return (
-    <View style={styles.container}>
-      {/* Top Navigation Bar */}
-      <View style={styles.topBar}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      {/* Top Navigation Bar with Dynamic Safe Area */}
+      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity
           onPress={() => {
             Haptics.selectionAsync();
@@ -121,8 +154,12 @@ export default function ExaminationScreen({
 
       {/* Scrollable Questions Content */}
       <ScrollView
+        ref={mainScrollRef}
         style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: insets.bottom + 96 },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         {/* Category Header */}
@@ -172,17 +209,34 @@ export default function ExaminationScreen({
                 </Text>
               </TouchableOpacity>
 
-              {/* Expandable Contextual Note Field */}
+              {/* Expandable Contextual Note Field with Quick Frequency Pills */}
               {isSelected && (
                 <View style={styles.noteFieldContainer}>
-                  <View style={styles.noteIndicatorBar} />
-                  <TextInput
-                    style={styles.noteInput}
-                    placeholder="Frequência aproximada ou circunstâncias (opcional)..."
-                    placeholderTextColor={CandlelightPalette.mutedText}
-                    value={currentNote}
-                    onChangeText={(text) => handleUpdateNote(q.id, text)}
-                  />
+                  <View style={styles.noteInputRow}>
+                    <View style={styles.noteIndicatorBar} />
+                    <TextInput
+                      style={styles.noteInput}
+                      placeholder="Frequência aproximada ou nota (opcional)..."
+                      placeholderTextColor={CandlelightPalette.mutedText}
+                      value={currentNote}
+                      onChangeText={(text) => handleUpdateNote(q.id, text)}
+                    />
+                  </View>
+
+                  {/* Atalhos Rápidos de Frequência */}
+                  <View style={styles.quickFreqRow}>
+                    <Text style={styles.quickFreqLabel}>Frequência:</Text>
+                    {QUICK_FREQUENCIES.map((freq) => (
+                      <TouchableOpacity
+                        key={freq}
+                        onPress={() => handleSetQuickFrequency(q.id, freq)}
+                        style={styles.quickFreqPill}
+                        activeOpacity={0.7}
+                      >
+                        <Text style={styles.quickFreqPillText}>{freq}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
                 </View>
               )}
             </LiquidGlassCard>
@@ -284,7 +338,7 @@ export default function ExaminationScreen({
 
       {/* Floating Bottom Bar: Ir ao Confessionário */}
       {totalSelected > 0 && (
-        <View style={styles.floatingBar}>
+        <View style={[styles.floatingBar, { bottom: insets.bottom > 0 ? insets.bottom + 10 : 20 }]}>
           <TouchableOpacity
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -317,7 +371,7 @@ export default function ExaminationScreen({
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -329,7 +383,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
     paddingHorizontal: 16,
     paddingBottom: 12,
   },
@@ -384,7 +437,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 18,
     paddingTop: 16,
-    paddingBottom: 110,
   },
   categoryHeader: {
     marginBottom: 16,
@@ -438,12 +490,14 @@ const styles = StyleSheet.create({
     color: CandlelightPalette.parchment,
   },
   noteFieldContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     marginTop: 12,
     paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: 'rgba(245, 158, 11, 0.15)',
+  },
+  noteInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   noteIndicatorBar: {
     width: 3,
@@ -458,6 +512,31 @@ const styles = StyleSheet.create({
     fontFamily: Typography.serif,
     color: CandlelightPalette.parchment,
     paddingVertical: 4,
+  },
+  quickFreqRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    paddingLeft: 13,
+    gap: 6,
+  },
+  quickFreqLabel: {
+    fontSize: 11,
+    color: CandlelightPalette.mutedText,
+    marginRight: 2,
+  },
+  quickFreqPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.borderDefault,
+  },
+  quickFreqPillText: {
+    fontSize: 11,
+    fontFamily: Typography.subheading,
+    color: CandlelightPalette.parchment,
   },
   stepNavRow: {
     flexDirection: 'row',
@@ -573,7 +652,6 @@ const styles = StyleSheet.create({
   },
   floatingBar: {
     position: 'absolute',
-    bottom: 24,
     left: 20,
     right: 20,
   },

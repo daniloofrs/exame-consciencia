@@ -7,28 +7,37 @@ import {
   TouchableOpacity,
   Modal,
   Animated,
+  LayoutAnimation,
   Platform,
+  UIManager,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LiquidGlassCard from '../components/LiquidGlassCard';
 import { CandlelightPalette, Typography } from '../theme/colors';
-import { calculateDaysSince } from '../services/storage';
+import { formatNaturalDaysSince } from '../services/storage';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function ConfessionalScreen({
   store,
   onBack,
   onAbsolutionComplete,
 }) {
+  const insets = useSafeAreaInsets();
   const [isActOfContritionVisible, setIsActOfContritionVisible] = useState(false);
   const [isConfirmAbsolutionVisible, setIsConfirmAbsolutionVisible] = useState(false);
   const [isAbsolutionCelebrated, setIsAbsolutionCelebrated] = useState(false);
+  const [textSizeMultiplier, setTextSizeMultiplier] = useState(1.0); // 0.9, 1.0, 1.15
 
   // Dissolution & Golden Flash animation
   const flashAnim = useRef(new Animated.Value(0)).current;
 
-  const daysSince = calculateDaysSince(store.lastConfessionDate);
+  const naturalTimeStr = formatNaturalDaysSince(store.lastConfessionDate);
   const actOfContrition = store.catalog.prayers?.find(
     (p) => p.id === 'ato-contricao'
   );
@@ -37,20 +46,25 @@ export default function ConfessionalScreen({
   );
   const dialogue = store.catalog.confessionalDialogue || {};
 
-  const greetingSentence =
-    daysSince !== null
-      ? `“Abençoai-me, Padre, porque pequei. A minha última confissão foi ${
-          daysSince === 0
-            ? 'hoje mesmo'
-            : daysSince === 1
-            ? 'ontem (há 1 dia)'
-            : `há cerca de ${daysSince} dias`
-        }. Estes são os meus pecados:”`
-      : '“Abençoai-me, Padre, porque pequei. Esta é a minha confissão e estes são os meus pecados:”';
+  const greetingSentence = naturalTimeStr
+    ? `“Abençoai-me, Padre, porque pequei. Minha última confissão foi ${naturalTimeStr}. Estes são os meus pecados:”`
+    : '“Abençoai-me, Padre, porque pequei. Esta é a minha confissão e estes são os meus pecados:”';
 
   const handleToggleConfessed = (key) => {
     Haptics.selectionAsync();
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     store.toggleConfessedItem(key);
+  };
+
+  const handleToggleTextSize = () => {
+    Haptics.selectionAsync();
+    if (textSizeMultiplier === 1.0) {
+      setTextSizeMultiplier(1.18);
+    } else if (textSizeMultiplier === 1.18) {
+      setTextSizeMultiplier(0.92);
+    } else {
+      setTextSizeMultiplier(1.0);
+    }
   };
 
   const handleOpenConfirmModal = () => {
@@ -69,12 +83,12 @@ export default function ConfessionalScreen({
     Animated.sequence([
       Animated.timing(flashAnim, {
         toValue: 1,
-        duration: 900,
+        duration: 850,
         useNativeDriver: true,
       }),
       Animated.timing(flashAnim, {
-        toValue: 0.25,
-        duration: 1400,
+        toValue: 0.22,
+        duration: 1300,
         useNativeDriver: true,
       }),
     ]).start();
@@ -100,7 +114,7 @@ export default function ConfessionalScreen({
               backgroundColor: CandlelightPalette.warmAmber,
               opacity: flashAnim.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, 0.32],
+                outputRange: [0, 0.30],
               }),
             },
           ]}
@@ -108,7 +122,13 @@ export default function ConfessionalScreen({
         />
 
         <ScrollView
-          contentContainerStyle={styles.peaceScrollContent}
+          contentContainerStyle={[
+            styles.peaceScrollContent,
+            {
+              paddingTop: insets.top + 28,
+              paddingBottom: insets.bottom + 36,
+            },
+          ]}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.peaceCrossCircle}>
@@ -173,8 +193,8 @@ export default function ConfessionalScreen({
 
   return (
     <View style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
+      {/* Top Bar with Safe Area */}
+      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity
           onPress={() => {
             Haptics.selectionAsync();
@@ -190,12 +210,23 @@ export default function ConfessionalScreen({
           <Text style={styles.backBtnText}>Exame</Text>
         </TouchableOpacity>
         <Text style={styles.topBarTitle}>NO CONFESSIONÁRIO</Text>
-        <View style={{ width: 60 }} />
+        <TouchableOpacity
+          onPress={handleToggleTextSize}
+          style={styles.textSizeBtn}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.textSizeBtnText}>
+            {textSizeMultiplier === 1.18 ? 'A+' : textSizeMultiplier === 0.92 ? 'A-' : 'A'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: insets.bottom + 52 },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         {/* Saudação Litúrgica de Entrada com o Sacerdote */}
@@ -209,14 +240,21 @@ export default function ConfessionalScreen({
             />
             <Text style={styles.greetingLabel}>ROTEIRO DE ENTRADA</Text>
           </View>
-          <Text style={styles.greetingText}>{greetingSentence}</Text>
+          <Text
+            style={[
+              styles.greetingText,
+              { fontSize: 14 * textSizeMultiplier, lineHeight: 21 * textSizeMultiplier },
+            ]}
+          >
+            {greetingSentence}
+          </Text>
         </LiquidGlassCard>
 
         {/* Section Header */}
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionHeaderTitle}>Pecados a Declarar</Text>
           <Text style={styles.sectionHeaderHint}>
-            Toque no pecado para velar/esmaecer após dizê-lo
+            Toque no item após declará-lo
           </Text>
         </View>
 
@@ -285,6 +323,10 @@ export default function ConfessionalScreen({
                     <Text
                       style={[
                         styles.confessItemText,
+                        {
+                          fontSize: 15 * textSizeMultiplier,
+                          lineHeight: 22 * textSizeMultiplier,
+                        },
                         isConfessed && styles.confessItemTextDimmed,
                       ]}
                     >
@@ -303,6 +345,7 @@ export default function ConfessionalScreen({
                         <Text
                           style={[
                             styles.confessNoteText,
+                            { fontSize: 12 * textSizeMultiplier },
                             isConfessed && styles.textDimmed,
                           ]}
                         >
@@ -365,6 +408,10 @@ export default function ConfessionalScreen({
                     <Text
                       style={[
                         styles.confessItemText,
+                        {
+                          fontSize: 15 * textSizeMultiplier,
+                          lineHeight: 22 * textSizeMultiplier,
+                        },
                         isConfessed && styles.confessItemTextDimmed,
                       ]}
                     >
@@ -389,7 +436,12 @@ export default function ConfessionalScreen({
               />
               <Text style={styles.greetingLabel}>AO CONCLUIR A ACUSAÇÃO</Text>
             </View>
-            <Text style={styles.closingText}>
+            <Text
+              style={[
+                styles.closingText,
+                { fontSize: 13 * textSizeMultiplier, lineHeight: 20 * textSizeMultiplier },
+              ]}
+            >
               “{dialogue.closing || 'Destes pecados e de todos os que por fraqueza não me lembro, peço a Deus perdão e a vós, Padre, a penitência e a absolvição.'}”
             </Text>
           </LiquidGlassCard>
@@ -434,7 +486,12 @@ export default function ConfessionalScreen({
             {isActOfContritionVisible && (
               <View style={styles.contritionBodyContainer}>
                 <View style={styles.divider} />
-                <Text style={styles.contritionBodyText}>
+                <Text
+                  style={[
+                    styles.contritionBodyText,
+                    { fontSize: 14 * textSizeMultiplier, lineHeight: 22 * textSizeMultiplier },
+                  ]}
+                >
                   {actOfContrition.body}
                 </Text>
               </View>
@@ -525,7 +582,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
     paddingHorizontal: 16,
     paddingBottom: 12,
   },
@@ -545,13 +601,27 @@ const styles = StyleSheet.create({
     color: CandlelightPalette.parchment,
     letterSpacing: 1.5,
   },
+  textSizeBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: CandlelightPalette.borderDefault,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textSizeBtnText: {
+    fontSize: 12,
+    fontFamily: Typography.subheading,
+    color: CandlelightPalette.warmAmber,
+  },
   scrollView: {
     flex: 1,
   },
   contentContainer: {
     paddingHorizontal: 18,
     paddingTop: 14,
-    paddingBottom: 64,
   },
   greetingCard: {
     marginBottom: 16,
@@ -838,8 +908,6 @@ const styles = StyleSheet.create({
   },
   peaceScrollContent: {
     paddingHorizontal: 24,
-    paddingTop: Platform.OS === 'ios' ? 80 : 60,
-    paddingBottom: 48,
     alignItems: 'center',
   },
   peaceCrossCircle: {

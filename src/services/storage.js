@@ -73,10 +73,29 @@ export function calculateDaysSince(date) {
 }
 
 export function formatConfessionDate(date) {
-  if (!date) return 'Primeira vez usando o app';
+  if (!date) return 'Nenhuma data registrada';
   return date.toLocaleDateString('pt-BR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   });
+}
+
+export function formatNaturalDaysSince(date) {
+  const days = calculateDaysSince(date);
+  if (days === null) return null;
+  if (days === 0) return 'hoje mesmo';
+  if (days === 1) return 'ontem (há 1 dia)';
+  if (days < 7) return `há ${days} dias`;
+  if (days < 14) return 'há cerca de 1 semana';
+  if (days < 21) return 'há cerca de 2 semanas';
+  if (days < 28) return 'há cerca de 3 semanas';
+  if (days < 45) return 'há cerca de 1 mês';
+  if (days < 75) return 'há cerca de 2 meses';
+  if (days < 105) return 'há cerca de 3 meses';
+  if (days < 150) return 'há cerca de 4 meses';
+  if (days < 210) return 'há cerca de 6 meses';
+  if (days < 365) return 'há menos de 1 ano';
+  if (days < 730) return 'há cerca de 1 ano';
+  return 'há mais de um ano';
 }

@@ -12,8 +12,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LiquidGlassCard from '../components/LiquidGlassCard';
-import AmberPill from '../components/AmberPill';
 import { CandlelightPalette, Typography } from '../theme/colors';
 import { formatConfessionDate, calculateDaysSince } from '../services/storage';
 
@@ -22,6 +22,7 @@ export default function HomeScreen({
   onNavigateToExam,
   onNavigateToConfessional,
 }) {
+  const insets = useSafeAreaInsets();
   const [isPrayerExpanded, setIsPrayerExpanded] = useState(false);
   const [isStepsModalVisible, setIsStepsModalVisible] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
@@ -58,7 +59,13 @@ export default function HomeScreen({
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={[
+        styles.contentContainer,
+        {
+          paddingTop: insets.top + 14,
+          paddingBottom: insets.bottom + 32,
+        },
+      ]}
       showsVerticalScrollIndicator={false}
     >
       {/* Header com Tipografia Solene de Missal */}
@@ -277,7 +284,7 @@ export default function HomeScreen({
         onRequestClose={() => setIsStepsModalVisible(false)}
       >
         <View style={styles.modalBackdrop}>
-          <View style={styles.stepsModalContainer}>
+          <View style={[styles.stepsModalContainer, { marginTop: insets.top + 20, marginBottom: insets.bottom + 20 }]}>
             <View style={styles.modalHeaderRow}>
               <Text style={styles.stepsModalTitle}>5 PASSOS PARA UMA BOA CONFISSÃO</Text>
               <TouchableOpacity
@@ -398,8 +405,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 64 : 44,
-    paddingBottom: 48,
   },
   header: {
     alignItems: 'center',
@@ -630,7 +635,7 @@ const styles = StyleSheet.create({
   },
   stepsModalContainer: {
     width: '100%',
-    maxHeight: '80%',
+    maxHeight: '82%',
     backgroundColor: '#0E1118',
     borderRadius: 24,
     borderWidth: 1,
@@ -644,7 +649,7 @@ const styles = StyleSheet.create({
   },
   stepsModalTitle: {
     fontFamily: Typography.title,
-    fontSize: 15,
+    fontSize: 14,
     letterSpacing: 1.2,
     color: CandlelightPalette.warmAmber,
   },
