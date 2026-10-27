@@ -689,6 +689,31 @@ const htmlContent = `<!DOCTYPE html>
       }
     });
 
+    // Apple Taptic Feedback Simulator
+    function triggerHaptic(type = 'light') {
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        try {
+          if (type === 'light') navigator.vibrate(12);
+          else if (type === 'medium') navigator.vibrate(22);
+          else if (type === 'heavy') navigator.vibrate(35);
+          else if (type === 'success') navigator.vibrate([20, 35, 30]);
+          else if (type === 'sacred') navigator.vibrate([30, 40, 45, 30, 60]);
+        } catch (e) {}
+      }
+    }
+
+    function setCategory(idx) {
+      activeCategoryIndex = idx;
+      triggerHaptic('light');
+      render();
+      setTimeout(() => {
+        const activePill = document.querySelector('.pill-cat.active');
+        if (activePill && typeof activePill.scrollIntoView === 'function') {
+          activePill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+      }, 20);
+    }
+
     function setScreen(screen) {
       currentScreen = screen;
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -696,6 +721,7 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     function toggleQuestion(qId) {
+      triggerHaptic('light');
       if (selectedQuestions.has(qId)) {
         selectedQuestions.delete(qId);
       } else {
@@ -711,6 +737,7 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     function setQuickFreq(qId, freq) {
+      triggerHaptic('light');
       const curr = questionNotes[qId] || '';
       questionNotes[qId] = curr ? freq + ' — ' + curr : freq;
       saveSession();
@@ -718,6 +745,7 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     function toggleConfessed(qId) {
+      triggerHaptic('medium');
       if (confessedQuestions.has(qId)) {
         confessedQuestions.delete(qId);
       } else {
@@ -877,6 +905,7 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     function confirmAbsolution() {
+      triggerHaptic('sacred');
       closeSheet();
       selectedQuestions.clear();
       questionNotes = {};
@@ -983,7 +1012,7 @@ const htmlContent = `<!DOCTYPE html>
             <!-- Scroller de Categorias -->
             <div class="category-scroll">
               \${CATALOG.categories.map((c, idx) => \`
-                <div class="pill-cat \${idx === activeCategoryIndex ? 'active' : ''}" onclick="activeCategoryIndex = \${idx}; render();">
+                <div class="pill-cat \${idx === activeCategoryIndex ? 'active' : ''}" onclick="setCategory(\${idx})">
                   \${c.title}
                 </div>
               \`).join('')}
