@@ -11,6 +11,9 @@ const htmlContent = `<!DOCTYPE html>
   <title>Exame de Consciência</title>
   
   <!-- Apple Web App & PWA Meta Tags -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Exame">
@@ -425,6 +428,15 @@ const htmlContent = `<!DOCTYPE html>
   </div>
 
   <script>
+    // Register Service Worker for 100% Offline Capability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch((err) => {
+          console.log('SW registration error:', err);
+        });
+      });
+    }
+
     const CATALOG = ${JSON.stringify(catalog)};
 
     // State Management

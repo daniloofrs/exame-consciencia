@@ -1,0 +1,20 @@
+{
+  "name": "Exame de Consciência — Breviário Católico",
+  "short_name": "Exame",
+  "description": "Aplicativo católico de exame de consciência e preparação para o Sacramento da Confissão. 100% offline, confidencial e seguro.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": ["lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
