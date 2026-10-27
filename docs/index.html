@@ -404,6 +404,86 @@
       background: rgba(255, 255, 255, 0.35);
       margin: 0 auto 16px;
     }
+    /* Smart PWA Install Banner */
+    .install-banner {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 440px;
+      background: rgba(18, 18, 22, 0.95);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(212, 175, 55, 0.12);
+      border-radius: 20px;
+      padding: 10px 14px;
+      z-index: 85;
+      animation: bannerSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes bannerSlideUp {
+      from { transform: translate(-50%, 40px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .install-banner-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .install-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .install-banner-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1C1917, #000);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #D4AF37;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .install-banner-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .install-banner-sub {
+      font-size: 11px;
+      color: #A8A29E;
+    }
+    .install-banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-install-cta {
+      background: #D4AF37;
+      color: #000;
+      border: none;
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-install-dismiss {
+      background: transparent;
+      border: none;
+      color: #78716C;
+      font-size: 15px;
+      padding: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -412,6 +492,23 @@
 
   <div class="app-viewport" id="app">
     <!-- Screen View Injected Dynamically -->
+  </div>
+
+  <!-- Smart PWA Install Banner -->
+  <div id="install-banner" class="install-banner" style="display: none;">
+    <div class="install-banner-inner">
+      <div class="install-banner-left" onclick="openInstallGuide()">
+        <div class="install-banner-icon">✝</div>
+        <div>
+          <div class="install-banner-title">Instalar Aplicativo</div>
+          <div class="install-banner-sub">100% offline & tela cheia</div>
+        </div>
+      </div>
+      <div class="install-banner-actions">
+        <button class="btn-install-cta" onclick="openInstallGuide()">Como Instalar</button>
+        <button class="btn-install-dismiss" onclick="dismissInstallBanner()" aria-label="Fechar">✕</button>
+      </div>
+    </div>
   </div>
 
   <!-- Apple Sheet Modal -->
@@ -471,6 +568,33 @@
       if (days === 0) return 'Hoje';
       if (days === 1) return 'Ontem (há 1 dia)';
       return 'Há ' + days + ' dias';
+    }
+
+    // PWA Installation Guide State & Handlers
+    let currentInstallOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : 'android';
+
+    function openInstallGuide(targetOS) {
+      if (targetOS) currentInstallOS = targetOS;
+      openSheet('install-guide');
+    }
+
+    function dismissInstallBanner() {
+      const banner = document.getElementById('install-banner');
+      if (banner) banner.style.display = 'none';
+      localStorage.setItem('pwa_install_dismissed', 'true');
+    }
+
+    function checkInstallBanner() {
+      const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+      const dismissed = localStorage.getItem('pwa_install_dismissed') === 'true';
+      const banner = document.getElementById('install-banner');
+      if (banner) {
+        if (!isStandalone && !dismissed) {
+          banner.style.display = 'block';
+        } else {
+          banner.style.display = 'none';
+        }
+      }
     }
 
     function setScreen(screen) {
@@ -562,6 +686,80 @@
             <button class="btn-primary" style="flex: 1;" onclick="confirmAbsolution()">Sim, Fui Absolvido</button>
           </div>
         `;
+      } else if (type === 'install-guide') {
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div class="rubric">APLICATIVO NATIVO PWA</div>
+            <div style="font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700;">Instalar na Tela Inicial</div>
+            <div style="font-size: 12.5px; color: #A8A29E; margin-top: 3px;">Use em tela cheia, sem barra do navegador e 100% offline</div>
+          </div>
+
+          <!-- Tabs iOS / Android -->
+          <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;">
+            <button class="pill-cat ${currentInstallOS === 'ios' ? 'active' : ''}" onclick="openInstallGuide('ios')">
+               iPhone (iOS Safari)
+            </button>
+            <button class="pill-cat ${currentInstallOS === 'android' ? 'active' : ''}" onclick="openInstallGuide('android')">
+              🤖 Android (Chrome)
+            </button>
+          </div>
+
+          ${currentInstallOS === 'ios' ? `
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+              <div class="card" style="margin: 0; background: rgba(255,255,255,0.04); display: flex; gap: 12px; align-items: center;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #38BDF8; flex-shrink: 0;">⎋</div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600; color: #FFF;">1. Toque em Compartilhar</div>
+                  <div style="font-size: 12px; color: #A8A29E;">No Safari do iPhone, toque no botão Compartilhar (o ícone de quadrado com seta para cima na barra inferior).</div>
+                </div>
+              </div>
+
+              <div class="card" style="margin: 0; background: rgba(255,255,255,0.04); display: flex; gap: 12px; align-items: center;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #F59E0B; flex-shrink: 0;">⊞</div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600; color: #FFF;">2. Adicionar à Tela de Início</div>
+                  <div style="font-size: 12px; color: #A8A29E;">Role para baixo no menu e toque na opção "Adicionar à Tela de Início".</div>
+                </div>
+              </div>
+
+              <div class="card" style="margin: 0; background: rgba(255,255,255,0.04); display: flex; gap: 12px; align-items: center;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #10B981; flex-shrink: 0;">✓</div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600; color: #FFF;">3. Confirmar e Usar</div>
+                  <div style="font-size: 12px; color: #A8A29E;">Toque em "Adicionar" no topo direito. Pronto! O app abrirá como aplicativo nativo em tela cheia.</div>
+                </div>
+              </div>
+            </div>
+          ` : `
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+              <div class="card" style="margin: 0; background: rgba(255,255,255,0.04); display: flex; gap: 12px; align-items: center;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #38BDF8; flex-shrink: 0;">⋮</div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600; color: #FFF;">1. Menu do Navegador</div>
+                  <div style="font-size: 12px; color: #A8A29E;">No Google Chrome do Android, toque no menu de 3 pontinhos no canto superior.</div>
+                </div>
+              </div>
+
+              <div class="card" style="margin: 0; background: rgba(255,255,255,0.04); display: flex; gap: 12px; align-items: center;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #F59E0B; flex-shrink: 0;">⬇</div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600; color: #FFF;">2. Instalar Aplicativo</div>
+                  <div style="font-size: 12px; color: #A8A29E;">Toque em "Instalar aplicativo" ou "Adicionar à tela inicial".</div>
+                </div>
+              </div>
+
+              <div class="card" style="margin: 0; background: rgba(255,255,255,0.04); display: flex; gap: 12px; align-items: center;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #10B981; flex-shrink: 0;">✓</div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600; color: #FFF;">3. Confirmar</div>
+                  <div style="font-size: 12px; color: #A8A29E;">Confirme a instalação. O ícone aparecerá na sua tela inicial funcionando offline.</div>
+                </div>
+              </div>
+            </div>
+          `}
+
+          <button class="btn-primary" onclick="closeSheet()">Compreendi</button>
+        `;
       }
 
       overlay.classList.add('active');
@@ -637,6 +835,18 @@
               <div style="font-size: 15.5px; font-weight: 600; color: #FFF; margin-bottom: 4px;">Os 5 Passos da Boa Confissão</div>
               <div style="font-size: 12.5px; color: #A8A29E; line-height: 1.45;">
                 1. Exame · 2. Dor / Contrição · 3. Propósito firme · 4. Confissão oral · 5. Penitência.
+              </div>
+            </div>
+
+            <!-- Como Instalar no Celular PWA -->
+            <div class="card card-interactive" onclick="openInstallGuide()" style="border-left: 3px solid #D4AF37;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div class="rubric" style="margin-bottom: 2px;">TELA INICIAL & OFFLINE</div>
+                  <div style="font-weight: 600; font-size: 15px; color: #FFF;">Como Instalar no Celular</div>
+                  <div style="font-size: 12px; color: #A8A29E; margin-top: 2px;">Adicione ao iPhone ou Android para usar em tela cheia</div>
+                </div>
+                <span style="font-size: 22px; color: #D4AF37;">📲</span>
               </div>
             </div>
 
@@ -842,6 +1052,7 @@
 
     // Initial Render
     render();
+    checkInstallBanner();
   </script>
 </body>
 </html>
