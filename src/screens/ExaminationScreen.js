@@ -194,8 +194,8 @@ export default function ExaminationScreen({
                   {isSelected && (
                     <Ionicons
                       name="checkmark"
-                      size={16}
-                      color={CandlelightPalette.obsidian}
+                      size={15}
+                      color="#000000"
                     />
                   )}
                 </View>
@@ -309,7 +309,7 @@ export default function ExaminationScreen({
               style={styles.customAddBtn}
               activeOpacity={0.7}
             >
-              <Ionicons name="add" size={24} color={CandlelightPalette.obsidian} />
+              <Ionicons name="add" size={24} color="#000000" />
             </TouchableOpacity>
           </View>
 
@@ -347,24 +347,11 @@ export default function ExaminationScreen({
             activeOpacity={0.9}
             style={styles.floatingButtonOuter}
           >
-            <LinearGradient
-              colors={[CandlelightPalette.warmAmber, CandlelightPalette.sacredBronze]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.floatingButton}
-            >
-              {/* Top specular highlight */}
-              <LinearGradient
-                colors={['rgba(255, 255, 255, 0.85)', 'rgba(255, 255, 255, 0.20)', 'transparent']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0.95, y: 0 }}
-                style={styles.btnSpecularBar}
-              />
-
+            <View style={styles.floatingButton}>
               <Ionicons
                 name="shield-checkmark"
-                size={22}
-                color={CandlelightPalette.obsidian}
+                size={20}
+                color="#000000"
                 style={{ marginRight: 10 }}
               />
               <Text style={styles.floatingButtonText}>
@@ -372,10 +359,10 @@ export default function ExaminationScreen({
               </Text>
               <Ionicons
                 name="arrow-forward"
-                size={20}
-                color={CandlelightPalette.obsidian}
+                size={18}
+                color="#000000"
               />
-            </LinearGradient>
+            </View>
           </TouchableOpacity>
         </View>
       )}
@@ -453,15 +440,14 @@ const styles = StyleSheet.create({
   categoryTitle: {
     fontFamily: Typography.title,
     fontSize: 20,
-    color: CandlelightPalette.warmAmber,
-    letterSpacing: 1,
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
     marginBottom: 4,
   },
   categorySubtitle: {
     fontFamily: Typography.serif,
     fontSize: 14,
-    color: CandlelightPalette.parchment,
-    opacity: 0.85,
+    color: CandlelightPalette.mutedText,
     fontStyle: 'italic',
   },
   questionCard: {
@@ -476,32 +462,32 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 6,
     borderWidth: 1.5,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     marginTop: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: '#141418',
   },
   checkboxSelected: {
-    backgroundColor: CandlelightPalette.warmAmber,
-    borderColor: CandlelightPalette.warmAmber,
+    backgroundColor: '#F5F5F4',
+    borderColor: '#FFFFFF',
   },
   questionText: {
     flex: 1,
     fontFamily: Typography.serif,
     fontSize: 15,
-    color: CandlelightPalette.ivory,
+    color: '#E7E5E4',
     lineHeight: 22,
   },
   questionTextSelected: {
-    color: CandlelightPalette.parchment,
+    color: '#FFFFFF',
   },
   noteFieldContainer: {
     marginTop: 12,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(245, 158, 11, 0.15)',
+    borderTopColor: '#222226',
   },
   noteInputRow: {
     flexDirection: 'row',
@@ -511,7 +497,7 @@ const styles = StyleSheet.create({
     width: 3,
     height: 28,
     borderRadius: 2,
-    backgroundColor: CandlelightPalette.warmAmber,
+    backgroundColor: '#F5F5F4',
     marginRight: 10,
   },
   noteInput: {
@@ -537,14 +523,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: '#141418',
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
   },
   quickFreqPillText: {
     fontSize: 11,
     fontFamily: Typography.subheading,
-    color: CandlelightPalette.parchment,
+    color: CandlelightPalette.mutedText,
   },
   stepNavRow: {
     flexDirection: 'row',
@@ -559,15 +545,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 14,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 12,
+    backgroundColor: '#141418',
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
   },
   stepNavTextSecondary: {
     fontSize: 13,
     fontFamily: Typography.subheading,
-    color: CandlelightPalette.parchment,
+    color: CandlelightPalette.mutedText,
     marginLeft: 4,
   },
   stepNavBtnPrimary: {
@@ -577,15 +563,15 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingVertical: 10,
     paddingHorizontal: 14,
-    borderRadius: 14,
-    backgroundColor: 'rgba(245, 158, 11, 0.10)',
+    borderRadius: 12,
+    backgroundColor: '#18181C',
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: '#28282E',
   },
   stepNavTextPrimary: {
     fontSize: 13,
     fontFamily: Typography.subheading,
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
     marginRight: 4,
   },
   customSectionCard: {
@@ -615,27 +601,27 @@ const styles = StyleSheet.create({
   customInput: {
     flex: 1,
     height: 44,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 14,
+    backgroundColor: '#141418',
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
     paddingHorizontal: 14,
     fontSize: 13,
     fontFamily: Typography.serif,
-    color: CandlelightPalette.ivory,
+    color: '#FFFFFF',
   },
   customAddBtn: {
     width: 44,
     height: 44,
-    borderRadius: 14,
-    backgroundColor: CandlelightPalette.warmAmber,
+    borderRadius: 12,
+    backgroundColor: '#F5F5F4',
     alignItems: 'center',
     justifyContent: 'center',
   },
   customEntriesList: {
     marginTop: 12,
     borderTopWidth: 1,
-    borderTopColor: CandlelightPalette.borderDefault,
+    borderTopColor: '#222226',
     paddingTop: 8,
   },
   customEntryItem: {
@@ -644,7 +630,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   customEntryBullet: {
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
     fontSize: 16,
     marginRight: 8,
   },
@@ -665,36 +651,28 @@ const styles = StyleSheet.create({
   },
   floatingButtonOuter: {
     width: '100%',
-    borderRadius: 24,
+    borderRadius: 14,
     overflow: 'hidden',
-    shadowColor: CandlelightPalette.warmAmber,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.75,
-    shadowRadius: 28,
-    elevation: 12,
-    borderWidth: 1.3,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
-    borderTopColor: '#FFFFFF',
-    borderBottomColor: 'rgba(217, 119, 6, 0.70)',
+    backgroundColor: '#F5F5F4',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
   },
   floatingButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    position: 'relative',
-  },
-  btnSpecularBar: {
-    position: 'absolute',
-    top: 0,
-    left: 14,
-    right: 14,
-    height: 1.5,
+    paddingVertical: 15,
+    backgroundColor: '#F5F5F4',
   },
   floatingButtonText: {
     fontFamily: Typography.title,
-    fontSize: 15,
+    fontSize: 14.5,
     letterSpacing: 0.8,
-    color: CandlelightPalette.obsidian,
+    color: '#000000',
   },
 });

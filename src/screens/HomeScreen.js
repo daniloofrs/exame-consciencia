@@ -195,24 +195,11 @@ export default function HomeScreen({
           activeOpacity={0.85}
           style={styles.primaryButtonOuter}
         >
-          <LinearGradient
-            colors={[CandlelightPalette.warmAmber, CandlelightPalette.sacredBronze]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.primaryButton}
-          >
-            {/* Top liquid specular highlight */}
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.85)', 'rgba(255, 255, 255, 0.20)', 'transparent']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0.95, y: 0 }}
-              style={styles.btnSpecularBar}
-            />
-
+          <View style={styles.primaryButton}>
             <Ionicons
               name="reader-outline"
-              size={24}
-              color={CandlelightPalette.obsidian}
+              size={22}
+              color="#000000"
               style={{ marginRight: 12 }}
             />
             <View style={{ flex: 1 }}>
@@ -227,10 +214,10 @@ export default function HomeScreen({
             </View>
             <Ionicons
               name="arrow-forward-circle"
-              size={26}
-              color={CandlelightPalette.obsidian}
+              size={24}
+              color="#000000"
             />
-          </LinearGradient>
+          </View>
         </TouchableOpacity>
 
         {totalSelected > 0 && (
@@ -584,42 +571,35 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   primaryButtonOuter: {
-    borderRadius: 24,
+    borderRadius: 14,
     overflow: 'hidden',
-    shadowColor: CandlelightPalette.warmAmber,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.75,
-    shadowRadius: 28,
-    elevation: 12,
-    borderWidth: 1.3,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
-    borderTopColor: '#FFFFFF',
-    borderBottomColor: 'rgba(217, 119, 6, 0.70)',
+    backgroundColor: '#F5F5F4',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
   },
   primaryButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 16,
     paddingHorizontal: 18,
-    position: 'relative',
-  },
-  btnSpecularBar: {
-    position: 'absolute',
-    top: 0,
-    left: 12,
-    right: 12,
-    height: 1.5,
+    backgroundColor: '#F5F5F4',
   },
   primaryButtonText: {
-    fontSize: 16,
+    fontSize: 15.5,
     fontFamily: Typography.title,
     letterSpacing: 0.8,
-    color: CandlelightPalette.obsidian,
+    color: '#000000',
   },
   primaryButtonSubtext: {
     fontSize: 11,
-    color: 'rgba(7, 8, 13, 0.80)',
+    color: '#44403C',
     marginTop: 2,
+    fontFamily: Typography.sans,
   },
   confessionalShortcutRow: {
     flexDirection: 'row',
@@ -633,7 +613,7 @@ const styles = StyleSheet.create({
   },
   shortcutSubtext: {
     fontSize: 12,
-    color: CandlelightPalette.warmAmber,
+    color: CandlelightPalette.mutedText,
     marginTop: 2,
   },
   footer: {
@@ -652,7 +632,7 @@ const styles = StyleSheet.create({
   },
   modalBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.82)',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -660,10 +640,10 @@ const styles = StyleSheet.create({
   stepsModalContainer: {
     width: '100%',
     maxHeight: '82%',
-    backgroundColor: '#0E1118',
-    borderRadius: 24,
+    backgroundColor: '#0C0C0E',
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: '#222226',
     padding: 22,
   },
   modalHeaderRow: {
@@ -675,7 +655,7 @@ const styles = StyleSheet.create({
     fontFamily: Typography.title,
     fontSize: 14,
     letterSpacing: 1.2,
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
   },
   modalCloseBtn: {
     padding: 4,
@@ -699,9 +679,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    backgroundColor: '#18181B',
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: '#27272A',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -710,7 +690,7 @@ const styles = StyleSheet.create({
   stepNumberText: {
     fontFamily: Typography.title,
     fontSize: 12,
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
   },
   stepItemTitle: {
     fontFamily: Typography.subheading,
@@ -726,23 +706,23 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   stepsUnderstoodBtn: {
-    backgroundColor: CandlelightPalette.warmAmber,
-    paddingVertical: 12,
-    borderRadius: 16,
+    backgroundColor: '#F5F5F4',
+    paddingVertical: 13,
+    borderRadius: 12,
     alignItems: 'center',
   },
   stepsUnderstoodBtnText: {
     fontFamily: Typography.title,
     fontSize: 13,
     letterSpacing: 0.8,
-    color: CandlelightPalette.obsidian,
+    color: '#000000',
   },
   modalContainer: {
     width: '100%',
-    backgroundColor: '#0E1118',
-    borderRadius: 24,
+    backgroundColor: '#0C0C0E',
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: '#222226',
     padding: 24,
     alignItems: 'center',
   },
@@ -763,11 +743,11 @@ const styles = StyleSheet.create({
   daysInput: {
     width: '100%',
     height: 52,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 16,
+    backgroundColor: '#141418',
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
-    color: CandlelightPalette.ivory,
+    borderColor: '#26262B',
+    color: '#FFFFFF',
     fontSize: 22,
     fontFamily: Typography.subheading,
     textAlign: 'center',
@@ -783,22 +763,23 @@ const styles = StyleSheet.create({
   quickDayPill: {
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 10,
+    backgroundColor: '#141418',
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
   },
   quickDayPillActive: {
-    backgroundColor: 'rgba(245, 158, 11, 0.20)',
-    borderColor: CandlelightPalette.warmAmber,
+    backgroundColor: '#F5F5F4',
+    borderColor: '#FFFFFF',
   },
   quickDayText: {
     fontSize: 13,
-    color: CandlelightPalette.parchment,
+    color: CandlelightPalette.mutedText,
   },
   quickDayTextActive: {
-    color: CandlelightPalette.warmAmber,
+    color: '#000000',
     fontFamily: Typography.subheading,
+    fontWeight: '700',
   },
   modalActionsRow: {
     flexDirection: 'row',
@@ -808,26 +789,28 @@ const styles = StyleSheet.create({
   modalCancelBtn: {
     flex: 1,
     paddingVertical: 13,
-    borderRadius: 16,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
+    backgroundColor: '#141418',
     alignItems: 'center',
   },
   modalCancelText: {
     fontSize: 14,
-    color: CandlelightPalette.parchment,
+    color: CandlelightPalette.mutedText,
   },
   modalConfirmBtn: {
     flex: 1,
     paddingVertical: 13,
-    borderRadius: 16,
-    backgroundColor: CandlelightPalette.warmAmber,
+    borderRadius: 12,
+    backgroundColor: '#F5F5F4',
     alignItems: 'center',
   },
   modalConfirmText: {
     fontSize: 14,
     fontFamily: Typography.subheading,
-    color: CandlelightPalette.obsidian,
+    color: '#000000',
+    fontWeight: '700',
   },
   clearDateBtn: {
     marginTop: 14,

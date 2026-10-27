@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratório de Estéticas — Exame de Consciência</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #090A0F;
+      color: #E2E8F0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 80px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      max-width: 700px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #F59E0B;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 26px;
+      color: #F8FAFC;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: #94A3B8;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Theme Switcher Bar */
+    .controls-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 900px;
+    }
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .theme-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #CBD5E1;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .theme-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .theme-btn.active {
+      background: #F59E0B;
+      color: #07080D;
+      border-color: #F59E0B;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+
+    .screen-tab-group {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 4px;
+    }
+    .screen-tab {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      padding: 7px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .screen-tab.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: #F8FAFC;
+    }
+
+    /* iPhone Frame */
+    .phone-container {
+      position: relative;
+      width: 375px;
+      height: 780px;
+      border-radius: 50px;
+      background: #000;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 10px #1E212B, 0 0 0 12px #333846;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 30px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+    .sensor-dot {
+      width: 9px;
+      height: 9px;
+      background: #070B18;
+      border-radius: 50%;
+    }
+    .camera-dot {
+      width: 10px;
+      height: 10px;
+      background: #0D162E;
+      border-radius: 50%;
+    }
+
+    /* Screen Inner */
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 55px 18px 30px;
+      position: relative;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .screen-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* THEME 1: VELLUM (Missal Antigo / Pergaminho) */
+    .theme-vellum {
+      background: #F4EFE2 !important;
+      color: #1F1914 !important;
+    }
+    .theme-vellum .card {
+      background: #EAE3D2;
+      border: 1px solid #D6C9B2;
+      border-top: 2px solid #8B1E1E;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-radius: 6px;
+    }
+    .theme-vellum h2, .theme-vellum .title {
+      font-family: 'Cinzel', serif;
+      color: #1F1914;
+    }
+    .theme-vellum .rubric {
+      color: #991B1B;
+      font-family: 'EB Garamond', serif;
+      font-weight: 600;
+    }
+    .theme-vellum .body-text {
+      font-family: 'EB Garamond', serif;
+      font-size: 16px;
+      line-height: 1.45;
+      color: #29231D;
+    }
+    .theme-vellum .btn-primary {
+      background: #8B1E1E;
+      color: #FBF8F2;
+      border: 1px solid #6E1616;
+      border-radius: 6px;
+      font-family: 'Cinzel', serif;
+      box-shadow: 0 3px 8px rgba(139, 30, 30, 0.25);
+    }
+    .theme-vellum .pill-cat {
+      background: #E5DDCA;
+      border: 1px solid #CEBF9F;
+      color: #383027;
+      border-radius: 4px;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+    }
+    .theme-vellum .pill-cat.active {
+      background: #8B1E1E;
+      color: #FFF;
+      border-color: #8B1E1E;
+    }
+    .theme-vellum .rule-double {
+      border-top: 3px double #A89B83;
+      margin: 12px 0;
+    }
+
+    /* THEME 2: BASÍLICA (Pedra Ardósia & Bronze) */
+    .theme-basilica {
+      background: #0E0F13 !important;
+      color: #E2E8F0 !important;
+    }
+    .theme-basilica .card {
+      background: #181921;
+      border: 1px solid #2B2D3B;
+      border-left: 3px solid #D97706;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .theme-basilica h2, .theme-basilica .title {
+      font-family: 'Cinzel', serif;
+      color: #F8FAFC;
+      letter-spacing: 1.5px;
+    }
+    .theme-basilica .rubric {
+      color: #D97706;
+      font-weight: 600;
+    }
+    .theme-basilica .body-text {
+      font-family: 'EB Garamond', serif;
+      font-size: 16px;
+      color: #CBD5E1;
+    }
+    .theme-basilica .btn-primary {
+      background: #B45309;
+      color: #0B0D11;
+      font-weight: 700;
+      border-radius: 12px;
+      font-family: 'Cinzel', serif;
+    }
+    .theme-basilica .pill-cat {
+      background: #1B1D26;
+      border: 1px solid #2F3244;
+      color: #94A3B8;
+      border-radius: 8px;
+    }
+    .theme-basilica .pill-cat.active {
+      background: #D97706;
+      color: #0E0F13;
+      border-color: #D97706;
+    }
+
+    /* THEME 3: BREVIÁRIO (Preto Absoluto & Marfim) */
+    .theme-breviario {
+      background: #000000 !important;
+      color: #F5F5F4 !important;
+    }
+    .theme-breviario .card {
+      background: #0A0A0A;
+      border: 1px solid #222222;
+      border-radius: 14px;
+    }
+    .theme-breviario h2, .theme-breviario .title {
+      font-family: 'Cinzel', serif;
+      color: #FFFFFF;
+      letter-spacing: 2px;
+    }
+    .theme-breviario .rubric {
+      color: #A8A29E;
+      font-style: italic;
+    }
+    .theme-breviario .body-text {
+      font-family: 'EB Garamond', serif;
+      font-size: 16.5px;
+      color: #E7E5E4;
+      line-height: 1.5;
+    }
+    .theme-breviario .btn-primary {
+      background: #F5F5F4;
+      color: #000;
+      font-weight: 700;
+      border-radius: 12px;
+      font-family: 'Cinzel', serif;
+    }
+    .theme-breviario .pill-cat {
+      background: #121212;
+      border: 1px solid #282828;
+      color: #A8A29E;
+      border-radius: 8px;
+    }
+    .theme-breviario .pill-cat.active {
+      background: #FFF;
+      color: #000;
+      border-color: #FFF;
+    }
+
+    /* THEME 4: VIGÍLIA (Azul Meia-Noite & Prata Sacra) */
+    .theme-vigilia {
+      background: #060913 !important;
+      color: #E2E8F0 !important;
+    }
+    .theme-vigilia .card {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.8), 0 0 25px rgba(56, 189, 248, 0.1);
+    }
+    .theme-vigilia h2, .theme-vigilia .title {
+      font-family: 'Cinzel', serif;
+      color: #F8FAFC;
+      letter-spacing: 1px;
+    }
+    .theme-vigilia .rubric {
+      color: #38BDF8;
+    }
+    .theme-vigilia .body-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14.5px;
+      color: #CBD5E1;
+      line-height: 1.5;
+    }
+    .theme-vigilia .btn-primary {
+      background: linear-gradient(135deg, #0284C7, #0369A1);
+      color: #FFF;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+    .theme-vigilia .pill-cat {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: #94A3B8;
+      border-radius: 999px;
+    }
+    .theme-vigilia .pill-cat.active {
+      background: #38BDF8;
+      color: #03132B;
+      font-weight: 700;
+      border-color: #38BDF8;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Common Card & Item Styles */
+    .card {
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: all 0.2s ease;
+    }
+    .cross-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 20px;
+    }
+    .header-center {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header-center .title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .header-center .subtitle {
+      font-size: 12px;
+      opacity: 0.8;
+      font-style: italic;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      text-align: center;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1.5px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .checkbox.checked {
+      background: currentColor;
+    }
+    .checkbox.checked::after {
+      content: '✓';
+      color: #fff;
+      font-size: 12px;
+    }
+    .dimmed {
+      opacity: 0.3 !important;
+      text-decoration: line-through;
+    }
+
+    /* Explanation Section */
+    .explanation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      max-width: 1100px;
+      width: 100%;
+      margin-top: 40px;
+    }
+    .expl-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .expl-card h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .expl-card p {
+      font-size: 13px;
+      color: #94A3B8;
+      line-height: 1.5;
+    }
+    .expl-card ul {
+      margin-top: 10px;
+      padding-left: 18px;
+      font-size: 12px;
+      color: #CBD5E1;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">Laboratório Visual Hallmark</div>
+    <h1>MOCKUPS DE ESTÉTICA SACRA</h1>
+    <p class="lead">Selecione abaixo o tema e a tela para visualizar ao vivo como o app se transforma no iPhone.</p>
+  </header>
+
+  <div class="controls-wrapper">
+    <!-- Estéticas -->
+    <div class="pill-group">
+      <button class="theme-btn active" onclick="setTheme('vellum', this)">
+        <span>📜</span> Vellum (Missal Antigo)
+      </button>
+      <button class="theme-btn" onclick="setTheme('basilica', this)">
+        <span>🏛️</span> Basílica (Pedra & Bronze)
+      </button>
+      <button class="theme-btn" onclick="setTheme('breviario', this)">
+        <span>📖</span> Breviário (Preto & Marfim)
+      </button>
+      <button class="theme-btn" onclick="setTheme('vigilia', this)">
+        <span>🌌</span> Vigília (Azul Meia-Noite)
+      </button>
+    </div>
+
+    <!-- Telas -->
+    <div class="screen-tab-group">
+      <button class="screen-tab active" onclick="setScreen('home', this)">1. Início</button>
+      <button class="screen-tab" onclick="setScreen('exam', this)">2. Exame (Mandamentos)</button>
+      <button class="screen-tab" onclick="setScreen('confession', this)">3. No Confessionário</button>
+    </div>
+  </div>
+
+  <!-- iPhone Frame -->
+  <div class="phone-container">
+    <div class="dynamic-island">
+      <div class="sensor-dot"></div>
+      <div class="camera-dot"></div>
+    </div>
+
+    <div id="screen" class="screen-content theme-vellum">
+      <!-- CONTEÚDO SERÁ RENDERIZADO VIA JAVASCRIPT -->
+    </div>
+  </div>
+
+  <!-- Cards Explicativos -->
+  <div class="explanation-grid">
+    <div class="expl-card">
+      <h3 style="color: #991B1B;">📜 1. Vellum (Missal Tradicional)</h3>
+      <p>Inspirado nos livros de oração clássicos da prensa de tipos móveis (Gutenberg/Plantin).</p>
+      <ul>
+        <li><strong>Fundo:</strong> Papel pergaminho quente e natural.</li>
+        <li><strong>Cores:</strong> Tinta preta sépia e rubricas em vermelho carmim.</li>
+        <li><strong>Sensação:</strong> Ler um missal litúrgico físico de alta nobreza.</li>
+      </ul>
+    </div>
+
+    <div class="expl-card">
+      <h3 style="color: #D97706;">🏛️ 2. Basílica (Pedra & Bronze)</h3>
+      <p>Inspirado na arquitetura de catedrais românicas e mosteiros beneditinos.</p>
+      <ul>
+        <li><strong>Fundo:</strong> Ardósia escura fosca de abadia.</li>
+        <li><strong>Cores:</strong> Bronze sacro e pedra cinza, sem neons.</li>
+        <li><strong>Sensação:</strong> Recolhimento, silêncio e firmeza monástica.</li>
+      </ul>
+    </div>
+
+    <div class="expl-card">
+      <h3 style="color: #F5F5F4;">📖 3. Breviário (Preto & Marfim)</h3>
+      <p>Inspirado nos breviários encadernados em couro negro do século XIX.</p>
+      <ul>
+        <li><strong>Fundo:</strong> Preto puro OLED (zero reflexos na igreja).</li>
+        <li><strong>Cores:</strong> Branco marfim límpido de altíssimo contraste.</li>
+        <li><strong>Sensação:</strong> Elegância atemporal, leitura impecável e discrição total.</li>
+      </ul>
+    </div>
+
+    <div class="expl-card">
+      <h3 style="color: #38BDF8;">🌌 4. Vigília (Azul Meia-Noite)</h3>
+      <p>Inspirado na oração contemplativa sob a luz da lua e vitrais sagrados.</p>
+      <ul>
+        <li><strong>Fundo:</strong> Azul meia-noite profundo.</li>
+        <li><strong>Cores:</strong> Prata límpida e toques de azul celestial.</li>
+        <li><strong>Sensação:</strong> Serenidade, paz e esperança pós-confissão.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let currentTheme = 'theme-vellum';
+    let currentScreen = 'home';
+    let item1Confessed = false;
+    let item2Confessed = true;
+
+    function setTheme(theme, btn) {
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const screen = document.getElementById('screen');
+      screen.className = 'screen-content theme-' + theme;
+      currentTheme = 'theme-' + theme;
+      render();
+    }
+
+    function setScreen(screenName, btn) {
+      document.querySelectorAll('.screen-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentScreen = screenName;
+      render();
+    }
+
+    function toggleConfess(id) {
+      if (id === 1) item1Confessed = !item1Confessed;
+      if (id === 2) item2Confessed = !item2Confessed;
+      render();
+    }
+
+    function render() {
+      const container = document.getElementById('screen');
+      if (currentScreen === 'home') {
+        container.innerHTML = `
+          <div class="header-center">
+            <div class="cross-badge rubric">†</div>
+            <div class="title">EXAME DE CONSCIÊNCIA</div>
+            <div class="subtitle rubric">«Cor contritum et humiliatum, Deus, non despicies»</div>
+          </div>
+
+          <div class="card">
+            <div class="rubric" style="font-size: 11px; letter-spacing: 1px; margin-bottom: 4px;">ÚLTIMA CONFISSÃO</div>
+            <div class="title" style="font-size: 17px; margin-bottom: 2px;">12 de Outubro de 2026</div>
+            <div class="body-text" style="font-size: 12px; opacity: 0.7;">Há cerca de 2 semanas</div>
+          </div>
+
+          <div class="card">
+            <div class="rubric" style="font-size: 13px; margin-bottom: 4px;">Os 5 Passos da Boa Confissão</div>
+            <div class="body-text" style="font-size: 12px;">Exame, Contrição, Firme Propósito, Confissão e Penitência.</div>
+          </div>
+
+          <div class="card">
+            <div class="rubric" style="font-size: 13px; margin-bottom: 4px;">Oração ao Espírito Santo</div>
+            <div class="body-text" style="font-style: italic; font-size: 13px;">
+              “Vinde, Espírito Santo, iluminai a minha inteligência para que eu conheça os meus pecados...”
+            </div>
+          </div>
+
+          <div class="btn-primary" onclick="setScreen('exam', document.querySelectorAll('.screen-tab')[1])">
+            INICIAR EXAME DE CONSCIÊNCIA
+          </div>
+        `;
+      } else if (currentScreen === 'exam') {
+        container.innerHTML = `
+          <div class="header-center">
+            <div class="rubric" style="font-size: 11px; letter-spacing: 1.5px;">EXAME SACRAMENTAL</div>
+            <div class="title" style="font-size: 17px;">1º MANDAMENTO</div>
+            <div class="subtitle">Amar a Deus sobre todas as coisas</div>
+          </div>
+
+          <div style="display: flex; gap: 6px; overflow-x: auto; margin-bottom: 14px; padding-bottom: 4px;">
+            <div class="pill-cat active" style="padding: 6px 12px; flex-shrink: 0;">1º Mandamento</div>
+            <div class="pill-cat" style="padding: 6px 12px; flex-shrink: 0;">2º Mandamento</div>
+            <div class="pill-cat" style="padding: 6px 12px; flex-shrink: 0;">3º Mandamento</div>
+          </div>
+
+          <div class="card item-row">
+            <div class="checkbox checked"></div>
+            <div>
+              <div class="body-text">Negligenciei minha oração diária com distração voluntária e frieza de coração?</div>
+              <div class="rubric" style="font-size: 11px; margin-top: 6px;">Frequência: Várias vezes</div>
+            </div>
+          </div>
+
+          <div class="card item-row">
+            <div class="checkbox"></div>
+            <div>
+              <div class="body-text">Duvidei deliberadamente de alguma verdade da Fé ensinada pela Santa Igreja?</div>
+            </div>
+          </div>
+
+          <div class="card item-row">
+            <div class="checkbox checked"></div>
+            <div>
+              <div class="body-text">Pratiquei ou consultei superstições, horóscopos ou amuletos?</div>
+              <div class="rubric" style="font-size: 11px; margin-top: 6px;">Frequência: 1x</div>
+            </div>
+          </div>
+
+          <div class="btn-primary" onclick="setScreen('confession', document.querySelectorAll('.screen-tab')[2])">
+            NO CONFESSIONÁRIO (2 PECADOS)
+          </div>
+        `;
+      } else if (currentScreen === 'confession') {
+        container.innerHTML = `
+          <div class="header-center">
+            <div class="rubric" style="font-size: 11px; letter-spacing: 1.5px;">DIANTE DO SACERDOTE</div>
+            <div class="title" style="font-size: 17px;">NO CONFESSIONÁRIO</div>
+          </div>
+
+          <div class="card">
+            <div class="rubric" style="font-size: 11px; letter-spacing: 1px; margin-bottom: 4px;">ROTEIRO DE ENTRADA</div>
+            <div class="body-text" style="font-style: italic; font-size: 13.5px;">
+              “Abençoai-me, Padre, porque pequei. Minha última confissão foi há cerca de 2 semanas. Estes são os meus pecados:”
+            </div>
+          </div>
+
+          <div style="font-size: 11px; opacity: 0.6; margin: 10px 4px 6px;">Toque no pecado para velar após confessar:</div>
+
+          <div class="card item-row ${item1Confessed ? 'dimmed' : ''}" onclick="toggleConfess(1)">
+            <div class="rubric" style="font-size: 14px;">${item1Confessed ? '✓' : '•'}</div>
+            <div>
+              <div class="rubric" style="font-size: 10px;">1º MANDAMENTO</div>
+              <div class="body-text">Negligenciei oração diária com distração (Várias vezes).</div>
+            </div>
+          </div>
+
+          <div class="card item-row ${item2Confessed ? 'dimmed' : ''}" onclick="toggleConfess(2)">
+            <div class="rubric" style="font-size: 14px;">${item2Confessed ? '✓' : '•'}</div>
+            <div>
+              <div class="rubric" style="font-size: 10px;">1º MANDAMENTO</div>
+              <div class="body-text">Consultei horóscopos / superstições (1x).</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="rubric" style="font-size: 11px; letter-spacing: 1px; margin-bottom: 4px;">FÓRMULA DE CONCLUSÃO</div>
+            <div class="body-text" style="font-style: italic; font-size: 13px;">
+              “Destes pecados e de todos os que não me lembro, peço a Deus perdão e a vós, Padre, a penitência e a absolvição.”
+            </div>
+          </div>
+
+          <div class="btn-primary" style="margin-top: 10px;">
+            RECEBI A ABSOLVIÇÃO
+          </div>
+        `;
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>

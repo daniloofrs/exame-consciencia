@@ -3,127 +3,65 @@ import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CandlelightPalette } from '../theme/colors';
 
+/**
+ * BreviarioBackground: Fundo preto puro OLED (#000000) com halo contemplativo
+ * extremamente sutil e suave, proporcionando máxima legibilidade e zero distração
+ * em ambientes de oração e penumbra sacramental.
+ */
 export default function CandlelightBackground({ children }) {
-  // Candle breathing animation
   const breatheAnim = useRef(new Animated.Value(0)).current;
-  const secondaryPulse = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Primary sanctuary candle flame
-    const loop1 = Animated.loop(
+    // Pulsação sutilíssima de contemplação (sem estresse visual)
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(breatheAnim, {
           toValue: 1,
-          duration: 3800,
+          duration: 4500,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
         Animated.timing(breatheAnim, {
           toValue: 0,
-          duration: 3600,
+          duration: 4500,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
       ])
     );
 
-    // Secondary subtle caustics pulse
-    const loop2 = Animated.loop(
-      Animated.sequence([
-        Animated.timing(secondaryPulse, {
-          toValue: 1,
-          duration: 4800,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: true,
-        }),
-        Animated.timing(secondaryPulse, {
-          toValue: 0,
-          duration: 4400,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: true,
-        }),
-      ])
-    );
+    loop.start();
+    return () => loop.stop();
+  }, [breatheAnim]);
 
-    loop1.start();
-    loop2.start();
-
-    return () => {
-      loop1.stop();
-      loop2.stop();
-    };
-  }, [breatheAnim, secondaryPulse]);
-
-  const candleScale = breatheAnim.interpolate({
+  const haloOpacity = breatheAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [1.0, 1.09],
-  });
-
-  const candleOpacity = breatheAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.70, 0.98],
-  });
-
-  const secondaryOpacity = secondaryPulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.35, 0.65],
+    outputRange: [0.35, 0.60],
   });
 
   return (
     <View style={styles.container}>
-      {/* Base deep obsidian floor */}
-      <LinearGradient
-        colors={[
-          '#06070B',
-          '#090B12',
-          '#06070B',
-        ]}
-        style={StyleSheet.absoluteFill}
-      />
+      {/* Fundo Preto OLED Absoluto */}
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]} />
 
-      {/* Primary Candlelight Organic Halo (Top-Left Sacrarium Glow) */}
+      {/* Sutilíssimo halo de presença sacra no topo */}
       <Animated.View
         style={[
           StyleSheet.absoluteFill,
           {
-            opacity: candleOpacity,
-            transform: [{ scale: candleScale }],
+            opacity: haloOpacity,
           },
         ]}
         pointerEvents="none"
       >
         <LinearGradient
           colors={[
-            'rgba(245, 158, 11, 0.20)',
-            'rgba(217, 119, 6, 0.08)',
-            'rgba(120, 53, 15, 0.02)',
+            'rgba(245, 245, 244, 0.035)',
+            'rgba(212, 175, 55, 0.015)',
             'transparent',
           ]}
-          start={{ x: 0.15, y: 0.0 }}
-          end={{ x: 0.9, y: 0.7 }}
-          style={StyleSheet.absoluteFill}
-        />
-      </Animated.View>
-
-      {/* Secondary Sacred Bronze Caustics (Bottom-Right Ember Flow) */}
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            opacity: secondaryOpacity,
-          },
-        ]}
-        pointerEvents="none"
-      >
-        <LinearGradient
-          colors={[
-            'transparent',
-            'rgba(217, 119, 6, 0.07)',
-            'rgba(245, 158, 11, 0.04)',
-            'transparent',
-          ]}
-          start={{ x: 0.05, y: 0.55 }}
-          end={{ x: 1.0, y: 1.0 }}
+          start={{ x: 0.5, y: 0.0 }}
+          end={{ x: 0.5, y: 0.45 }}
           style={StyleSheet.absoluteFill}
         />
       </Animated.View>
@@ -136,6 +74,6 @@ export default function CandlelightBackground({ children }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#06070B',
+    backgroundColor: '#000000',
   },
 });

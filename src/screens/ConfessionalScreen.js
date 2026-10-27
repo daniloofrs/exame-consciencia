@@ -177,14 +177,9 @@ export default function ConfessionalScreen({
             style={styles.peaceReturnBtn}
             activeOpacity={0.85}
           >
-            <LinearGradient
-              colors={[CandlelightPalette.warmAmber, CandlelightPalette.sacredBronze]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.peaceReturnGradient}
-            >
+            <View style={styles.peaceReturnGradient}>
               <Text style={styles.peaceReturnBtnText}>Voltar à Paz de Cristo</Text>
-            </LinearGradient>
+            </View>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -304,7 +299,7 @@ export default function ConfessionalScreen({
                       <Ionicons
                         name="checkmark"
                         size={14}
-                        color={CandlelightPalette.warmAmber}
+                        color="#000000"
                       />
                     ) : (
                       <View style={styles.veilCircleDot} />
@@ -389,7 +384,7 @@ export default function ConfessionalScreen({
                       <Ionicons
                         name="checkmark"
                         size={14}
-                        color={CandlelightPalette.warmAmber}
+                        color="#000000"
                       />
                     ) : (
                       <View style={styles.veilCircleDot} />
@@ -506,30 +501,17 @@ export default function ConfessionalScreen({
             activeOpacity={0.85}
             style={styles.absolutionButtonOuter}
           >
-            <LinearGradient
-              colors={[CandlelightPalette.warmAmber, CandlelightPalette.sacredBronze]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.absolutionButton}
-            >
-              {/* Top liquid specular highlight */}
-              <LinearGradient
-                colors={['rgba(255, 255, 255, 0.85)', 'rgba(255, 255, 255, 0.20)', 'transparent']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0.95, y: 0 }}
-                style={styles.btnSpecularBar}
-              />
-
+            <View style={styles.absolutionButton}>
               <Ionicons
                 name="shield-checkmark"
-                size={22}
-                color={CandlelightPalette.obsidian}
+                size={20}
+                color="#000000"
                 style={{ marginRight: 10 }}
               />
               <Text style={styles.absolutionButtonText}>
                 Recebi a Absolvição
               </Text>
-            </LinearGradient>
+            </View>
           </TouchableOpacity>
           <Text style={styles.absolutionNotice}>
             Ao receber a absolvição sacramental, todos os pecados anotados são permanentemente destruídos do aparelho.
@@ -611,19 +593,20 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
   },
   textSizeBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+    backgroundColor: '#141418',
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
     alignItems: 'center',
     justifyContent: 'center',
   },
   textSizeBtnText: {
     fontSize: 12,
     fontFamily: Typography.subheading,
-    color: CandlelightPalette.warmAmber,
+    color: '#F5F5F4',
+    fontWeight: '700',
   },
   scrollView: {
     flex: 1,
@@ -644,12 +627,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: Typography.title,
     letterSpacing: 1.2,
-    color: CandlelightPalette.warmAmber,
+    color: '#A8A29E',
   },
   greetingText: {
     fontFamily: Typography.serif,
     fontSize: 14,
-    color: CandlelightPalette.parchment,
+    color: '#E7E5E4',
     lineHeight: 21,
     fontStyle: 'italic',
   },
@@ -664,7 +647,7 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: {
     fontFamily: Typography.title,
     fontSize: 16,
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
     letterSpacing: 0.8,
   },
   sectionHeaderHint: {
@@ -695,10 +678,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   confessItemCard: {
-    borderRadius: 16,
+    borderRadius: 14,
   },
   confessItemCardDimmed: {
-    opacity: 0.30,
+    opacity: 0.25,
   },
   confessItemRow: {
     flexDirection: 'row',
@@ -709,42 +692,42 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 11,
     borderWidth: 1.5,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: '#26262B',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     marginTop: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: '#141418',
   },
   veilCircleDimmed: {
-    backgroundColor: 'rgba(245, 158, 11, 0.20)',
-    borderColor: CandlelightPalette.warmAmber,
+    backgroundColor: '#F5F5F4',
+    borderColor: '#FFFFFF',
   },
   veilCircleDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: CandlelightPalette.warmAmber,
+    backgroundColor: '#57534E',
   },
   commandmentBadge: {
     fontSize: 10,
     fontFamily: Typography.title,
-    color: CandlelightPalette.warmAmber,
+    color: '#A8A29E',
     letterSpacing: 0.8,
     marginBottom: 2,
   },
   confessItemText: {
     fontFamily: Typography.serif,
     fontSize: 15,
-    color: CandlelightPalette.ivory,
+    color: '#E7E5E4',
     lineHeight: 22,
   },
   confessItemTextDimmed: {
     textDecorationLine: 'line-through',
-    color: CandlelightPalette.dimmedText,
+    color: '#57534E',
   },
   textDimmed: {
-    color: CandlelightPalette.dimmedText,
+    color: '#57534E',
   },
   confessNoteRow: {
     flexDirection: 'row',
@@ -756,7 +739,7 @@ const styles = StyleSheet.create({
     fontFamily: Typography.serif,
     fontSize: 12,
     fontStyle: 'italic',
-    color: CandlelightPalette.parchment,
+    color: '#A8A29E',
   },
   closingCard: {
     marginTop: 12,
@@ -765,7 +748,7 @@ const styles = StyleSheet.create({
   closingText: {
     fontFamily: Typography.serif,
     fontSize: 13,
-    color: CandlelightPalette.parchment,
+    color: '#E7E5E4',
     lineHeight: 20,
     fontStyle: 'italic',
   },
@@ -789,7 +772,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: CandlelightPalette.borderDefault,
+    backgroundColor: '#222226',
     marginVertical: 12,
   },
   contritionBodyContainer: {
@@ -798,7 +781,7 @@ const styles = StyleSheet.create({
   contritionBodyText: {
     fontFamily: Typography.serif,
     fontSize: 14,
-    color: CandlelightPalette.parchment,
+    color: '#E7E5E4',
     lineHeight: 22,
     fontStyle: 'italic',
   },
@@ -808,37 +791,29 @@ const styles = StyleSheet.create({
   },
   absolutionButtonOuter: {
     width: '100%',
-    borderRadius: 24,
+    borderRadius: 14,
     overflow: 'hidden',
-    shadowColor: CandlelightPalette.warmAmber,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.75,
-    shadowRadius: 28,
-    elevation: 12,
-    borderWidth: 1.3,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
-    borderTopColor: '#FFFFFF',
-    borderBottomColor: 'rgba(217, 119, 6, 0.70)',
+    backgroundColor: '#F5F5F4',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
   },
   absolutionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    position: 'relative',
-  },
-  btnSpecularBar: {
-    position: 'absolute',
-    top: 0,
-    left: 14,
-    right: 14,
-    height: 1.5,
+    backgroundColor: '#F5F5F4',
   },
   absolutionButtonText: {
     fontFamily: Typography.title,
-    fontSize: 16,
+    fontSize: 15.5,
     letterSpacing: 1,
-    color: CandlelightPalette.obsidian,
+    color: '#000000',
   },
   absolutionNotice: {
     fontSize: 11,
@@ -858,10 +833,10 @@ const styles = StyleSheet.create({
   },
   confirmModalContainer: {
     width: '100%',
-    backgroundColor: '#0E1118',
-    borderRadius: 24,
+    backgroundColor: '#0C0C0E',
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: '#222226',
     padding: 24,
     alignItems: 'center',
   },
@@ -869,24 +844,24 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    backgroundColor: '#141418',
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: '#26262B',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
   },
   confirmModalTitle: {
     fontFamily: Typography.title,
-    fontSize: 16,
+    fontSize: 15,
     letterSpacing: 1.5,
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
     marginBottom: 8,
   },
   confirmModalSubtitle: {
     fontSize: 14,
     fontFamily: Typography.serif,
-    color: CandlelightPalette.ivory,
+    color: '#E7E5E4',
     textAlign: 'center',
     marginBottom: 12,
     lineHeight: 20,
@@ -906,26 +881,28 @@ const styles = StyleSheet.create({
   modalCancelBtn: {
     flex: 1,
     paddingVertical: 13,
-    borderRadius: 16,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: CandlelightPalette.borderDefault,
+    borderColor: '#26262B',
+    backgroundColor: '#141418',
     alignItems: 'center',
   },
   modalCancelText: {
     fontSize: 14,
-    color: CandlelightPalette.parchment,
+    color: CandlelightPalette.mutedText,
   },
   modalConfirmBtn: {
     flex: 1,
     paddingVertical: 13,
-    borderRadius: 16,
-    backgroundColor: CandlelightPalette.warmAmber,
+    borderRadius: 12,
+    backgroundColor: '#F5F5F4',
     alignItems: 'center',
   },
   modalConfirmText: {
     fontFamily: Typography.subheading,
     fontSize: 14,
-    color: CandlelightPalette.obsidian,
+    color: '#000000',
+    fontWeight: '700',
   },
   peaceContainer: {
     flex: 1,
@@ -939,9 +916,9 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: 'rgba(245, 158, 11, 0.18)',
+    backgroundColor: '#141418',
     borderWidth: 1,
-    borderColor: CandlelightPalette.warmAmber,
+    borderColor: '#26262B',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 18,
@@ -950,7 +927,7 @@ const styles = StyleSheet.create({
     fontFamily: Typography.title,
     fontSize: 20,
     letterSpacing: 2,
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -958,7 +935,7 @@ const styles = StyleSheet.create({
     fontFamily: Typography.serif,
     fontSize: 16,
     fontStyle: 'italic',
-    color: CandlelightPalette.ivory,
+    color: '#E7E5E4',
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 24,
@@ -976,12 +953,12 @@ const styles = StyleSheet.create({
   thanksgivingTitle: {
     fontFamily: Typography.subheading,
     fontSize: 15,
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
   },
   thanksgivingBody: {
     fontFamily: Typography.serif,
     fontSize: 14,
-    color: CandlelightPalette.parchment,
+    color: '#E7E5E4',
     lineHeight: 22,
     fontStyle: 'italic',
   },
@@ -1002,18 +979,21 @@ const styles = StyleSheet.create({
   },
   peaceReturnGradient: {
     paddingVertical: 16,
-    borderRadius: 20,
+    borderRadius: 14,
     alignItems: 'center',
-    shadowColor: CandlelightPalette.warmAmber,
-    shadowOffset: { width: 0, height: 6 },
+    backgroundColor: '#F5F5F4',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowRadius: 10,
+    elevation: 4,
   },
   peaceReturnBtnText: {
     fontFamily: Typography.title,
     fontSize: 15,
     letterSpacing: 1,
-    color: CandlelightPalette.obsidian,
+    color: '#000000',
   },
 });
