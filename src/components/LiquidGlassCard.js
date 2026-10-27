@@ -4,15 +4,16 @@ import { BlurView } from 'expo-blur';
 import { CandlelightPalette } from '../theme/colors';
 
 /**
- * BreviarioCard: Cartão litúrgico com acabamento de couro/ardósia polida,
- * bordas hairline milimétricas e sobriedade total, ideal para foco e devoção.
+ * AppleBreviarioCard: Cartão translúcido no padrão de materiais Apple (WWDC),
+ * com blur de profundidade, cantos em squircle de 20px e fino filete de luz
+ * especular no topo (borderTopColor) para dar sensação de material físico nobre.
  */
 export default function LiquidGlassCard({
   children,
   isHighlighted = false,
   style,
   contentStyle,
-  cornerRadius = 16,
+  cornerRadius = 20,
 }) {
   return (
     <View
@@ -22,7 +23,10 @@ export default function LiquidGlassCard({
           borderRadius: cornerRadius,
           borderColor: isHighlighted
             ? CandlelightPalette.borderActive
-            : CandlelightPalette.borderDefault,
+            : CandlelightPalette.cardBorder,
+          borderTopColor: isHighlighted
+            ? '#FFFFFF'
+            : CandlelightPalette.cardBorderTop,
           backgroundColor: isHighlighted
             ? CandlelightPalette.cardBgActive
             : CandlelightPalette.cardBg,
@@ -32,7 +36,7 @@ export default function LiquidGlassCard({
       ]}
     >
       <BlurView
-        intensity={Platform.OS === 'ios' ? 25 : 15}
+        intensity={Platform.OS === 'ios' ? 45 : 30}
         tint="dark"
         style={[styles.blurView, { borderRadius: cornerRadius }]}
       >
@@ -46,20 +50,21 @@ const styles = StyleSheet.create({
   outerContainer: {
     borderWidth: 1,
     overflow: 'hidden',
-    backgroundColor: '#0A0A0C',
+    backgroundColor: 'rgba(20, 20, 24, 0.72)',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.6,
-    shadowRadius: 12,
+    shadowOpacity: 0.45,
+    shadowRadius: 16,
     elevation: 4,
   },
   highlightedCard: {
-    borderColor: '#F5F5F4',
-    backgroundColor: '#141418',
+    borderColor: '#FFFFFF',
+    borderTopColor: '#FFFFFF',
+    backgroundColor: 'rgba(32, 32, 38, 0.88)',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.75,
-    shadowRadius: 16,
+    shadowOpacity: 0.65,
+    shadowRadius: 20,
     elevation: 6,
   },
   blurView: {

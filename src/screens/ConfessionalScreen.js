@@ -523,11 +523,12 @@ export default function ConfessionalScreen({
       <Modal
         visible={isConfirmAbsolutionVisible}
         transparent={true}
-        animationType="fade"
+        animationType="slide"
         onRequestClose={() => setIsConfirmAbsolutionVisible(false)}
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.confirmModalContainer}>
+            <View style={styles.sheetGrabber} />
             <View style={styles.modalIconCircle}>
               <Ionicons
                 name="flame"
@@ -575,13 +576,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingBottom: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
   },
   backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   backBtnText: {
-    color: CandlelightPalette.warmAmber,
+    color: '#FFFFFF',
     fontSize: 16,
     fontFamily: Typography.subheading,
     marginLeft: 2,
@@ -589,23 +593,23 @@ const styles = StyleSheet.create({
   topBarTitle: {
     fontFamily: Typography.title,
     fontSize: 13,
-    color: CandlelightPalette.parchment,
+    color: '#FFFFFF',
     letterSpacing: 1.5,
   },
   textSizeBtn: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 10,
-    backgroundColor: '#141418',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: '#26262B',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   textSizeBtnText: {
     fontSize: 12,
     fontFamily: Typography.subheading,
-    color: '#F5F5F4',
+    color: '#FFFFFF',
     fontWeight: '700',
   },
   scrollView: {
@@ -690,17 +694,17 @@ const styles = StyleSheet.create({
   veilCircle: {
     width: 22,
     height: 22,
-    borderRadius: 11,
-    borderWidth: 1.5,
-    borderColor: '#26262B',
+    borderRadius: 7,
+    borderWidth: 1.8,
+    borderColor: '#52525B',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     marginTop: 2,
-    backgroundColor: '#141418',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   veilCircleDimmed: {
-    backgroundColor: '#F5F5F4',
+    backgroundColor: '#FFFFFF',
     borderColor: '#FFFFFF',
   },
   veilCircleDot: {
@@ -791,15 +795,15 @@ const styles = StyleSheet.create({
   },
   absolutionButtonOuter: {
     width: '100%',
-    borderRadius: 14,
+    borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: '#F5F5F4',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#FFFFFF',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
     elevation: 4,
   },
   absolutionButton: {
@@ -807,7 +811,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    backgroundColor: '#F5F5F4',
+    backgroundColor: '#FFFFFF',
   },
   absolutionButtonText: {
     fontFamily: Typography.title,
@@ -831,22 +835,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
   },
+  sheetGrabber: {
+    width: 38,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
   confirmModalContainer: {
     width: '100%',
-    backgroundColor: '#0C0C0E',
-    borderRadius: 18,
+    backgroundColor: '#141418',
+    borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#222226',
+    borderTopColor: 'rgba(255, 255, 255, 0.20)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
     padding: 24,
     alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.7,
+    shadowRadius: 28,
   },
   modalIconCircle: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#141418',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: '#26262B',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
@@ -881,10 +898,10 @@ const styles = StyleSheet.create({
   modalCancelBtn: {
     flex: 1,
     paddingVertical: 13,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#26262B',
-    backgroundColor: '#141418',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     alignItems: 'center',
   },
   modalCancelText: {
@@ -894,8 +911,8 @@ const styles = StyleSheet.create({
   modalConfirmBtn: {
     flex: 1,
     paddingVertical: 13,
-    borderRadius: 12,
-    backgroundColor: '#F5F5F4',
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
   },
   modalConfirmText: {
@@ -979,15 +996,15 @@ const styles = StyleSheet.create({
   },
   peaceReturnGradient: {
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: 16,
     alignItems: 'center',
-    backgroundColor: '#F5F5F4',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#FFFFFF',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
     elevation: 4,
   },
   peaceReturnBtnText: {

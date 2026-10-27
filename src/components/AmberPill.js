@@ -4,8 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { CandlelightPalette, Typography } from '../theme/colors';
 
 /**
- * BreviarioPill: Pílula de categoria com acabamento gráfico de alta precisão
- * e contraste solene (Preto no Marfim quando ativo; Ardósia no Pedra quando inativo).
+ * AppleSegmentPill: Pílula de categoria com estética de controle segmentado da Apple (WWDC).
+ * Translucidez refinada no estado inativo e contraste sólido puro com micro-sombra no ativo.
  */
 export default function AmberPill({ text, icon, isSelected = false, style }) {
   if (isSelected) {
@@ -47,23 +47,23 @@ const styles = StyleSheet.create({
   selectedPillContainer: {
     borderRadius: 999,
     paddingHorizontal: 16,
-    paddingVertical: 9,
-    backgroundColor: '#F5F5F4',
+    paddingVertical: 8,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#FFFFFF',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.35,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
     elevation: 3,
   },
   unselectedPillContainer: {
     borderRadius: 999,
     paddingHorizontal: 16,
-    paddingVertical: 9,
-    backgroundColor: '#121215',
+    paddingVertical: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
     borderWidth: 1,
-    borderColor: '#26262B',
+    borderColor: 'rgba(255, 255, 255, 0.10)',
   },
   pillContent: {
     flexDirection: 'row',
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12.5,
     fontFamily: Typography.subheading,
-    letterSpacing: 0.5,
+    letterSpacing: 0.4,
   },
   selectedText: {
     color: '#000000',

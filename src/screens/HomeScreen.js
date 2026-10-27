@@ -272,15 +272,16 @@ export default function HomeScreen({
         </Text>
       </View>
 
-      {/* Modal: Os 5 Passos da Boa Confissão */}
+      {/* Modal: Os 5 Passos da Boa Confissão (Apple Sheet) */}
       <Modal
         visible={isStepsModalVisible}
         transparent={true}
-        animationType="fade"
+        animationType="slide"
         onRequestClose={() => setIsStepsModalVisible(false)}
       >
         <View style={styles.modalBackdrop}>
-          <View style={[styles.stepsModalContainer, { marginTop: insets.top + 20, marginBottom: insets.bottom + 20 }]}>
+          <View style={[styles.stepsModalContainer, { marginTop: insets.top + 40, marginBottom: insets.bottom + 10 }]}>
+            <View style={styles.sheetGrabber} />
             <View style={styles.modalHeaderRow}>
               <Text style={styles.stepsModalTitle}>5 PASSOS PARA UMA BOA CONFISSÃO</Text>
               <TouchableOpacity
@@ -322,11 +323,12 @@ export default function HomeScreen({
       <Modal
         visible={isDatePickerVisible}
         transparent={true}
-        animationType="fade"
+        animationType="slide"
         onRequestClose={() => setIsDatePickerVisible(false)}
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalContainer}>
+            <View style={styles.sheetGrabber} />
             <Text style={styles.modalTitle}>ÚLTIMA CONFISSÃO</Text>
             <Text style={styles.modalSubtitle}>
               Há quantos dias (aproximadamente) foi a sua última confissão?
@@ -410,24 +412,24 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: 'rgba(255, 255, 255, 0.16)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
   },
   crossSymbol: {
-    fontSize: 26,
-    color: CandlelightPalette.warmAmber,
+    fontSize: 24,
+    color: '#FFFFFF',
     fontFamily: Typography.serif,
-    lineHeight: 28,
+    lineHeight: 26,
   },
   title: {
     fontFamily: Typography.title,
     fontSize: 22,
-    color: CandlelightPalette.ivory,
-    letterSpacing: 2.2,
+    color: '#FFFFFF',
+    letterSpacing: 1.8,
     textAlign: 'center',
     marginBottom: 6,
   },
@@ -435,7 +437,7 @@ const styles = StyleSheet.create({
     fontFamily: Typography.serif,
     fontStyle: 'italic',
     fontSize: 13,
-    color: CandlelightPalette.warmAmber,
+    color: CandlelightPalette.mutedText,
     textAlign: 'center',
     marginBottom: 10,
     opacity: 0.9,
@@ -459,9 +461,9 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 14,
@@ -470,16 +472,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   confessionCardLabel: {
-    fontSize: 10,
-    fontFamily: Typography.title,
-    letterSpacing: 1.2,
-    color: CandlelightPalette.warmAmber,
+    fontSize: 10.5,
+    fontFamily: Typography.subheading,
+    letterSpacing: Typography.trackingRubric,
+    color: CandlelightPalette.mutedText,
     marginBottom: 2,
+    fontWeight: '600',
   },
   confessionDateText: {
     fontSize: 17,
     fontFamily: Typography.subheading,
-    color: CandlelightPalette.ivory,
+    color: '#FFFFFF',
   },
   confessionDaysText: {
     fontSize: 12,
@@ -513,9 +516,9 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(217, 119, 6, 0.20)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: CandlelightPalette.bronzeBorder,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -637,14 +640,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
   },
+  sheetGrabber: {
+    width: 38,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
   stepsModalContainer: {
     width: '100%',
-    maxHeight: '82%',
-    backgroundColor: '#0C0C0E',
-    borderRadius: 18,
+    maxHeight: '84%',
+    backgroundColor: '#141418',
+    borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#222226',
+    borderTopColor: 'rgba(255, 255, 255, 0.20)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
     padding: 22,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.6,
+    shadowRadius: 24,
   },
   modalHeaderRow: {
     flexDirection: 'row',
@@ -679,9 +695,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#18181B',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: '#27272A',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -706,9 +722,9 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   stepsUnderstoodBtn: {
-    backgroundColor: '#F5F5F4',
-    paddingVertical: 13,
-    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 14,
+    borderRadius: 14,
     alignItems: 'center',
   },
   stepsUnderstoodBtnText: {
@@ -719,12 +735,17 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '100%',
-    backgroundColor: '#0C0C0E',
-    borderRadius: 18,
+    backgroundColor: '#141418',
+    borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#222226',
+    borderTopColor: 'rgba(255, 255, 255, 0.20)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
     padding: 24,
     alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.6,
+    shadowRadius: 24,
   },
   modalTitle: {
     fontFamily: Typography.title,
