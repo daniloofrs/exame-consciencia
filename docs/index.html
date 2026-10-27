@@ -21,6 +21,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --text-scale: 1;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -169,9 +173,57 @@
       margin-bottom: 4px;
     }
     .body-text {
-      font-size: 14.5px;
+      font-size: calc(14.5px * var(--text-scale, 1));
       color: #E7E5E4;
       line-height: 1.52;
+    }
+
+    /* Apple Search Bar */
+    .search-bar-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 14px;
+      width: 100%;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 9px 34px 9px 34px;
+      font-size: calc(14px * var(--text-scale, 1));
+      color: #FFFFFF;
+      outline: none;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .search-input:focus {
+      border-color: rgba(212, 175, 55, 0.5);
+      background: rgba(255, 255, 255, 0.09);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      font-size: 13px;
+      color: #78716C;
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      color: #A8A29E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
     .cross-badge {
       width: 44px;
@@ -595,7 +647,37 @@
     let confessedQuestions = new Set();
     let activeCategoryIndex = 0;
     let lastConfessionDate = localStorage.getItem('last_confession_date') || null;
-    let textSizeMultiplier = 1.0;
+    let textSizeMultiplier = parseFloat(localStorage.getItem('text_size_multiplier')) || 1.0;
+    let searchQuery = '';
+
+    function applyTextScale() {
+      document.documentElement.style.setProperty('--text-scale', textSizeMultiplier.toString());
+    }
+
+    function adjustFontSize(delta) {
+      triggerHaptic('light');
+      if (typeof delta === 'number') {
+        textSizeMultiplier = Math.min(1.4, Math.max(0.85, textSizeMultiplier + delta));
+      } else {
+        if (textSizeMultiplier < 1.1) textSizeMultiplier = 1.18;
+        else if (textSizeMultiplier < 1.28) textSizeMultiplier = 1.35;
+        else textSizeMultiplier = 1.0;
+      }
+      localStorage.setItem('text_size_multiplier', textSizeMultiplier.toFixed(2));
+      applyTextScale();
+      render();
+    }
+
+    function filterQuestions(query) {
+      searchQuery = query || '';
+      render();
+      const el = document.getElementById('exam-search');
+      if (el) {
+        el.focus();
+        const len = el.value.length;
+        el.setSelectionRange(len, len);
+      }
+    }
 
     // Load saved session if exists
     try {
@@ -993,37 +1075,82 @@
         `;
       } else if (currentScreen === 'exam') {
         const cat = CATALOG.categories[activeCategoryIndex] || CATALOG.categories[0];
+        
+        let questionsToDisplay = [];
+        if (searchQuery) {
+          const qLower = searchQuery.toLowerCase();
+          CATALOG.categories.forEach(c => {
+            c.questions.forEach(q => {
+              if (q.text.toLowerCase().includes(qLower) || c.title.toLowerCase().includes(qLower)) {
+                questionsToDisplay.push({ ...q, categoryTitle: c.title });
+              }
+            });
+          });
+        } else {
+          questionsToDisplay = cat.questions;
+        }
+
         app.innerHTML = `
           <div class="apple-nav">
             <button class="nav-btn" onclick="setScreen('home')">‹ Início</button>
-            <span class="nav-title">${cat.title.toUpperCase()}</span>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <button class="nav-btn" onclick="togglePrivacyShield(true)" title="Ocultar tela (Privacidade)" style="padding: 4px 8px; font-size: 15px;">🛡</button>
+            <span class="nav-title">${searchQuery ? 'BUSCA DE FALTAS' : cat.title.toUpperCase()}</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <button class="nav-btn" onclick="adjustFontSize()" title="Tamanho do Texto" style="padding: 4px 7px; font-size: 13px; font-weight: 700;">A±</button>
+              <button class="nav-btn" onclick="togglePrivacyShield(true)" title="Ocultar tela (Privacidade)" style="padding: 4px 7px; font-size: 15px;">🛡</button>
               <span class="nav-badge">${totalSelected} Faltas</span>
             </div>
           </div>
 
           <div class="main-content">
-            <!-- Scroller de Categorias -->
-            <div class="category-scroll">
-              ${CATALOG.categories.map((c, idx) => `
-                <div class="pill-cat ${idx === activeCategoryIndex ? 'active' : ''}" onclick="setCategory(${idx})">
-                  ${c.title}
-                </div>
-              `).join('')}
+            <!-- Barra de Busca Instantânea -->
+            <div class="search-bar-wrapper">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                id="exam-search" 
+                class="search-input" 
+                placeholder="Buscar falta ou mandamento..." 
+                value="${searchQuery}" 
+                oninput="filterQuestions(this.value)"
+              />
+              ${searchQuery ? `<button class="search-clear" onclick="filterQuestions('')">✕</button>` : ''}
             </div>
 
-            <div style="margin-bottom: 16px;">
-              <div class="rubric">${cat.title.toUpperCase()}</div>
-              <div style="font-size: 19px; font-weight: 700; color: #FFF; letter-spacing: -0.3px;">${cat.subtitle}</div>
-            </div>
+            <!-- Scroller de Categorias (oculto se buscando) -->
+            ${!searchQuery ? `
+              <div class="category-scroll">
+                ${CATALOG.categories.map((c, idx) => `
+                  <div class="pill-cat ${idx === activeCategoryIndex ? 'active' : ''}" onclick="setCategory(${idx})">
+                    ${c.title}
+                  </div>
+                `).join('')}
+              </div>
+
+              <div style="margin-bottom: 16px;">
+                <div class="rubric">${cat.title.toUpperCase()}</div>
+                <div style="font-size: 19px; font-weight: 700; color: #FFF; letter-spacing: -0.3px;">${cat.subtitle}</div>
+              </div>
+            ` : `
+              <div style="margin-bottom: 14px;">
+                <div class="rubric">RESULTADOS DA BUSCA (${questionsToDisplay.length})</div>
+                <div style="font-size: 13.5px; color: #A8A29E;">Exibindo faltas encontradas para “${searchQuery}”</div>
+              </div>
+            `}
+
+            ${searchQuery && questionsToDisplay.length === 0 ? `
+              <div class="card" style="text-align: center; padding: 28px 16px;">
+                <div style="font-size: 16px; font-weight: 600; color: #FFF; margin-bottom: 4px;">Nenhuma falta encontrada</div>
+                <div style="font-size: 13px; color: #A8A29E;">Tente outra palavra ou toque no ✕ para voltar às categorias.</div>
+              </div>
+            ` : ''}
 
             <!-- Lista de Perguntas -->
-            ${cat.questions.map(q => {
+            ${questionsToDisplay.map(q => {
               const isChecked = selectedQuestions.has(q.id);
               const note = questionNotes[q.id] || '';
               return `
                 <div class="card ${isChecked ? 'card-highlighted' : ''}">
+                  ${q.categoryTitle ? `<div class="rubric" style="color: #D4AF37; margin-bottom: 6px;">${q.categoryTitle.toUpperCase()}</div>` : ''}
                   <div class="question-row" onclick="toggleQuestion('${q.id}')">
                     <div class="checkbox ${isChecked ? 'checked' : ''}"></div>
                     <div style="flex: 1;">
@@ -1173,6 +1300,7 @@
     }
 
     // Initial Render
+    applyTextScale();
     render();
     checkInstallBanner();
   </script>
