@@ -841,10 +841,11 @@ const htmlContent = `<!DOCTYPE html>
       const content = document.getElementById('sheet-content');
 
       if (type === 'steps') {
-        const steps = CATALOG.confessionGuide || [];
+        const rawSteps = CATALOG.confessionGuide;
+        const steps = Array.isArray(rawSteps) ? rawSteps : (rawSteps.conditions || []);
         content.innerHTML = \`
           <div style="text-align: center; margin-bottom: 16px;">
-            <div class="rubric">CATEQUESE TRADICIONAL</div>
+            <div class="rubric">GUIA DO PENITENTE</div>
             <div style="font-family: 'Cinzel', serif; font-size: 17px; font-weight: 700;">Os 5 Passos da Boa Confissão</div>
           </div>
           <div style="max-height: 60vh; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px;">
@@ -859,6 +860,26 @@ const htmlContent = `<!DOCTYPE html>
             \`).join('')}
           </div>
           <button class="btn-primary" onclick="closeSheet()">Compreendi</button>
+        \`;
+      } else if (type === 'prayers') {
+        content.innerHTML = \`
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div class="rubric">LITURGIA TRADICIONAL</div>
+            <div style="font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700;">Orações do Breviário</div>
+            <div style="font-size: 12.5px; color: #A8A29E; margin-top: 3px;">Orações da Igreja para preparação e recolhimento</div>
+          </div>
+          <div style="max-height: 60vh; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 14px;">
+            \${CATALOG.prayers.map(p => \`
+              <div class="card" style="margin: 0; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                <div class="rubric" style="color: #D4AF37;">\${p.title.toUpperCase()}</div>
+                \${p.subtitle ? \`<div style="font-size: 12px; color: #A8A29E; margin-bottom: 6px;">\${p.subtitle}</div>\` : ''}
+                <div style="font-family: 'EB Garamond', serif; font-size: 14.5px; font-style: italic; color: #FFF; line-height: 1.55; white-space: pre-line;">
+                  \${p.body}
+                </div>
+              </div>
+            \`).join('')}
+          </div>
+          <button class="btn-primary" onclick="closeSheet()">Fechar</button>
         \`;
       } else if (type === 'adjust-date') {
         content.innerHTML = \`
@@ -1058,6 +1079,18 @@ const htmlContent = `<!DOCTYPE html>
               <div class="rubric">\${prayer.title.toUpperCase()}</div>
               <div style="font-family: 'EB Garamond', serif; font-size: 14.5px; font-style: italic; color: #E7E5E4; line-height: 1.55;">
                 “\${prayer.body}”
+              </div>
+            </div>
+
+            <!-- Orações Tradicionais do Breviário -->
+            <div class="card card-interactive" onclick="openSheet('prayers')">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div class="rubric" style="margin-bottom: 2px;">LITURGIA & RECOLHIMENTO</div>
+                  <div style="font-weight: 600; font-size: 15px; color: #FFF;">Orações Tradicionais</div>
+                  <div style="font-size: 12px; color: #A8A29E; margin-top: 2px;">Santo Tomás de Aquino, Salmo 50 (Miserere) e mais</div>
+                </div>
+                <span style="font-size: 20px; color: #D4AF37;">📜</span>
               </div>
             </div>
 

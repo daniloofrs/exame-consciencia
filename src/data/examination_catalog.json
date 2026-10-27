@@ -17,6 +17,18 @@
       "title": "Ação de Graças pós-Confissão",
       "subtitle": "Louvor após receber a absolvição",
       "body": "Senhor Jesus Cristo, Redentor meu, agradeço-Vos com toda a minha alma por terdes lavado os meus pecados com o Vosso preciosíssimo Sangue. Concedei-me a Vossa santa graça para que eu permaneça fiel aos Vossos mandamentos até o fim dos meus dias. Virgem Maria, Mãe de Deus, protegei-me e sede minha advogada. Amém."
+    },
+    {
+      "id": "tomas-aquino",
+      "title": "Oração de Santo Tomás de Aquino",
+      "subtitle": "Antes do Exame e da Confissão",
+      "body": "Onipotente e eterno Deus, eis que me aproximo do sacramento do vosso Filho unigênito, Nosso Senhor Jesus Cristo. Chego como enfermo ao médico da vida, como imundo à fonte da misericórdia, como cego à luz da claridade eterna, como pobre e necessitado ao Senhor do céu e da terra. Suplico, pois, à vossa imensa generosidade que cureis minha enfermidade, laveis minha impureza, ilumineis minha cegueira e enriqueçais minha pobreza. Amém."
+    },
+    {
+      "id": "salmo-50",
+      "title": "Salmo 50 (Miserere mei, Deus)",
+      "subtitle": "Súplica Penitencial de Davi",
+      "body": "Tende piedade de mim, ó Deus, segundo a vossa grande misericórdia; e, pela multidão das vossas bondades, apagai a minha iniquidade. Lavai-me inteiramente da minha culpa e purificai-me do meu pecado. Pois eu reconheço a minha iniquidade, e o meu pecado está sempre diante de mim. Criai em mim, ó Deus, um coração puro, e renovai em meu íntimo um espírito reto. Não me repilais da vossa presença, nem retireis de mim o vosso santo espírito. Dai-me de novo a alegria da vossa salvação e sustentai-me com um espírito generoso. Glória ao Pai, ao Filho e ao Espírito Santo. Como era no princípio, agora e sempre. Amém."
     }
   ],
   "categories": [
@@ -410,33 +422,36 @@
       ]
     }
   ],
-  "confessionGuide": [
-    {
-      "number": 1,
-      "title": "Exame de Consciência",
-      "description": "Recordar sinceramente com a luz de Deus todos os pecados cometidos por pensamentos, palavras, atos e omissões."
-    },
-    {
-      "number": 2,
-      "title": "Contrição (Dor dos Pecados)",
-      "description": "Arrependimento sincero de coração por ter ofendido a Deus, Sumo Bem e digno de todo o amor, ou pelo temor de seus castigos."
-    },
-    {
-      "number": 3,
-      "title": "Firme Propósito de Emenda",
-      "description": "Vontade resoluta e sincera de não mais cometer o pecado e evitar com coragem as ocasiões que conduzem à queda."
-    },
-    {
-      "number": 4,
-      "title": "Confissão Vocal ao Sacerdote",
-      "description": "Acusar com clareza, sinceridade e humildade todos os pecados graves ou mortais em espécie e número, sem nada ocultar."
-    },
-    {
-      "number": 5,
-      "title": "Satisfação (Penitência)",
-      "description": "Cumprir devotamente as orações ou penitências impostas pelo confessor em reparação às ofensas contra a Majestade Divina."
-    }
-  ],
+  "confessionGuide": {
+    "title": "Guia do Penitente",
+    "conditions": [
+      {
+        "number": 1,
+        "title": "Exame de Consciência",
+        "description": "Recordar sinceramente com a luz de Deus todos os pecados cometidos por pensamentos, palavras, atos e omissões."
+      },
+      {
+        "number": 2,
+        "title": "Dor dos pecados (Contrição)",
+        "description": "Arrependimento sincero de coração por ter ofendido a Deus, Sumo Bem e digno de todo o amor, ou pelo temor de seus castigos."
+      },
+      {
+        "number": 3,
+        "title": "Firme Propósito de Emenda",
+        "description": "Vontade resoluta e sincera de não mais cometer o pecado e evitar com coragem as ocasiões que conduzem à queda."
+      },
+      {
+        "number": 4,
+        "title": "Confissão vocal / oral ao Sacerdote",
+        "description": "Acusar com clareza, sinceridade e humildade todos os pecados graves ou mortais em espécie e número, sem nada ocultar."
+      },
+      {
+        "number": 5,
+        "title": "Satisfação (Penitência)",
+        "description": "Cumprir devotamente as orações ou penitências impostas pelo confessor em reparação às ofensas contra a Majestade Divina."
+      }
+    ]
+  },
   "confessionalDialogue": {
     "opening": "Abençoai-me, Padre, porque pequei.",
     "timeTemplate": "A minha última confissão foi há...",

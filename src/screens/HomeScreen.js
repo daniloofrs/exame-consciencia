@@ -31,7 +31,8 @@ export default function HomeScreen({
   const lastDate = store.lastConfessionDate;
   const daysSince = calculateDaysSince(lastDate);
   const prayer = store.catalog.prayers?.find((p) => p.id === 'espirito-santo');
-  const confessionSteps = store.catalog.confessionGuide || [];
+  const guideData = store.catalog.confessionGuide || [];
+  const confessionSteps = Array.isArray(guideData) ? guideData : (guideData.conditions || []);
   const totalSelected = store.totalSelectedCount;
 
   const handleOpenDatePicker = () => {
