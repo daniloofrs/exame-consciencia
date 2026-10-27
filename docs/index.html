@@ -2,11 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laboratório de Design Apple — Exame de Consciência</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Exame de Consciência</title>
+  
+  <!-- Apple Web App & PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Exame">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Aplicativo católico de exame de consciência e preparação para o Sacramento da Confissão. 100% offline e confidencial.">
+
+  <!-- Tipografia Sacra & Apple SF -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -14,655 +24,247 @@
       padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", Roboto, sans-serif;
-      background: #060709;
-      color: #E2E8F0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 16px 80px;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 24px;
-      max-width: 760px;
-    }
-    .badge-apple {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 14px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      color: #F8FAFC;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      backdrop-filter: blur(12px);
-    }
-    .badge-apple span.icon {
-      font-size: 13px;
-    }
-    h1 {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-      font-size: 30px;
-      font-weight: 700;
-      color: #FFFFFF;
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-      line-height: 1.15;
-    }
-    p.lead {
-      color: #94A3B8;
-      font-size: 14.5px;
-      line-height: 1.55;
-    }
-
-    /* Controls Bar */
-    .controls-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 28px;
-      width: 100%;
-      max-width: 900px;
-    }
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .theme-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: #94A3B8;
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .theme-btn:active {
-      transform: scale(0.96);
-    }
-    .theme-btn:hover {
-      color: #FFFFFF;
-      background: rgba(255, 255, 255, 0.06);
-    }
-    .theme-btn.active {
-      background: #FFFFFF;
-      color: #000000;
-      border-color: #FFFFFF;
-      font-weight: 600;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Screen Switcher (Apple Segmented Control) */
-    .screen-tab-group {
-      display: flex;
-      background: rgba(255, 255, 255, 0.06);
-      padding: 4px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      gap: 4px;
-    }
-    .screen-tab {
-      background: transparent;
-      border: none;
-      color: #94A3B8;
-      padding: 8px 18px;
-      border-radius: 10px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .screen-tab:active {
-      transform: scale(0.96);
-    }
-    .screen-tab.active {
-      background: rgba(255, 255, 255, 0.2);
-      color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Phone Outer Frame */
-    .phone-container {
-      position: relative;
-      width: 380px;
-      height: 800px;
-      border-radius: 54px;
-      background: #000;
-      box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.85),
-        0 0 0 1px rgba(255, 255, 255, 0.15),
-        0 0 0 11px #16181F,
-        0 0 0 13px #2C303E;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Dynamic Island */
-    .dynamic-island {
-      position: absolute;
-      top: 11px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 112px;
-      height: 30px;
       background: #000000;
-      border-radius: 20px;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 11px;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .dynamic-island:hover {
-      width: 130px;
-    }
-    .sensor-dot {
-      width: 9px;
-      height: 9px;
-      background: #070B18;
-      border-radius: 50%;
-    }
-    .camera-dot {
-      width: 10px;
-      height: 10px;
-      background: #0D162E;
-      border-radius: 50%;
-    }
-
-    /* Status Bar */
-    .status-bar {
-      position: relative;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 28px 0;
-      font-size: 13px;
-      font-weight: 600;
-      z-index: 90;
-      pointer-events: none;
-    }
-
-    /* Screen Inner Viewport */
-    .screen-viewport {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 10px 18px 30px;
-      position: relative;
-      scroll-behavior: smooth;
-    }
-    .screen-viewport::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Home Indicator */
-    .home-indicator {
-      width: 130px;
-      height: 5px;
-      background: #FFFFFF;
-      opacity: 0.35;
-      border-radius: 10px;
-      margin: 8px auto 6px;
-      flex-shrink: 0;
-    }
-
-    /* ==========================================================================
-       THEME 1: APPLE BREVIÁRIO (DARK OLED & TRANSLUCENT GLASS) [PADRÃO WWDC]
-       ========================================================================== */
-    .theme-apple-breviario {
-      background: #000000 !important;
-      color: #F5F5F4 !important;
-    }
-    .theme-apple-breviario .status-bar {
       color: #F5F5F4;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", Roboto, sans-serif;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    .theme-apple-breviario .apple-nav {
+
+    /* App Container: 100% no celular, max-width elegante no desktop */
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #000000;
+    }
+
+    /* Halo suave de oração e recolhimento */
+    .sanctuary-halo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 240px;
+      background: radial-gradient(circle at 50% -20%, rgba(245, 245, 244, 0.04), rgba(212, 175, 55, 0.015), transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Sticky Translucent Apple Navigation Bar */
+    .apple-nav {
       position: sticky;
-      top: -10px;
-      margin: -10px -18px 14px -18px;
-      padding: 10px 18px 12px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
       z-index: 50;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: calc(env(safe-area-inset-top, 0px) + 12px) 18px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .theme-apple-breviario .card {
-      background: rgba(18, 18, 22, 0.72);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-top: 1px solid rgba(255, 255, 255, 0.16); /* Top specular highlight (Apple Design) */
-      border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-    .theme-apple-breviario .card-interactive:active {
-      transform: scale(0.975);
-      transition: transform 100ms cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-    .theme-apple-breviario .title {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-      font-weight: 700;
+    .nav-btn {
+      background: transparent;
+      border: none;
       color: #FFFFFF;
-      letter-spacing: -0.025em; /* Negative tracking for large text (WWDC 2020) */
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
     }
-    .theme-apple-breviario .sacred-title {
+    .nav-btn:active {
+      opacity: 0.7;
+    }
+    .nav-title {
       font-family: 'Cinzel', serif;
+      font-size: 13.5px;
       letter-spacing: 1.5px;
       font-weight: 700;
       color: #FFFFFF;
     }
-    .theme-apple-breviario .rubric {
+    .nav-badge {
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.07em; /* Positive tracking for small uppercase labels */
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* Main Scrollable Content Area */
+    .main-content {
+      flex: 1;
+      padding: 18px 18px calc(env(safe-area-inset-bottom, 0px) + 90px);
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Apple Glass Cards */
+    .card {
+      background: rgba(20, 20, 24, 0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+    }
+    .card-interactive:active {
+      transform: scale(0.98);
+    }
+    .card-highlighted {
+      border-color: #FFFFFF;
+      border-top-color: #FFFFFF;
+      background: rgba(32, 32, 38, 0.88);
+    }
+
+    /* Typography */
+    .sacred-title {
+      font-family: 'Cinzel', serif;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #FFFFFF;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .sacred-motto {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 13.5px;
+      color: #A8A29E;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .rubric {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #A8A29E;
+      margin-bottom: 4px;
     }
-    .theme-apple-breviario .body-text {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 15px;
+    .body-text {
+      font-size: 14.5px;
       color: #E7E5E4;
       line-height: 1.52;
     }
-    .theme-apple-breviario .btn-primary {
-      background: #F5F5F4;
-      color: #000000;
-      font-weight: 600;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      letter-spacing: -0.01em;
-      border-radius: 16px;
-      border: 1px solid #FFFFFF;
-      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15);
-      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    .cross-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #FFFFFF;
+      margin: 4px auto 14px;
     }
-    .theme-apple-breviario .btn-primary:active {
-      transform: scale(0.97);
+
+    /* Apple Action Buttons */
+    .btn-primary {
+      width: 100%;
+      background: #FFFFFF;
+      color: #000000;
+      border: 1px solid #FFFFFF;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease;
+      user-select: none;
+    }
+    .btn-primary:active {
+      transform: scale(0.975);
       background: #E5E5E4;
     }
-    .theme-apple-breviario .pill-cat {
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.12s ease;
+    }
+    .btn-secondary:active {
+      transform: scale(0.975);
+    }
+
+    /* Horizontal Category Segmented Scroller */
+    .category-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin: 0 -18px 14px -18px;
+      padding-left: 18px;
+      padding-right: 18px;
+      scrollbar-width: none;
+    }
+    .category-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .pill-cat {
       background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.10);
       color: #A8A29E;
       border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
       font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
     }
-    .theme-apple-breviario .pill-cat.active {
+    .pill-cat:active {
+      transform: scale(0.96);
+    }
+    .pill-cat.active {
       background: #FFFFFF;
       color: #000000;
       font-weight: 600;
       border-color: #FFFFFF;
       box-shadow: 0 2px 10px rgba(255, 255, 255, 0.25);
     }
-    .theme-apple-breviario .checkbox {
-      border: 1.8px solid #52525B;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 7px;
-    }
-    .theme-apple-breviario .checkbox.checked {
-      background: #FFFFFF;
-      border-color: #FFFFFF;
-      color: #000000;
-      animation: appleCheckboxBounce 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .theme-apple-breviario .checkbox.checked::after {
-      content: '✓';
-      color: #000000;
-      font-weight: 700;
-      font-size: 13px;
-    }
 
-    /* ==========================================================================
-       THEME 2: APPLE LITÚRGICO (PÚRPURA / OXBLOOD & OURO)
-       ========================================================================== */
-    .theme-apple-liturgico {
-      background: #090306 !important;
-      color: #F8FAFC !important;
-    }
-    .theme-apple-liturgico .status-bar {
-      color: #F8FAFC;
-    }
-    .theme-apple-liturgico .apple-nav {
-      position: sticky;
-      top: -10px;
-      margin: -10px -18px 14px -18px;
-      padding: 10px 18px 12px;
-      background: rgba(9, 3, 6, 0.78);
-      backdrop-filter: blur(25px) saturate(190%);
-      z-index: 50;
-      border-bottom: 1px solid rgba(225, 29, 72, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .theme-apple-liturgico .card {
-      background: rgba(26, 10, 18, 0.65);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(225, 29, 72, 0.18);
-      border-top: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 20px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-    .theme-apple-liturgico .card-interactive:active {
-      transform: scale(0.975);
-      transition: transform 100ms cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-    .theme-apple-liturgico .sacred-title {
-      font-family: 'Cinzel', serif;
-      letter-spacing: 1.5px;
-      font-weight: 700;
-      color: #FFFFFF;
-    }
-    .theme-apple-liturgico .rubric {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #FB7185;
-    }
-    .theme-apple-liturgico .body-text {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 15px;
-      color: #F1F5F9;
-      line-height: 1.52;
-    }
-    .theme-apple-liturgico .btn-primary {
-      background: linear-gradient(135deg, #BE123C, #9F1239);
-      color: #FFFFFF;
-      font-weight: 600;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 4px 18px rgba(190, 18, 60, 0.4);
-      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .theme-apple-liturgico .btn-primary:active {
-      transform: scale(0.97);
-      background: #9F1239;
-    }
-    .theme-apple-liturgico .pill-cat {
-      background: rgba(225, 29, 72, 0.12);
-      border: 1px solid rgba(225, 29, 72, 0.22);
-      color: #FDA4AF;
-      border-radius: 999px;
-      font-weight: 500;
-    }
-    .theme-apple-liturgico .pill-cat.active {
-      background: #E11D48;
-      color: #FFFFFF;
-      font-weight: 600;
-      border-color: #FB7185;
-      box-shadow: 0 2px 12px rgba(225, 29, 72, 0.4);
-    }
-    .theme-apple-liturgico .checkbox {
-      border: 1.8px solid #9F1239;
-      background: rgba(225, 29, 72, 0.08);
-      border-radius: 7px;
-    }
-    .theme-apple-liturgico .checkbox.checked {
-      background: #E11D48;
-      border-color: #FB7185;
-      color: #FFFFFF;
-      animation: appleCheckboxBounce 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .theme-apple-liturgico .checkbox.checked::after {
-      content: '✓';
-      color: #FFFFFF;
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    /* ==========================================================================
-       THEME 3: APPLE VELLUM (LIGHT GLASS & CARMIM)
-       ========================================================================== */
-    .theme-apple-vellum {
-      background: #F8F5EE !important;
-      color: #1C1917 !important;
-    }
-    .theme-apple-vellum .status-bar {
-      color: #1C1917;
-    }
-    .theme-apple-vellum .apple-nav {
-      position: sticky;
-      top: -10px;
-      margin: -10px -18px 14px -18px;
-      padding: 10px 18px 12px;
-      background: rgba(248, 245, 238, 0.82);
-      backdrop-filter: blur(25px);
-      z-index: 50;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .theme-apple-vellum .card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      border-top: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
-    }
-    .theme-apple-vellum .card-interactive:active {
-      transform: scale(0.975);
-      transition: transform 100ms cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-    .theme-apple-vellum .sacred-title {
-      font-family: 'Cinzel', serif;
-      letter-spacing: 1px;
-      font-weight: 700;
-      color: #1C1917;
-    }
-    .theme-apple-vellum .rubric {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #991B1B;
-    }
-    .theme-apple-vellum .body-text {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 15px;
-      color: #292524;
-      line-height: 1.52;
-    }
-    .theme-apple-vellum .btn-primary {
-      background: #991B1B;
-      color: #FFFFFF;
-      font-weight: 600;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 4px 14px rgba(153, 27, 27, 0.25);
-      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .theme-apple-vellum .btn-primary:active {
-      transform: scale(0.97);
-      background: #7F1D1D;
-    }
-    .theme-apple-vellum .pill-cat {
-      background: rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      color: #78716C;
-      border-radius: 999px;
-      font-weight: 500;
-    }
-    .theme-apple-vellum .pill-cat.active {
-      background: #991B1B;
-      color: #FFFFFF;
-      font-weight: 600;
-      border-color: #991B1B;
-      box-shadow: 0 2px 10px rgba(153, 27, 27, 0.2);
-    }
-    .theme-apple-vellum .checkbox {
-      border: 1.8px solid #D6D3D1;
-      background: rgba(0, 0, 0, 0.02);
-      border-radius: 7px;
-    }
-    .theme-apple-vellum .checkbox.checked {
-      background: #991B1B;
-      border-color: #991B1B;
-      color: #FFFFFF;
-      animation: appleCheckboxBounce 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .theme-apple-vellum .checkbox.checked::after {
-      content: '✓';
-      color: #FFFFFF;
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    /* ==========================================================================
-       THEME 4: BREVIÁRIO CLÁSSICO (PRETO OLED & MARFIM ESTÁTICO)
-       ========================================================================== */
-    .theme-breviario-classico {
-      background: #000000 !important;
-      color: #F5F5F4 !important;
-    }
-    .theme-breviario-classico .status-bar {
-      color: #F5F5F4;
-    }
-    .theme-breviario-classico .apple-nav {
-      position: sticky;
-      top: -10px;
-      margin: -10px -18px 14px -18px;
-      padding: 10px 18px 12px;
-      background: #000000;
-      border-bottom: 1px solid #222226;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .theme-breviario-classico .card {
-      background: #0A0A0C;
-      border: 1px solid #222226;
-      border-radius: 14px;
-    }
-    .theme-breviario-classico .sacred-title {
-      font-family: 'Cinzel', serif;
-      letter-spacing: 2px;
-      font-weight: 700;
-      color: #FFFFFF;
-    }
-    .theme-breviario-classico .rubric {
-      font-size: 11px;
-      font-style: italic;
-      color: #A8A29E;
-    }
-    .theme-breviario-classico .body-text {
-      font-family: 'EB Garamond', serif;
-      font-size: 16px;
-      color: #E7E5E4;
-      line-height: 1.5;
-    }
-    .theme-breviario-classico .btn-primary {
-      background: #F5F5F4;
-      color: #000000;
-      font-weight: 700;
-      border-radius: 12px;
-      font-family: 'Cinzel', serif;
-      border: 1px solid #FFFFFF;
-    }
-    .theme-breviario-classico .pill-cat {
-      background: #121214;
-      border: 1px solid #28282E;
-      color: #A8A29E;
-      border-radius: 8px;
-    }
-    .theme-breviario-classico .pill-cat.active {
-      background: #FFFFFF;
-      color: #000000;
-      font-weight: 700;
-    }
-    .theme-breviario-classico .checkbox {
-      border: 1.5px solid #28282E;
-      background: #121214;
-      border-radius: 5px;
-    }
-    .theme-breviario-classico .checkbox.checked {
-      background: #FFFFFF;
-      border-color: #FFFFFF;
-      color: #000000;
-    }
-    .theme-breviario-classico .checkbox.checked::after {
-      content: '✓';
-      color: #000000;
-      font-size: 12px;
-    }
-
-    /* Common Card & Item Styles */
-    .card {
-      padding: 16px;
-      margin-bottom: 12px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .header-center {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .header-center .sacred-title {
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-    .header-center .subtitle {
-      font-size: 12.5px;
-      opacity: 0.8;
-      font-style: italic;
-    }
-    .cross-circle {
-      width: 44px;
-      height: 44px;
-      border-radius: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      font-size: 22px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-    }
-    .btn-primary {
-      width: 100%;
-      padding: 15px;
-      text-align: center;
-      font-size: 14.5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      user-select: none;
-    }
-    .item-row {
+    /* Question Item Row with Checkbox */
+    .question-row {
       display: flex;
       align-items: flex-start;
       gap: 13px;
@@ -672,6 +274,9 @@
     .checkbox {
       width: 22px;
       height: 22px;
+      border-radius: 7px;
+      border: 1.8px solid #52525B;
+      background: rgba(255, 255, 255, 0.05);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -679,40 +284,114 @@
       margin-top: 2px;
       transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .checkbox.checked {
+      background: #FFFFFF;
+      border-color: #FFFFFF;
+      color: #000000;
+      animation: checkBounce 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .checkbox.checked::after {
+      content: '✓';
+      color: #000000;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    @keyframes checkBounce {
+      0% { transform: scale(0.7); }
+      50% { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    /* Note Context Field */
+    .note-box {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .note-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: #FFFFFF;
+      font-size: 13px;
+      outline: none;
+    }
+    .quick-freq-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .quick-freq-pill {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #A8A29E;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .quick-freq-pill:active {
+      background: #FFFFFF;
+      color: #000000;
+    }
+
+    /* Floating Bottom Action Bar */
+    .floating-bar {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+      width: 100%;
+      max-width: 480px;
+      padding: 0 18px;
+      z-index: 45;
+      pointer-events: none;
+    }
+    .floating-bar button {
+      pointer-events: auto;
+    }
+
+    /* Confessional Veiled Dim */
     .dimmed {
       opacity: 0.25 !important;
       text-decoration: line-through;
       transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Apple Modal Bottom Sheet */
-    .apple-sheet-backdrop {
-      position: absolute;
+    /* Apple Bottom Sheet Modal */
+    .sheet-overlay {
+      position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.65);
+      background: rgba(0, 0, 0, 0.72);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      z-index: 200;
+      z-index: 100;
       display: none;
       align-items: flex-end;
+      justify-content: center;
       opacity: 0;
-      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.25s ease;
     }
-    .apple-sheet-backdrop.active {
+    .sheet-overlay.active {
       display: flex;
       opacity: 1;
     }
-    .apple-sheet {
+    .sheet-card {
       width: 100%;
+      max-width: 480px;
       background: #141418;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 28px 28px 0 0;
-      padding: 14px 20px 34px;
+      padding: 14px 20px calc(env(safe-area-inset-bottom, 0px) + 24px);
       transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); /* Apple Sheet Spring */
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
     }
-    .apple-sheet-backdrop.active .apple-sheet {
+    .sheet-overlay.active .sheet-card {
       transform: translateY(0);
     }
     .sheet-grabber {
@@ -720,453 +399,436 @@
       height: 5px;
       border-radius: 3px;
       background: rgba(255, 255, 255, 0.35);
-      margin: 0 auto 18px;
-    }
-
-    @keyframes appleCheckboxBounce {
-      0% { transform: scale(0.7); }
-      50% { transform: scale(1.18); }
-      100% { transform: scale(1); }
-    }
-
-    /* Explanation Section */
-    .explanation-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 16px;
-      max-width: 1080px;
-      width: 100%;
-      margin-top: 40px;
-    }
-    .expl-card {
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-top: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 18px;
-      padding: 22px;
-      backdrop-filter: blur(12px);
-    }
-    .expl-card h3 {
-      font-size: 15.5px;
-      font-weight: 600;
-      color: #FFFFFF;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .expl-card p {
-      font-size: 13.5px;
-      color: #94A3B8;
-      line-height: 1.55;
-    }
-    .expl-card code {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 6px;
-      border-radius: 5px;
-      font-size: 12px;
-      color: #E2E8F0;
+      margin: 0 auto 16px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="badge-apple">
-      <span class="icon"></span> Apple Design Foundation · Emil Kowalski
-    </div>
-    <h1>Laboratório de Interface Fluida</h1>
-    <p class="lead">
-      Aplicando os princípios das conferências de design da Apple (WWDC): <strong>latência zero ao toque</strong>, 
-      física de molas interruptíveis, <strong>materiais translúcidos com iluminação de borda</strong> e tipografia com tracking óptico nobre.
-    </p>
-  </header>
+  <div class="sanctuary-halo"></div>
 
-  <!-- Controls: Theme & Screen Switcher -->
-  <div class="controls-wrapper">
-    <div class="pill-group">
-      <button class="theme-btn active" onclick="setTheme('apple-breviario', this)">
-        <span></span> Apple Breviário (Dark OLED)
-      </button>
-      <button class="theme-btn" onclick="setTheme('apple-liturgico', this)">
-        <span>✝</span> Apple Litúrgico (Púrpura & Ouro)
-      </button>
-      <button class="theme-btn" onclick="setTheme('apple-vellum', this)">
-        <span>📜</span> Apple Vellum (Light Glass)
-      </button>
-      <button class="theme-btn" onclick="setTheme('breviario-classico', this)">
-        <span>⬛</span> Breviário Clássico
-      </button>
-    </div>
-
-    <div class="screen-tab-group">
-      <button class="screen-tab active" onclick="setScreen('home', this)">1. Início</button>
-      <button class="screen-tab" onclick="setScreen('exam', this)">2. Exame dos Mandamentos</button>
-      <button class="screen-tab" onclick="setScreen('confession', this)">3. No Confessionário</button>
-    </div>
+  <div class="app-viewport" id="app">
+    <!-- Screen View Injected Dynamically -->
   </div>
 
-  <!-- Interactive iPhone 16 Pro Frame -->
-  <div class="phone-container theme-apple-breviario" id="phone">
-    <!-- Dynamic Island -->
-    <div class="dynamic-island" onclick="triggerIslandPulse()" title="Toque para testar animação da Dynamic Island">
-      <div class="sensor-dot"></div>
-      <div class="camera-dot"></div>
-    </div>
-
-    <!-- Status Bar -->
-    <div class="status-bar">
-      <span>09:41</span>
-      <div style="display: flex; gap: 6px; align-items: center;">
-        <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor"><path d="M0 8.5C0 7.67 0.67 7 1.5 7H2.5C3.33 7 4 7.67 4 8.5V9.5C4 10.33 3.33 11 2.5 11H1.5C0.67 11 0 10.33 0 9.5V8.5ZM5.5 5.5C5.5 4.67 6.17 4 7 4H8C8.83 4 9.5 4.67 9.5 5.5V9.5C9.5 10.33 8.83 11 8 11H7C6.17 11 5.5 10.33 5.5 9.5V5.5ZM11 2C11 1.17 11.67 0.5 12.5 0.5H13.5C14.33 0.5 15 1.17 15 2V9.5C15 10.33 14.33 11 13.5 11H12.5C11.67 11 11 10.33 11 9.5V2Z"/></svg>
-        <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor"><path d="M7.5 2.5C9.7 2.5 11.65 3.35 13.1 4.75L14.5 3.35C12.7 1.6 10.25 0.5 7.5 0.5C4.75 0.5 2.3 1.6 0.5 3.35L1.9 4.75C3.35 3.35 5.3 2.5 7.5 2.5ZM7.5 6C8.85 6 10.1 6.55 11 7.45L12.4 6.05C11.15 4.8 9.4 4 7.5 4C5.6 4 3.85 4.8 2.6 6.05L4 7.45C4.9 6.55 6.15 6 7.5 6ZM7.5 9.5C8.35 9.5 9 10.15 9 11H6C6 10.15 6.65 9.5 7.5 9.5Z"/></svg>
-        <svg width="22" height="11" viewBox="0 0 22 11" fill="currentColor"><rect x="0.5" y="0.5" width="18" height="10" rx="3" fill="none" stroke="currentColor"/><rect x="2" y="2" width="13" height="7" rx="1.5"/><path d="M20 3.5V7.5C20.8 7.2 21.5 6.4 21.5 5.5C21.5 4.6 20.8 3.8 20 3.5Z"/></svg>
-      </div>
-    </div>
-
-    <!-- Scrollable Screen Content -->
-    <div class="screen-viewport" id="screen-container">
-      <!-- Injected via JavaScript -->
-    </div>
-
-    <!-- Apple Sheet Bottom Modal (Interativo) -->
-    <div class="apple-sheet-backdrop" id="sheet-modal" onclick="closeSheet(event)">
-      <div class="apple-sheet" onclick="event.stopPropagation()">
-        <div class="sheet-grabber"></div>
-        <div style="text-align: center; margin-bottom: 18px;">
-          <div class="rubric" style="margin-bottom: 6px;">SACRAMENTO DA PENITÊNCIA</div>
-          <div class="title" style="font-size: 20px; margin-bottom: 6px;">Receber a Absolvição?</div>
-          <div class="body-text" style="font-size: 13.5px; opacity: 0.8; padding: 0 10px;">
-            Ao confirmar, os pecados anotados são permanentemente destruídos do aparelho, registrando apenas a data da reconciliação.
-          </div>
-        </div>
-        <div style="display: flex; gap: 10px;">
-          <button class="btn-primary" style="background: rgba(255,255,255,0.1); color: #FFF; border: 1px solid rgba(255,255,255,0.15);" onclick="closeSheet()">
-            Ainda não
-          </button>
-          <button class="btn-primary" onclick="confirmAbsolution()">
-            Sim, Fui Absolvido
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Home Indicator -->
-    <div class="home-indicator"></div>
-  </div>
-
-  <!-- Deep Dive Explanations based on Emil Kowalski's Apple Design Skill -->
-  <div class="explanation-grid">
-    <div class="expl-card">
-      <h3><span>⚡</span> 1. Resposta Imediata (Kill Latency)</h3>
-      <p>
-        O design da Apple exige feedback no <code>pointer-down</code>, nunca após a liberação (touch-up). 
-        Todo cartão e botão possui escala de mola imediata <code>scale(0.97)</code> com 100ms de recuperação suave.
-      </p>
-    </div>
-
-    <div class="expl-card">
-      <h3><span>✨</span> 2. Materiais & Translucidez</h3>
-      <p>
-        A barra superior flutua sobre o conteúdo usando <code>backdrop-filter: blur(25px) saturate(190%)</code> com um fino filete de luz especular no topo 
-        (<code>border-top: 1px solid rgba(255,255,255,0.16)</code>). O texto e os itens deslizam suavemente por baixo.
-      </p>
-    </div>
-
-    <div class="expl-card">
-      <h3><span>📐</span> 3. Tipografia Óptica (WWDC 2020)</h3>
-      <p>
-        Títulos grandes possuem tracking negativo (<code>letter-spacing: -0.025em</code>) para coesão visual; 
-        já as rúbricas em caixa-alta usam tracking positivo (<code>letter-spacing: +0.07em</code>) para máxima legibilidade à distância.
-      </p>
-    </div>
-
-    <div class="expl-card">
-      <h3><span>🌊</span> 4. Micro-molas & Gestos</h3>
-      <p>
-        O ato de marcar um pecado dispara um micro-bounce na caixa de seleção (mola amortecida <code>damping 0.8</code>). 
-        No confessionário, o toque aplica um esmaecimento fluido a 25% para conduzir o penitente sem distração.
-      </p>
+  <!-- Apple Sheet Modal -->
+  <div class="sheet-overlay" id="sheet-modal" onclick="closeSheet(event)">
+    <div class="sheet-card" onclick="event.stopPropagation()">
+      <div class="sheet-grabber"></div>
+      <div id="sheet-content"></div>
     </div>
   </div>
 
   <script>
-    let currentTheme = 'theme-apple-breviario';
-    let currentScreen = 'home';
-    let item1Checked = true;
-    let item2Checked = false;
-    let item3Checked = true;
-    let item1Confessed = false;
-    let item2Confessed = false;
+    const CATALOG = {"prayers":[{"id":"espirito-santo","title":"Oração antes do Exame","subtitle":"Invocação ao Espírito Santo","body":"Vinde, Espírito Santo, iluminai a minha inteligência para que eu conheça verdadeiramente os meus pecados, e tocai o meu coração para que eu os deteste com sincero arrependimento e firme propósito de emenda. Por Cristo, nosso Senhor. Amém.\n\nMeu Deus e Senhor, dai-me a graça de examinar com sinceridade a minha consciência, sem ocultar nem justificar minhas faltas diante da Vossa infinita misericórdia."},{"id":"ato-contricao","title":"Ato de Contrição","subtitle":"Para rezar no confessionário","body":"Meu Deus, eu me arrependo de todo o coração de Vos ter ofendido, porque sois tão bom e amável. Prometo, com a Vossa graça, esforçar-me para não mais pecar, fugir das ocasiões próximas de pecado e fazer penitência. Meu Jesus, misericórdia!"},{"id":"acao-gracas","title":"Ação de Graças pós-Confissão","subtitle":"Louvor após receber a absolvição","body":"Senhor Jesus Cristo, Redentor meu, agradeço-Vos com toda a minha alma por terdes lavado os meus pecados com o Vosso preciosíssimo Sangue. Concedei-me a Vossa santa graça para que eu permaneça fiel aos Vossos mandamentos até o fim dos meus dias. Virgem Maria, Mãe de Deus, protegei-me e sede minha advogada. Amém."}],"categories":[{"id":"cmd-1","title":"1º Mandamento","subtitle":"Amar a Deus sobre todas as coisas","icon":"flame","questions":[{"id":"cmd1_q1","commandmentLabel":"1º Mandamento","text":"Negligenciei minha vida de oração diária ou rezei com distração voluntária e frieza?"},{"id":"cmd1_q2","commandmentLabel":"1º Mandamento","text":"Duvidei voluntariamente de alguma verdade da Fé Católica ou do ensinamento da Igreja?"},{"id":"cmd1_q3","commandmentLabel":"1º Mandamento","text":"Pratiquei ou acreditei em superstições, horóscopos, adivinhações, ocultismo ou amuletos?"},{"id":"cmd1_q4","commandmentLabel":"1º Mandamento","text":"Cometi sacrilégio ao receber a Sagrada Comunhão em estado de pecado mortal sem antes me confessar?"},{"id":"cmd1_q5","commandmentLabel":"1º Mandamento","text":"Calei anteriormente na Confissão algum pecado mortal por vergonha ou medo?"},{"id":"cmd1_q6","commandmentLabel":"1º Mandamento","text":"Tive vergonha de manifestar minha fé católica diante de amigos, familiares ou colegas?"},{"id":"cmd1_q7","commandmentLabel":"1º Mandamento","text":"Caí no desespero da misericórdia de Deus ou na presunção de me salvar sem conversão?"}]},{"id":"cmd-2","title":"2º Mandamento","subtitle":"Não tomar o Seu Santo Nome em vão","icon":"sparkles","questions":[{"id":"cmd2_q1","commandmentLabel":"2º Mandamento","text":"Pronunciei o santo nome de Deus, de Jesus Cristo, da Virgem Maria ou dos Santos sem respeito ou com raiva?"},{"id":"cmd2_q2","commandmentLabel":"2º Mandamento","text":"Proferi blasfêmias (palavras de ódio, desafio ou injúria contra Deus ou a Igreja)?"},{"id":"cmd2_q3","commandmentLabel":"2º Mandamento","text":"Fiz juramentos falsos, desnecessários ou jurei fazer algo ilícito?"},{"id":"cmd2_q4","commandmentLabel":"2º Mandamento","text":"Deixei de cumprir algum voto ou promessa grave feita a Deus?"}]},{"id":"cmd-3","title":"3º Mandamento","subtitle":"Guardar os domingos e festas de guarda","icon":"business","questions":[{"id":"cmd3_q1","commandmentLabel":"3º Mandamento","text":"Faltei voluntariamente à Santa Missa aos domingos ou dias santos de guarda sem motivo grave (como doença)?"},{"id":"cmd3_q2","commandmentLabel":"3º Mandamento","text":"Cheguei atrasado à Santa Missa por culpa própria ou saí antes do término sem necessidade?"},{"id":"cmd3_q3","commandmentLabel":"3º Mandamento","text":"Estive voluntariamente distraído durante a Missa ou não guardei a devida reverência diante do Santíssimo Sacramento?"},{"id":"cmd3_q4","commandmentLabel":"3º Mandamento","text":"Realizei trabalhos pesados ou negócios desnecessários no domingo que impediram o descanso e o culto a Deus?"}]},{"id":"cmd-4","title":"4º Mandamento","subtitle":"Honrar pai e mãe","icon":"home","questions":[{"id":"cmd4_q1","commandmentLabel":"4º Mandamento","text":"Faltei com o respeito, a obediência ou a paciência para com meus pais ou legítimos superiores?"},{"id":"cmd4_q2","commandmentLabel":"4º Mandamento","text":"Negligenciei o auxílio material ou espiritual aos meus pais em suas necessidades ou na velhice?"},{"id":"cmd4_q3","commandmentLabel":"4º Mandamento","text":"Tratei com aspereza, frieza ou falta de caridade o cônjuge, os filhos ou os irmãos?"},{"id":"cmd4_q4","commandmentLabel":"4º Mandamento","text":"Deixei de rezar pela minha família e pela conversão dos meus parentes?"}]},{"id":"cmd-5","title":"5º Mandamento","subtitle":"Não matar","icon":"heart","questions":[{"id":"cmd5_q1","commandmentLabel":"5º Mandamento","text":"Guardei ódio, rancor, desejo de vingança ou recusei-me a perdoar quem me ofendeu?"},{"id":"cmd5_q2","commandmentLabel":"5º Mandamento","text":"Deixei-me levar pela ira, discussões violentas, insultos ou humilhações contra o próximo?"},{"id":"cmd5_q3","commandmentLabel":"5º Mandamento","text":"Dei mau exemplo ou fui causa de escândalo, levando outras pessoas a pecar?"},{"id":"cmd5_q4","commandmentLabel":"5º Mandamento","text":"Prejudiquei minha saúde ou a de outros por excesso de bebida, uso de drogas, imprudência no trânsito ou descuido grave?"},{"id":"cmd5_q5","commandmentLabel":"5º Mandamento","text":"Apoiei, aconselhei ou colaborei de alguma forma com o aborto ou a eutanásia?"}]},{"id":"cmd-6-9","title":"6º e 9º Mandamentos","subtitle":"Não pecar contra a castidade e guardar a pureza","icon":"water","questions":[{"id":"cmd6_q1","commandmentLabel":"6º e 9º Mandamentos","text":"Consenti voluntariamente em pensamentos, imaginações ou desejos impuros?"},{"id":"cmd6_q2","commandmentLabel":"6º e 9º Mandamentos","text":"Procurei ou assisti a vídeos, imagens ou leituras pornográficas ou imorais?"},{"id":"cmd6_q3","commandmentLabel":"6º e 9º Mandamentos","text":"Pratiquei atos solitários contra a castidade (masturbação)?"},{"id":"cmd6_q4","commandmentLabel":"6º e 9º Mandamentos","text":"Mantive relações sexuais fora do matrimônio (fornicação) ou cometi adultério?"},{"id":"cmd6_q5","commandmentLabel":"6º e 9º Mandamentos","text":"Participei de conversas obscenas, piadas indecentes ou vesti-me de modo a provocar ocasião de pecado?"},{"id":"cmd6_q6","commandmentLabel":"6º e 9º Mandamentos","text":"Deixei de fugir das ocasiões próximas de pecado contra a pureza (redes sociais, ambientes, companhias)?"}]},{"id":"cmd-7-10","title":"7º e 10º Mandamentos","subtitle":"Não furtar nem cobiçar as coisas alheias","icon":"scale","questions":[{"id":"cmd7_q1","commandmentLabel":"7º e 10º Mandamentos","text":"Roubei, furtei ou fiquei com algo que não me pertencia, mesmo de pequeno valor?"},{"id":"cmd7_q2","commandmentLabel":"7º e 10º Mandamentos","text":"Prejudiquei o próximo nos negócios por fraude, engano ou recusa em pagar dívidas justas?"},{"id":"cmd7_q3","commandmentLabel":"7º e 10º Mandamentos","text":"Desperdicei tempo no trabalho ou no estudo pelo qual sou remunerado ou responsável?"},{"id":"cmd7_q4","commandmentLabel":"7º e 10º Mandamentos","text":"Deixei de restituir o que tomei indevidamente ou de reparar um dano material que causei?"},{"id":"cmd7_q5","commandmentLabel":"7º e 10º Mandamentos","text":"Tive inveja dos bens alheios ou apeguei-me com avareza ao dinheiro, esquecendo a esmola e os pobres?"}]},{"id":"cmd-8","title":"8º Mandamento","subtitle":"Não levantar falso testemunho","icon":"chatbubble-ellipses","questions":[{"id":"cmd8_q1","commandmentLabel":"8º Mandamento","text":"Menti por vaidade, conveniência ou para prejudicar alguém?"},{"id":"cmd8_q2","commandmentLabel":"8º Mandamento","text":"Cometi maledicência ou fofoca (revelar defeitos reais de outros sem necessidade justa)?"},{"id":"cmd8_q3","commandmentLabel":"8º Mandamento","text":"Cometi calúnia (atribuir falsamente a alguém faltas que não cometeu) ou deixei de reparar a fama prejudicada?"},{"id":"cmd8_q4","commandmentLabel":"8º Mandamento","text":"Fiz juízos temerários (julgar mal as intenções do próximo sem fundamento suficiente)?"},{"id":"cmd8_q5","commandmentLabel":"8º Mandamento","text":"Revelei segredos que me foram confiados ou violei a privacidade alheia?"}]},{"id":"cmd-9","title":"9º Mandamento","subtitle":"Pureza do coração e dos afetos","icon":"eye","questions":[{"id":"cmd9_q1","commandmentLabel":"9º Mandamento","text":"Alimentei olhares indiscretos ou curiosidade desordenada que ferem o pudor e a pureza interior?"},{"id":"cmd9_q2","commandmentLabel":"9º Mandamento","text":"Deixei de guardar a custódia dos sentidos e do coração diante de tentações?"}]},{"id":"cmd-10","title":"10º Mandamento","subtitle":"Desprendimento e gratidão","icon":"hand-left","questions":[{"id":"cmd10_q1","commandmentLabel":"10º Mandamento","text":"Murmurei contra a Providência Divina por insatisfação com minha condição material?"},{"id":"cmd10_q2","commandmentLabel":"10º Mandamento","text":"Busquei riquezas ou conforto material passando por cima da consciência e dos deveres cristãos?"}]},{"id":"preceitos","title":"Preceitos da Igreja","subtitle":"Os Cinco Mandamentos da Santa Igreja","icon":"shield","questions":[{"id":"prec_q1","commandmentLabel":"Preceitos da Igreja","text":"Passei mais de um ano sem me confessar ou sem comungar ao menos pela Páscoa da Ressurreição?"},{"id":"prec_q2","commandmentLabel":"Preceitos da Igreja","text":"Deixei de guardar o jejum e a abstinência de carne na Quarta-feira de Cinzas e na Sexta-feira Santa?"},{"id":"prec_q3","commandmentLabel":"Preceitos da Igreja","text":"Deixei de fazer abstinência de carne (ou outra penitência prescrita) nas sextas-feiras do ano?"},{"id":"prec_q4","commandmentLabel":"Preceitos da Igreja","text":"Negligenciei ajudar a Igreja em suas necessidades materiais segundo as minhas possibilidades (dízimo e ofertas)?"}]},{"id":"capitais","title":"Pecados Capitais","subtitle":"Raízes dos vícios e faltas habituais","icon":"warning","questions":[{"id":"cap_q1","commandmentLabel":"Soberba","text":"Agir por orgulho, vaidade, arrogância, desprezo pelos outros ou desejo excessivo de ser elogiado?"},{"id":"cap_q2","commandmentLabel":"Avareza","text":"Apego desordenado ao dinheiro e bens materiais, fechando o coração à generosidade?"},{"id":"cap_q3","commandmentLabel":"Inveja","text":"Tristeza pelo bem ou sucesso do próximo, ou alegria com o fracasso alheio?"},{"id":"cap_q4","commandmentLabel":"Ira","text":"Impaciência descontrolada, grosseria nas palavras ou ressentimento prolongado?"},{"id":"cap_q5","commandmentLabel":"Gula","text":"Excesso no comer ou no beber, perdendo a temperança e o domínio de si?"},{"id":"cap_q6","commandmentLabel":"Preguiça / Acídia","text":"Desleixo espiritual, adiamento das obrigações, perda de tempo excessiva em telas e entretenimento fútil?"}]},{"id":"deveres","title":"Deveres de Estado","subtitle":"Vocação, trabalho e caridade cristã","icon":"people","questions":[{"id":"dev_q1","commandmentLabel":"Deveres de Estado","text":"Omiti o bem que podia e devia fazer ao próximo em necessidade espiritual ou material (obras de misericórdia)?"},{"id":"dev_q2","commandmentLabel":"Deveres de Estado","text":"Fui negligente nos meus estudos, trabalho profissional ou responsabilidades cotidianas?"},{"id":"dev_q3","commandmentLabel":"Deveres de Estado","text":"Deixei de buscar formação na fé católica para melhor amar e servir a Deus?"}]}],"confessionGuide":[{"number":1,"title":"Exame de Consciência","description":"Recordar sinceramente com a luz de Deus todos os pecados cometidos por pensamentos, palavras, atos e omissões."},{"number":2,"title":"Contrição (Dor dos Pecados)","description":"Arrependimento sincero de coração por ter ofendido a Deus, Sumo Bem e digno de todo o amor, ou pelo temor de seus castigos."},{"number":3,"title":"Firme Propósito de Emenda","description":"Vontade resoluta e sincera de não mais cometer o pecado e evitar com coragem as ocasiões que conduzem à queda."},{"number":4,"title":"Confissão Vocal ao Sacerdote","description":"Acusar com clareza, sinceridade e humildade todos os pecados graves ou mortais em espécie e número, sem nada ocultar."},{"number":5,"title":"Satisfação (Penitência)","description":"Cumprir devotamente as orações ou penitências impostas pelo confessor em reparação às ofensas contra a Majestade Divina."}],"confessionalDialogue":{"opening":"Abençoai-me, Padre, porque pequei.","timeTemplate":"A minha última confissão foi há...","closing":"Destes pecados e de todos os que por fraqueza não me lembro, peço a Deus perdão e a vós, Padre, a penitência e a absolvição.","absolutionVerse":"Vai em paz, e que o Senhor perdoe todos os teus pecados."}};
+
+    // State Management
+    let currentScreen = 'home'; // 'home' | 'exam' | 'confession' | 'peace'
+    let selectedQuestions = new Set();
+    let questionNotes = {};
+    let customSins = [];
+    let confessedQuestions = new Set();
     let activeCategoryIndex = 0;
+    let lastConfessionDate = localStorage.getItem('last_confession_date') || null;
+    let textSizeMultiplier = 1.0;
 
-    const categories = [
-      "1º Mandamento",
-      "2º Mandamento",
-      "3º Mandamento",
-      "4º Mandamento",
-      "Preceitos da Igreja"
-    ];
+    // Load saved session if exists
+    try {
+      const saved = localStorage.getItem('confession_draft');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.selected) selectedQuestions = new Set(parsed.selected);
+        if (parsed.notes) questionNotes = parsed.notes;
+        if (parsed.custom) customSins = parsed.custom;
+      }
+    } catch (e) {}
 
-    function setTheme(themeName, btn) {
-      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    function saveSession() {
+      try {
+        localStorage.setItem('confession_draft', JSON.stringify({
+          selected: Array.from(selectedQuestions),
+          notes: questionNotes,
+          custom: customSins
+        }));
+      } catch (e) {}
+    }
 
-      const phone = document.getElementById('phone');
-      phone.classList.remove(
-        'theme-apple-breviario',
-        'theme-apple-liturgico',
-        'theme-apple-vellum',
-        'theme-breviario-classico'
-      );
-      currentTheme = 'theme-' + themeName;
-      phone.classList.add(currentTheme);
+    function formatDaysSince(dateStr) {
+      if (!dateStr) return 'Nenhuma confissão registrada';
+      const days = Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
+      if (days === 0) return 'Hoje';
+      if (days === 1) return 'Ontem (há 1 dia)';
+      return 'Há ' + days + ' dias';
+    }
+
+    function setScreen(screen) {
+      currentScreen = screen;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       render();
     }
 
-    function setScreen(screenName, btn) {
-      document.querySelectorAll('.screen-tab').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      currentScreen = screenName;
+    function toggleQuestion(qId) {
+      if (selectedQuestions.has(qId)) {
+        selectedQuestions.delete(qId);
+      } else {
+        selectedQuestions.add(qId);
+      }
+      saveSession();
       render();
     }
 
-    function toggleCheck(idx) {
-      if (idx === 1) item1Checked = !item1Checked;
-      if (idx === 2) item2Checked = !item2Checked;
-      if (idx === 3) item3Checked = !item3Checked;
+    function updateNote(qId, text) {
+      questionNotes[qId] = text;
+      saveSession();
+    }
+
+    function setQuickFreq(qId, freq) {
+      const curr = questionNotes[qId] || '';
+      questionNotes[qId] = curr ? freq + ' — ' + curr : freq;
+      saveSession();
       render();
     }
 
-    function toggleConfess(idx) {
-      if (idx === 1) item1Confessed = !item1Confessed;
-      if (idx === 2) item2Confessed = !item2Confessed;
+    function toggleConfessed(qId) {
+      if (confessedQuestions.has(qId)) {
+        confessedQuestions.delete(qId);
+      } else {
+        confessedQuestions.add(qId);
+      }
       render();
     }
 
-    function selectCategory(index) {
-      activeCategoryIndex = index;
+    function openSheet(type) {
+      const overlay = document.getElementById('sheet-modal');
+      const content = document.getElementById('sheet-content');
+
+      if (type === 'steps') {
+        const steps = CATALOG.confessionGuide || [];
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div class="rubric">CATEQUESE TRADICIONAL</div>
+            <div style="font-family: 'Cinzel', serif; font-size: 17px; font-weight: 700;">Os 5 Passos da Boa Confissão</div>
+          </div>
+          <div style="max-height: 60vh; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px;">
+            ${steps.map(s => `
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="width: 26px; height: 26px; border-radius: 13px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">${s.number}</div>
+                <div>
+                  <div style="font-size: 14.5px; font-weight: 600; color: #FFF; margin-bottom: 2px;">${s.title}</div>
+                  <div style="font-size: 13px; color: #A8A29E; line-height: 1.45;">${s.description}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn-primary" onclick="closeSheet()">Compreendi</button>
+        `;
+      } else if (type === 'adjust-date') {
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div class="rubric">REGISTRO SACRAMENTAL</div>
+            <div style="font-family: 'Cinzel', serif; font-size: 17px; font-weight: 700;">Data da Última Confissão</div>
+            <div style="font-size: 13px; color: #A8A29E; margin-top: 4px;">Há quantos dias aproximadamente você se confessou?</div>
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+            ${[0, 7, 14, 30, 60, 90, 180].map(d => `
+              <button class="pill-cat" onclick="saveManualDays(${d})">${d === 0 ? 'Hoje' : d + ' dias'}</button>
+            `).join('')}
+          </div>
+          <button class="btn-secondary" onclick="clearConfessionDate()">Limpar registro</button>
+        `;
+      } else if (type === 'absolution') {
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 18px;">
+            <div class="rubric">SACRAMENTO DA PENITÊNCIA</div>
+            <div style="font-family: 'Cinzel', serif; font-size: 19px; font-weight: 700; margin-bottom: 6px;">Receber a Absolvição?</div>
+            <div style="font-size: 13.5px; color: #A8A29E; line-height: 1.5; padding: 0 8px;">
+              O sacerdote concedeu a absolvição sacramental? Seus pecados e anotações serão destruídos da memória, preservando apenas a data de hoje.
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-secondary" style="flex: 1;" onclick="closeSheet()">Ainda não</button>
+            <button class="btn-primary" style="flex: 1;" onclick="confirmAbsolution()">Sim, Fui Absolvido</button>
+          </div>
+        `;
+      }
+
+      overlay.classList.add('active');
+    }
+
+    function closeSheet() {
+      document.getElementById('sheet-modal').classList.remove('active');
+    }
+
+    function saveManualDays(days) {
+      const targetDate = new Date(Date.now() - days * 86400000).toISOString();
+      lastConfessionDate = targetDate;
+      localStorage.setItem('last_confession_date', targetDate);
+      closeSheet();
       render();
     }
 
-    function openAbsolutionSheet() {
-      const sheet = document.getElementById('sheet-modal');
-      sheet.classList.add('active');
-    }
-
-    function closeSheet(e) {
-      const sheet = document.getElementById('sheet-modal');
-      sheet.classList.remove('active');
+    function clearConfessionDate() {
+      lastConfessionDate = null;
+      localStorage.removeItem('last_confession_date');
+      closeSheet();
+      render();
     }
 
     function confirmAbsolution() {
       closeSheet();
-      item1Confessed = false;
-      item2Confessed = false;
-      item1Checked = false;
-      item2Checked = false;
-      item3Checked = false;
-      alert("Absolvição confirmada! Todos os pecados foram purificados e apagados da memória com paz sacramental.");
-      setScreen('home', document.querySelectorAll('.screen-tab')[0]);
-    }
-
-    function triggerIslandPulse() {
-      const island = document.querySelector('.dynamic-island');
-      island.style.width = '170px';
-      island.style.background = '#1E1E24';
-      setTimeout(() => {
-        island.style.width = '112px';
-        island.style.background = '#000000';
-      }, 700);
+      selectedQuestions.clear();
+      questionNotes = {};
+      customSins = [];
+      confessedQuestions.clear();
+      localStorage.removeItem('confession_draft');
+      const now = new Date().toISOString();
+      lastConfessionDate = now;
+      localStorage.setItem('last_confession_date', now);
+      setScreen('peace');
     }
 
     function render() {
-      const container = document.getElementById('screen-container');
+      const app = document.getElementById('app');
+      const totalSelected = selectedQuestions.size + customSins.length;
 
       if (currentScreen === 'home') {
-        container.innerHTML = `
-          <!-- Sticky Apple Nav Bar with Translucent Blur -->
+        const prayer = CATALOG.prayers.find(p => p.id === 'espirito-santo');
+        app.innerHTML = `
           <div class="apple-nav">
-            <span class="rubric" style="font-size: 10px; letter-spacing: 1px;">SACRAMENTO</span>
-            <span style="font-size: 13px; font-weight: 600;">Exame de Consciência</span>
-            <span class="rubric" style="font-size: 10px; opacity: 0;">•••</span>
+            <span class="rubric" style="font-size: 10.5px;">SACRAMENTO</span>
+            <span class="nav-title">EXAME DE CONSCIÊNCIA</span>
+            <span style="width: 24px;"></span>
           </div>
 
-          <div class="header-center">
-            <div class="cross-circle">†</div>
+          <div class="main-content">
+            <div class="cross-badge">†</div>
             <div class="sacred-title">EXAME DE CONSCIÊNCIA</div>
-            <div class="subtitle rubric">«Cor contritum et humiliatum, Deus, non despicies»</div>
-          </div>
+            <div class="sacred-motto">«Cor contritum et humiliatum, Deus, non despicies»</div>
 
-          <!-- Status Card (Apple Squircle & Hairline Rim) -->
-          <div class="card card-interactive" onclick="triggerIslandPulse()">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-              <span class="rubric">ÚLTIMA CONFISSÃO</span>
-              <span style="font-size: 11px; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.08); font-weight: 600;">Ajustar</span>
+            <!-- Card da Última Confissão -->
+            <div class="card card-interactive" onclick="openSheet('adjust-date')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="rubric">ÚLTIMA CONFISSÃO</span>
+                <span style="font-size: 11px; padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,0.08); color: #FFF; font-weight: 600;">Ajustar</span>
+              </div>
+              <div style="font-size: 17px; font-weight: 600; color: #FFF; margin-bottom: 2px;">
+                ${formatDaysSince(lastConfessionDate)}
+              </div>
+              <div style="font-size: 12px; color: #A8A29E;">
+                ${lastConfessionDate ? 'Tempo oportuno para recolhimento e reconciliação' : 'Toque em ajustar para informar a data aproximada'}
+              </div>
             </div>
-            <div class="title" style="font-size: 18px; margin-bottom: 2px;">12 de Outubro de 2026</div>
-            <div class="body-text" style="font-size: 13px; opacity: 0.75;">Há 14 dias · Tempo oportuno para reconciliação</div>
-          </div>
 
-          <!-- Os 5 Passos (Card com hierarquia Apple) -->
-          <div class="card card-interactive">
-            <div class="rubric" style="margin-bottom: 5px;">GUIA DO PENITENTE</div>
-            <div class="title" style="font-size: 16px; margin-bottom: 4px;">Os 5 Passos da Boa Confissão</div>
-            <div class="body-text" style="font-size: 13px; opacity: 0.85;">
-              1. Exame · 2. Dor / Contrição · 3. Propósito firme · 4. Confissão oral · 5. Penitência.
+            <!-- Os 5 Passos da Boa Confissão -->
+            <div class="card card-interactive" onclick="openSheet('steps')">
+              <div class="rubric">GUIA DO PENITENTE</div>
+              <div style="font-size: 15.5px; font-weight: 600; color: #FFF; margin-bottom: 4px;">Os 5 Passos da Boa Confissão</div>
+              <div style="font-size: 12.5px; color: #A8A29E; line-height: 1.45;">
+                1. Exame · 2. Dor / Contrição · 3. Propósito firme · 4. Confissão oral · 5. Penitência.
+              </div>
             </div>
-          </div>
 
-          <!-- Oração ao Espírito Santo -->
-          <div class="card card-interactive">
-            <div class="rubric" style="margin-bottom: 5px;">ORAÇÃO PREPARATÓRIA</div>
-            <div class="body-text" style="font-style: italic; font-size: 13.5px;">
-              “Vinde, Espírito Santo, iluminai a minha inteligência para que eu conheça os meus pecados, e tocai o meu coração para que deles me arrependa sinceramente.”
+            <!-- Oração ao Espírito Santo -->
+            <div class="card">
+              <div class="rubric">${prayer.title.toUpperCase()}</div>
+              <div style="font-family: 'EB Garamond', serif; font-size: 14.5px; font-style: italic; color: #E7E5E4; line-height: 1.55;">
+                “${prayer.body}”
+              </div>
             </div>
-          </div>
 
-          <!-- Apple Action Button -->
-          <div class="btn-primary" onclick="setScreen('exam', document.querySelectorAll('.screen-tab')[1])">
-            <span>Iniciar Exame de Consciência</span>
-            <span style="font-size: 16px;">→</span>
+            <!-- Ações -->
+            <button class="btn-primary" onclick="setScreen('exam')" style="margin-top: 14px;">
+              <span>${totalSelected > 0 ? 'Continuar Exame de Consciência' : 'Iniciar Exame de Consciência'}</span>
+              <span>→</span>
+            </button>
+
+            ${totalSelected > 0 ? `
+              <button class="btn-secondary" onclick="setScreen('confession')" style="margin-top: 10px;">
+                No Confessionário (${totalSelected} ${totalSelected === 1 ? 'pecado apontado' : 'pecados apontados'})
+              </button>
+            ` : ''}
+
+            <div style="text-align: center; margin-top: 24px; font-size: 11.5px; color: #78716C; line-height: 1.5;">
+              🔒 100% offline e sigiloso. Seus apontamentos são destruídos assim que você recebe a absolvição.
+            </div>
           </div>
         `;
       } else if (currentScreen === 'exam') {
-        container.innerHTML = `
-          <!-- Sticky Apple Nav Bar -->
+        const cat = CATALOG.categories[activeCategoryIndex] || CATALOG.categories[0];
+        app.innerHTML = `
           <div class="apple-nav">
-            <span style="font-size: 13px; color: currentColor; cursor: pointer;" onclick="setScreen('home', document.querySelectorAll('.screen-tab')[0])">‹ Início</span>
-            <span class="sacred-title" style="font-size: 13px;">1º MANDAMENTO</span>
-            <span class="rubric" style="font-size: 11px;">2 Faltas</span>
+            <button class="nav-btn" onclick="setScreen('home')">‹ Início</button>
+            <span class="nav-title">${cat.title.toUpperCase()}</span>
+            <span class="nav-badge">${totalSelected} Faltas</span>
           </div>
 
-          <!-- Apple Horizontal Segmented Filter -->
-          <div style="display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px;">
-            ${categories.map((cat, idx) => `
-              <div 
-                class="pill-cat ${idx === activeCategoryIndex ? 'active' : ''}" 
-                style="padding: 7px 14px; flex-shrink: 0; cursor: pointer; font-size: 12.5px;"
-                onclick="selectCategory(${idx})"
-              >
-                ${cat}
-              </div>
-            `).join('')}
-          </div>
-
-          <div style="margin-bottom: 12px;">
-            <div class="rubric" style="margin-bottom: 2px;">DEVERES PARA COM DEUS</div>
-            <div class="title" style="font-size: 19px;">Amar a Deus sobre todas as coisas</div>
-          </div>
-
-          <!-- Interactive Exam Question Cards -->
-          <div class="card card-interactive item-row" onclick="toggleCheck(1)">
-            <div class="checkbox ${item1Checked ? 'checked' : ''}"></div>
-            <div style="flex: 1;">
-              <div class="body-text" style="font-size: 14.5px;">
-                Negligenciei minha oração diária com distração voluntária e frieza de coração?
-              </div>
-              <div class="rubric" style="font-size: 10.5px; margin-top: 6px;">
-                Frequência: Várias vezes · Toque para editar nota
-              </div>
+          <div class="main-content">
+            <!-- Scroller de Categorias -->
+            <div class="category-scroll">
+              ${CATALOG.categories.map((c, idx) => `
+                <div class="pill-cat ${idx === activeCategoryIndex ? 'active' : ''}" onclick="activeCategoryIndex = ${idx}; render();">
+                  ${c.title}
+                </div>
+              `).join('')}
             </div>
-          </div>
 
-          <div class="card card-interactive item-row" onclick="toggleCheck(2)">
-            <div class="checkbox ${item2Checked ? 'checked' : ''}"></div>
-            <div style="flex: 1;">
-              <div class="body-text" style="font-size: 14.5px;">
-                Duvidei deliberadamente de alguma verdade da Fé ensinada pela Santa Igreja Católica?
-              </div>
+            <div style="margin-bottom: 16px;">
+              <div class="rubric">${cat.title.toUpperCase()}</div>
+              <div style="font-size: 19px; font-weight: 700; color: #FFF; letter-spacing: -0.3px;">${cat.subtitle}</div>
             </div>
+
+            <!-- Lista de Perguntas -->
+            ${cat.questions.map(q => {
+              const isChecked = selectedQuestions.has(q.id);
+              const note = questionNotes[q.id] || '';
+              return `
+                <div class="card ${isChecked ? 'card-highlighted' : ''}">
+                  <div class="question-row" onclick="toggleQuestion('${q.id}')">
+                    <div class="checkbox ${isChecked ? 'checked' : ''}"></div>
+                    <div style="flex: 1;">
+                      <div class="body-text">${q.text}</div>
+                    </div>
+                  </div>
+
+                  ${isChecked ? `
+                    <div class="note-box">
+                      <input 
+                        type="text" 
+                        class="note-input" 
+                        placeholder="Frequência aproximada ou nota (opcional)..." 
+                        value="${note}"
+                        onchange="updateNote('${q.id}', this.value)"
+                      />
+                      <div class="quick-freq-row">
+                        <span style="font-size: 11px; color: #A8A29E;">Atalho:</span>
+                        ${['1x', '2x', '3x', 'Várias vezes'].map(f => `
+                          <button class="quick-freq-pill" onclick="setQuickFreq('${q.id}', '${f}')">${f}</button>
+                        `).join('')}
+                      </div>
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join('')}
           </div>
 
-          <div class="card card-interactive item-row" onclick="toggleCheck(3)">
-            <div class="checkbox ${item3Checked ? 'checked' : ''}"></div>
-            <div style="flex: 1;">
-              <div class="body-text" style="font-size: 14.5px;">
-                Pratiquei ou consultei superstições, horóscopos, amuletos ou espiritismo?
-              </div>
-              <div class="rubric" style="font-size: 10.5px; margin-top: 6px;">
-                Frequência: 1x
-              </div>
+          ${totalSelected > 0 ? `
+            <div class="floating-bar">
+              <button class="btn-primary" onclick="setScreen('confession')">
+                <span>No Confessionário (${totalSelected} ${totalSelected === 1 ? 'item' : 'itens'})</span>
+                <span>→</span>
+              </button>
             </div>
-          </div>
-
-          <!-- Floating Button to Confessional -->
-          <div class="btn-primary" style="margin-top: 14px;" onclick="setScreen('confession', document.querySelectorAll('.screen-tab')[2])">
-            <span>No Confessionário (${(item1Checked ? 1 : 0) + (item2Checked ? 1 : 0) + (item3Checked ? 1 : 0)} Pecados)</span>
-            <span style="font-size: 16px;">→</span>
-          </div>
+          ` : ''}
         `;
       } else if (currentScreen === 'confession') {
-        container.innerHTML = `
-          <!-- Sticky Apple Nav Bar -->
+        const markedList = [];
+        CATALOG.categories.forEach(c => {
+          c.questions.forEach(q => {
+            if (selectedQuestions.has(q.id)) {
+              markedList.push({ ...q, categoryTitle: c.title, note: questionNotes[q.id] || '' });
+            }
+          });
+        });
+
+        const actContrition = CATALOG.prayers.find(p => p.id === 'ato-contricao');
+
+        app.innerHTML = `
           <div class="apple-nav">
-            <span style="font-size: 13px; color: currentColor; cursor: pointer;" onclick="setScreen('exam', document.querySelectorAll('.screen-tab')[1])">‹ Exame</span>
-            <span class="sacred-title" style="font-size: 13px;">NO CONFESSIONÁRIO</span>
-            <span class="rubric" style="font-size: 11px;">Modo Foco</span>
+            <button class="nav-btn" onclick="setScreen('exam')">‹ Exame</button>
+            <span class="nav-title">NO CONFESSIONÁRIO</span>
+            <span style="width: 24px;"></span>
           </div>
 
-          <!-- Roteiro de Abertura com o Padre -->
-          <div class="card card-interactive">
-            <div class="rubric" style="margin-bottom: 6px;">FALA DO PENITENTE</div>
-            <div class="body-text" style="font-style: italic; font-size: 14px;">
-              “Abençoai-me, Padre, porque pequei. Minha última confissão foi há 14 dias. Estes são os meus pecados:”
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin: 16px 4px 8px;">
-            <span class="rubric">PECADOS APONTADOS</span>
-            <span style="font-size: 11.5px; opacity: 0.6;">Toque para velar após acusar</span>
-          </div>
-
-          <!-- Confession Item 1 with Tap to Dim & Veil -->
-          <div class="card card-interactive item-row ${item1Confessed ? 'dimmed' : ''}" onclick="toggleConfess(1)">
-            <div class="checkbox ${item1Confessed ? 'checked' : ''}"></div>
-            <div style="flex: 1;">
-              <div class="rubric" style="font-size: 10px; margin-bottom: 3px;">1º MANDAMENTO</div>
-              <div class="body-text" style="font-size: 14px;">
-                Negligenciei oração diária com distração deliberada (Várias vezes).
+          <div class="main-content">
+            <!-- Fala de Entrada -->
+            <div class="card">
+              <div class="rubric">FALA DO PENITENTE COM O SACERDOTE</div>
+              <div style="font-family: 'EB Garamond', serif; font-size: 15px; font-style: italic; color: #FFF; line-height: 1.5;">
+                “Abençoai-me, Padre, porque pequei. Minha última confissão foi ${formatDaysSince(lastConfessionDate)}. Estes são os meus pecados:”
               </div>
             </div>
-          </div>
 
-          <!-- Confession Item 2 -->
-          <div class="card card-interactive item-row ${item2Confessed ? 'dimmed' : ''}" onclick="toggleConfess(2)">
-            <div class="checkbox ${item2Confessed ? 'checked' : ''}"></div>
-            <div style="flex: 1;">
-              <div class="rubric" style="font-size: 10px; margin-bottom: 3px;">1º MANDAMENTO</div>
-              <div class="body-text" style="font-size: 14px;">
-                Consultei horóscopos / superstição (1x).
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin: 16px 4px 8px;">
+              <span class="rubric">PECADOS A DECLARAR</span>
+              <span style="font-size: 11px; color: #A8A29E;">Toque no item após declará-lo</span>
+            </div>
+
+            ${markedList.length === 0 ? `
+              <div class="card" style="text-align: center; padding: 28px 16px;">
+                <div style="font-size: 16px; font-weight: 600; color: #FFF; margin-bottom: 4px;">Nenhum pecado apontado</div>
+                <div style="font-size: 13px; color: #A8A29E;">Volte ao exame para selecionar as faltas antes de se confessar.</div>
+              </div>
+            ` : ''}
+
+            ${markedList.map(item => {
+              const isConfessed = confessedQuestions.has(item.id);
+              return `
+                <div class="card card-interactive ${isConfessed ? 'dimmed' : ''}" onclick="toggleConfessed('${item.id}')">
+                  <div style="display: flex; gap: 12px; align-items: flex-start;">
+                    <div class="checkbox ${isConfessed ? 'checked' : ''}"></div>
+                    <div style="flex: 1;">
+                      <div class="rubric" style="font-size: 10px; margin-bottom: 2px;">${item.categoryTitle.toUpperCase()}</div>
+                      <div style="font-size: 14.5px; color: #FFF; line-height: 1.45;">${item.text}</div>
+                      ${item.note ? `<div style="font-size: 12px; color: #D4AF37; margin-top: 4px; font-style: italic;">Nota: ${item.note}</div>` : ''}
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+
+            <!-- Conclusão -->
+            <div class="card" style="margin-top: 14px;">
+              <div class="rubric">AO CONCLUIR A ACUSAÇÃO</div>
+              <div style="font-family: 'EB Garamond', serif; font-size: 14.5px; font-style: italic; color: #FFF; line-height: 1.5;">
+                “Destes pecados e de todos os que por fraqueza não me lembro, peço a Deus perdão e a vós, Padre, a penitência e a absolvição.”
               </div>
             </div>
-          </div>
 
-          <!-- Fórmula de Conclusão -->
-          <div class="card">
-            <div class="rubric" style="margin-bottom: 5px;">CONCLUSÃO DA ACUSAÇÃO</div>
-            <div class="body-text" style="font-style: italic; font-size: 13.5px;">
-              “Destes pecados e de todos os que não me lembro, peço a Deus perdão e a vós, Padre, a penitência e a absolvição.”
+            <!-- Ato de Contrição -->
+            <div class="card">
+              <div class="rubric">ATO DE CONTRIÇÃO</div>
+              <div style="font-size: 14px; color: #FFF; line-height: 1.55;">
+                ${actContrition.body}
+              </div>
             </div>
-          </div>
 
-          <!-- Ato de Contrição -->
-          <div class="card">
-            <div class="rubric" style="margin-bottom: 5px;">ATO DE CONTRIÇÃO</div>
-            <div class="body-text" style="font-size: 13.5px; opacity: 0.9;">
-              “Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça prometo firmemente emendar-me...”
+            <button class="btn-primary" onclick="openSheet('absolution')" style="margin-top: 14px;">
+              <span>Recebi a Absolvição</span>
+              <span>✝</span>
+            </button>
+          </div>
+        `;
+      } else if (currentScreen === 'peace') {
+        const thanks = CATALOG.prayers.find(p => p.id === 'acao-gracas');
+        app.innerHTML = `
+          <div class="main-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center;">
+            <div class="cross-badge" style="width: 60px; height: 60px; border-radius: 30px; font-size: 30px; margin-bottom: 16px;">✝</div>
+            <div class="sacred-title" style="font-size: 22px; margin-bottom: 8px;">ABSOLVIÇÃO CONCEDIDA</div>
+            <div class="sacred-motto" style="font-size: 16px; margin-bottom: 24px; padding: 0 16px;">
+              «Vai em paz, e que o Senhor perdoe todos os teus pecados.»
             </div>
-          </div>
 
-          <!-- Trigger Apple Bottom Sheet Modal -->
-          <div class="btn-primary" style="margin-top: 14px;" onclick="openAbsolutionSheet()">
-            <span>Recebi a Absolvição</span>
-            <span style="font-size: 15px;">✝</span>
+            <div class="card" style="text-align: left; margin-bottom: 24px;">
+              <div class="rubric">${thanks.title.toUpperCase()}</div>
+              <div style="font-family: 'EB Garamond', serif; font-size: 15px; font-style: italic; color: #FFF; line-height: 1.55;">
+                “${thanks.body}”
+              </div>
+            </div>
+
+            <div style="font-size: 12px; color: #A8A29E; margin-bottom: 24px; padding: 0 16px;">
+              ✓ Todos os seus pecados e anotações foram permanentemente destruídos da memória deste aparelho.
+            </div>
+
+            <button class="btn-primary" onclick="setScreen('home')">
+              Voltar à Paz de Cristo
+            </button>
           </div>
         `;
       }
     }
 
+    // Initial Render
     render();
   </script>
 </body>
