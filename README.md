@@ -1,78 +1,68 @@
-# 🕯️ Exame de Consciência — iOS (SwiftUI Liquid Glass)
+# 🕯️ Exame de Consciência (iOS e Expo)
 
-Aplicativo nativo para iOS desenvolvido em **Swift & SwiftUI**, criado para auxiliar no **Exame de Consciência Católico** em preparação para o **Sacramento da Confissão (Penitência / Reconciliação)**.
+Aplicativo criado pra auxiliar no exame de consciência católico antes do sacramento da confissão.
 
----
-
-## 🎯 Propósito
-
-Substituir pesquisas dispersas na internet e anotações improvisadas no bloco de notas do celular por uma ferramenta dedicada, sóbria, fiel ao Magistério da Igreja Católica e projetada com **privacidade absoluta**.
+A ideia nasceu de uma necessidade prática: em vez de levar anotações soltas no bloco de notas ou caçar roteiros em sites na porta da igreja, você tem um roteiro seguro, discreto e com privacidade absoluta na mão.
 
 ---
 
-## ✨ Funcionalidades Planejadas
+## Como Funciona a Privacidade
 
-- **Doutrina Tradicional e Segura:**
-  - Oração preparatória ao Espírito Santo.
-  - Exame estruturado nos **Dez Mandamentos da Lei de Deus**, **Cinco Preceitos da Igreja**, **Sete Pecados Capitais** e **Deveres de Estado**.
-  - **Ato de Contrição** integrado para o momento da confissão.
-- **Marcação & Notas Personalizadas:**
-  - Seleção rápida das perguntas do guia com um toque.
-  - Adição de notas contextuais opcionais em cada item (ex: frequência ou circunstância).
-  - Adição de **faltas ou anotações livres avulsas** que não estejam listadas no roteiro fixo.
-- **Modo Confessionário (Resumo Consolidado):**
-  - Tela limpa e organizada reunindo apenas os pontos marcados e anotações feitas, facilitando a leitura discreta diante do sacerdote.
-  - Toque rápido para atenuar itens já confessados durante a acusação.
-- **Privacidade Absoluta & Registro da Última Confissão:**
-  - **100% Offline:** Sem servidores, sem contas, sem telemetria e sem nuvem.
-  - **Destruição Imediata Pós-Absolvição:** Ao tocar em *"Recebi a Absolvição"*, toda a lista de pecados e anotações é permanentemente apagada do aparelho.
-  - **Memória Apenas da Data:** O aplicativo guarda unicamente a data da última confissão realizada (ex: *"Última confissão: há 15 dias"*) para ajudar o penitente a saber há quanto tempo não se confessa.
-  - **Proteção no App Switcher:** Oculta automaticamente a tela quando o aplicativo fica em segundo plano.
+A regra número um do projeto é proteger a sua privacidade no confessionário:
+
+- **100% offline:** nada vai pra nuvem. Não tem login, banco de dados externo ou telemetria.
+- **Destruição total pós-absolvição:** quando você toca no botão para confirmar a absolvição, cada anotação sua e cada falta marcada somem imediatamente da memória do celular.
+- **Apenas a data fica:** guardamos somente a data da sua confissão mais recente, ajudando você a lembrar há quantos dias não se confessa.
+- **Proteção de tela:** se você alternar de aplicativo ou receber uma ligação, a tela se oculta pra ninguém ao seu lado ler nada.
 
 ---
 
-## 🎨 Identidade Visual: Liquid Glass ("Luz de Vela")
+## Roteiro e Estrutura
 
-- **Estética Liquid Glass (iOS):** Superfícies translúcidas com desfoque dinâmico (`backdrop blur`), refração sutil nas bordas e profundidade em camadas.
-- **Atmosfera Luz de Vela:** Fundo escuro obsidiana com acentos acolhedores em tons de **âmbar e bronze**, pensado para não ofuscar a vista na penumbra da igreja ou do confessionário.
-- **Feedback Tátil (Haptics):** Interações silenciosas com resposta tátil suave.
-
----
-
-## 🛠️ Arquitetura e Tecnologias
-
-- **Linguagem:** Swift 6
-- **Interface:** SwiftUI Nativo
-- **Persistência:**
-  - Rascunho temporário protegido por criptografia de hardware (`FileProtectionType.complete`) enquanto o exame estiver em andamento (evitando perda caso o iOS suspenda o app na fila da confissão), destruído ao concluir a confissão.
-  - Armazenamento local (`UserDefaults`) restrito exclusivamente ao timestamp `lastConfessionDate`.
-- **Compilação & Instalação (CI/CD):**
-  - Workflow do **GitHub Actions** (`macos-latest`) para compilar o projeto Xcode na nuvem e gerar o pacote `.ipa` para instalação pessoal (via AltStore / Sideloadly / Xcode).
+- **Oração preparatória:** invocação tradicional ao Espírito Santo antes de começar a reflexão.
+- **Exame guiado:** perguntas organizadas pelos Dez Mandamentos, Cinco Preceitos da Igreja, Pecados Capitais e Deveres de Estado do seu cotidiano.
+- **Notas livres:** além dos itens prontos pra marcar com um toque, dá pra escrever apontamentos pessoais rápidos.
+- **Modo Confessionário:** na hora da confissão com o padre, o app reúne numa tela limpa apenas as faltas que você selecionou. Conforme você for falando, basta tocar no item pra atenuar a linha.
+- **Ato de Contrição:** oração completa disponível na mesma tela pra você rezar com tranquilidade.
 
 ---
 
-## 📱 Como Rodar no seu iPhone em 1 Minuto (Expo Go)
+## Visual: Estética Breviário e Luz de Vela
 
-1. **No seu iPhone:**
-   - Abra a **App Store** oficial e instale o aplicativo gratuito **[Expo Go](https://apps.apple.com/app/expo-go/id982107779)**.
-2. **No seu computador (Windows):**
-   - Abra o terminal na pasta do projeto e execute:
-     ```bash
-     npm start
-     ```
-   - Um **QR Code** vai aparecer no seu terminal.
-3. **No iPhone:**
-   - Abra a **Câmera** do iPhone e aponte para o QR Code na tela do computador.
-   - Toque no banner amarelo *"Abrir no Expo"*.
-   - Pronto! O aplicativo vai abrir diretamente no seu iPhone, rodando liso e 100% nativo com a estética Liquid Glass!
+- **Fundo preto OLED e acentos em âmbar:** planejado especialmente pra você usar no interior escuro da igreja sem chamar atenção e sem cansar a sua vista.
+- **Tipografia Cinzel:** inspiração nos antigos missais e breviários em harmonia com a usabilidade moderna do iOS.
+- **Feedback tátil:** respostas hápticas suaves a cada seleção.
 
 ---
 
-## 📲 Como Gerar o .ipa para Instalação Permanente (.ipa)
+## Tecnologias do Projeto
+
+O repositório reúne duas formas de execução:
+
+1. **React Native com Expo (pasta raiz e `src/`):** interface rápida e interativa pra rodar no seu aparelho sem precisar de Mac.
+2. **Swift 6 nativo com SwiftUI (pasta `ExameConsciencia/`):** implementação nativa feita pra compilar o app puro pra iOS.
 
 ---
 
-## 📄 Documentação de Design e Plano
+## Como Rodar no seu iPhone em 1 Minuto (Expo Go)
+
+1. Baixe o aplicativo gratuito **[Expo Go](https://apps.apple.com/app/expo-go/id982107779)** na App Store do seu iPhone.
+2. No seu computador, instale as dependências e inicie o projeto:
+   ```bash
+   npm install
+   npm start
+   ```
+3. Aponte a câmera do seu iPhone pro QR Code que aparecer no terminal e toque em abrir com o Expo Go. Pronto, o app já carrega no seu aparelho!
+
+---
+
+## Como Gerar o Pacote .ipa (Build Nativo)
+
+O projeto conta com um workflow automatizado no GitHub Actions em `.github/workflows/build-ios.yml`. Ele roda num runner macOS, gera o projeto Xcode via XcodeGen, roda os testes unitários e compila o `.ipa` pronto pra instalação via AltStore, Sideloadly ou Xcode.
+
+---
+
+## Documentação e Especificações
 
 - Especificação de Design: [`docs/superpowers/specs/2026-10-23-exame-consciencia-ios-design.md`](docs/superpowers/specs/2026-10-23-exame-consciencia-ios-design.md)
 - Plano de Implementação: [`docs/superpowers/plans/2026-10-23-exame-consciencia-ios.md`](docs/superpowers/plans/2026-10-23-exame-consciencia-ios.md)
