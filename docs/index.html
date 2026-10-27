@@ -484,6 +484,47 @@
       padding: 4px;
       cursor: pointer;
     }
+
+    /* Sacred Privacy Shield Overlay */
+    .privacy-shield {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(36px) saturate(140%);
+      -webkit-backdrop-filter: blur(36px) saturate(140%);
+      z-index: 250;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .privacy-shield.active {
+      display: flex;
+      opacity: 1;
+    }
+    .privacy-shield-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 24px;
+      max-width: 320px;
+    }
+    .privacy-cross {
+      width: 58px;
+      height: 58px;
+      border-radius: 29px;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #D4AF37;
+      font-size: 26px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+    }
   </style>
 </head>
 <body>
@@ -492,6 +533,21 @@
 
   <div class="app-viewport" id="app">
     <!-- Screen View Injected Dynamically -->
+  </div>
+
+  <!-- Sacred Privacy Shield Overlay -->
+  <div id="privacy-shield" class="privacy-shield" onclick="togglePrivacyShield(false)">
+    <div class="privacy-shield-content" onclick="event.stopPropagation()">
+      <div class="privacy-cross">✝</div>
+      <div class="sacred-title" style="font-size: 19px; margin-bottom: 6px;">EM RECOLHIMENTO</div>
+      <div class="sacred-motto" style="font-size: 14px; margin-bottom: 18px;">«Dominus custodiat te ab omni malo»</div>
+      <div style="font-size: 12.5px; color: #A8A29E; line-height: 1.5; margin-bottom: 22px;">
+        Sua preparação sacramental está segura e oculta aos olhares ao redor.
+      </div>
+      <button class="btn-primary" style="padding: 11px 24px;" onclick="togglePrivacyShield(false)">
+        Toque para Reabrir
+      </button>
+    </div>
   </div>
 
   <!-- Smart PWA Install Banner -->
@@ -596,6 +652,37 @@
         }
       }
     }
+
+    // Sacred Privacy Shield State & Event Listeners
+    let isShieldActive = false;
+
+    function togglePrivacyShield(force) {
+      const shield = document.getElementById('privacy-shield');
+      if (!shield) return;
+      if (typeof force === 'boolean') {
+        isShieldActive = force;
+      } else {
+        isShieldActive = !isShieldActive;
+      }
+      if (isShieldActive) {
+        shield.classList.add('active');
+      } else {
+        shield.classList.remove('active');
+      }
+    }
+
+    // Auto-Conceal on app switch or screen lock (App Switcher Protection)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && (currentScreen === 'exam' || currentScreen === 'confession')) {
+        togglePrivacyShield(true);
+      }
+    });
+
+    window.addEventListener('blur', () => {
+      if (currentScreen === 'exam' || currentScreen === 'confession') {
+        togglePrivacyShield(true);
+      }
+    });
 
     function setScreen(screen) {
       currentScreen = screen;
@@ -881,7 +968,10 @@
           <div class="apple-nav">
             <button class="nav-btn" onclick="setScreen('home')">‹ Início</button>
             <span class="nav-title">${cat.title.toUpperCase()}</span>
-            <span class="nav-badge">${totalSelected} Faltas</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="nav-btn" onclick="togglePrivacyShield(true)" title="Ocultar tela (Privacidade)" style="padding: 4px 8px; font-size: 15px;">🛡</button>
+              <span class="nav-badge">${totalSelected} Faltas</span>
+            </div>
           </div>
 
           <div class="main-content">
@@ -959,7 +1049,10 @@
           <div class="apple-nav">
             <button class="nav-btn" onclick="setScreen('exam')">‹ Exame</button>
             <span class="nav-title">NO CONFESSIONÁRIO</span>
-            <span style="width: 24px;"></span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="nav-btn" onclick="togglePrivacyShield(true)" title="Ocultar tela (Privacidade)" style="padding: 4px 8px; font-size: 15px;">🛡</button>
+              <button class="nav-btn" onclick="openSheet('absolution')" style="color: #D4AF37; font-weight: 600;">Concluir</button>
+            </div>
           </div>
 
           <div class="main-content">
