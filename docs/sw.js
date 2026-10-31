@@ -1,4 +1,4 @@
-const CACHE_NAME = 'exame-consciencia-v1';
+const CACHE_NAME = 'exame-consciencia-v2';
 const STATIC_ASSETS = [
   './',
   'index.html',
