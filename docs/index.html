@@ -55,6 +55,52 @@
       flex-direction: column;
       position: relative;
       background: #000000;
+      transition: max-width 0.25s ease;
+    }
+
+    /* Tablet & Desktop Dual-Pane Elevation */
+    @media (min-width: 768px) {
+      .app-viewport {
+        max-width: 860px;
+        box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.05);
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .exam-desktop-split {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 22px;
+        align-items: start;
+        width: 100%;
+      }
+      .exam-sidebar-categories {
+        position: sticky;
+        top: 64px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: calc(100vh - 84px);
+        overflow-y: auto;
+        padding-right: 6px;
+      }
+      .exam-sidebar-categories .pill-cat {
+        width: 100%;
+        text-align: left;
+        border-radius: 12px;
+        padding: 9px 13px;
+        font-size: 13px;
+      }
+      .category-scroll {
+        display: none !important;
+      }
+      .floating-bar {
+        max-width: 860px;
+      }
+    }
+    @media (max-width: 767px) {
+      .exam-sidebar-categories {
+        display: none !important;
+      }
     }
 
     /* Halo suave de oração e recolhimento */
@@ -939,6 +985,32 @@
       render();
     }
 
+    // Desktop Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      // Don't trigger shortcuts if user is typing in an input
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+        if (e.key === 'Escape') {
+          document.activeElement.blur();
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowRight') {
+        if (currentScreen === 'exam') nextCategory();
+      } else if (e.key === 'ArrowLeft') {
+        if (currentScreen === 'exam') prevCategory();
+      } else if (e.key === 'Escape') {
+        closeSheet();
+        togglePrivacyShield(false);
+      } else if (e.key === '/') {
+        if (currentScreen === 'exam') {
+          e.preventDefault();
+          const searchEl = document.getElementById('exam-search');
+          if (searchEl) searchEl.focus();
+        }
+      }
+    });
+
     function toggleQuestion(qId) {
       triggerHaptic('light');
       if (selectedQuestions.has(qId)) {
@@ -1316,8 +1388,21 @@
           </div>
 
           <div class="main-content" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
-            <!-- Barra de Busca Instantânea -->
-            <div class="search-bar-wrapper">
+            <div class="exam-desktop-split">
+              <!-- Sidebar de Categorias no Desktop -->
+              <div class="exam-sidebar-categories">
+                <div class="rubric" style="padding-left: 6px; margin-bottom: 6px;">MANDAMENTOS (13)</div>
+                ${CATALOG.categories.map((c, idx) => `
+                  <button class="pill-cat ${idx === activeCategoryIndex && !searchQuery ? 'active' : ''}" onclick="setCategory(${idx})">
+                    ${c.title}
+                  </button>
+                `).join('')}
+              </div>
+
+              <!-- Coluna Principal de Perguntas -->
+              <div style="flex: 1; min-width: 0;">
+                <!-- Barra de Busca Instantânea -->
+                <div class="search-bar-wrapper">
               <span class="search-icon">🔍</span>
               <input 
                 type="text" 
@@ -1452,6 +1537,8 @@
                 }).join('')}
               </div>
             ` : ''}
+              </div>
+            </div>
           </div>
 
           ${totalSelected > 0 ? `
