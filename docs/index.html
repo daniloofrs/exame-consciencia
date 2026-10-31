@@ -69,6 +69,30 @@
       z-index: 1;
     }
 
+    /* Low-Light Candlelight Mode (Modo Círio / Penumbra) */
+    body.modo-cirio {
+      background: #000000 !important;
+      color: #D6D3D1 !important;
+    }
+    body.modo-cirio .card {
+      background: rgba(28, 25, 23, 0.45) !important;
+      border-color: rgba(212, 175, 55, 0.15) !important;
+      box-shadow: none !important;
+    }
+    body.modo-cirio .apple-nav {
+      background: rgba(0, 0, 0, 0.94) !important;
+      border-bottom-color: rgba(212, 175, 55, 0.12) !important;
+    }
+    body.modo-cirio .body-text, 
+    body.modo-cirio .nav-title,
+    body.modo-cirio h1, 
+    body.modo-cirio h2 {
+      color: #E7E5E4 !important;
+    }
+    body.modo-cirio .rubric {
+      color: #B45309 !important;
+    }
+
     /* Sticky Translucent Apple Navigation Bar */
     .apple-nav {
       position: sticky;
@@ -861,8 +885,56 @@
       }
     }
 
+    // Screen Wake Lock API for Confessional Screen
+    let confessionWakeLock = null;
+
+    async function requestConfessionWakeLock() {
+      if (typeof navigator !== 'undefined' && 'wakeLock' in navigator) {
+        try {
+          confessionWakeLock = await navigator.wakeLock.request('screen');
+          confessionWakeLock.addEventListener('release', () => {
+            confessionWakeLock = null;
+          });
+        } catch (err) {}
+      }
+    }
+
+    function releaseConfessionWakeLock() {
+      if (confessionWakeLock !== null) {
+        try {
+          confessionWakeLock.release();
+        } catch (e) {}
+        confessionWakeLock = null;
+      }
+    }
+
+    // Low-Light Candlelight Mode (Modo Círio)
+    let isLowLightMode = localStorage.getItem('low_light_mode') === 'true';
+
+    function toggleLowLightMode() {
+      triggerHaptic('light');
+      isLowLightMode = !isLowLightMode;
+      localStorage.setItem('low_light_mode', isLowLightMode.toString());
+      applyLowLightMode();
+      render();
+    }
+
+    function applyLowLightMode() {
+      if (isLowLightMode) {
+        document.body.classList.add('modo-cirio');
+      } else {
+        document.body.classList.remove('modo-cirio');
+      }
+    }
+
     function setScreen(screen) {
+      if (currentScreen === 'confession' && screen !== 'confession') {
+        releaseConfessionWakeLock();
+      }
       currentScreen = screen;
+      if (currentScreen === 'confession') {
+        requestConfessionWakeLock();
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
       render();
     }
@@ -1320,6 +1392,7 @@
             <button class="nav-btn" onclick="setScreen('exam')">‹ Exame</button>
             <span class="nav-title">NO CONFESSIONÁRIO</span>
             <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="nav-btn" onclick="toggleLowLightMode()" title="Modo Penumbra" style="padding: 4px 8px; font-size: 14px;">🕯️</button>
               <button class="nav-btn" onclick="togglePrivacyShield(true)" title="Ocultar tela (Privacidade)" style="padding: 4px 8px; font-size: 15px;">🛡</button>
               <button class="nav-btn" onclick="openSheet('absolution')" style="color: #D4AF37; font-weight: 600;">Concluir</button>
             </div>
@@ -1415,6 +1488,7 @@
 
     // Initial Render
     applyTextScale();
+    applyLowLightMode();
     render();
     checkInstallBanner();
   </script>
