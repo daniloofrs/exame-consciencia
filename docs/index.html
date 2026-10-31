@@ -963,6 +963,45 @@
       render();
     }
 
+    // Act of Contrition Formulas
+    let contritionFormula = localStorage.getItem('contrition_formula') || 'breve';
+
+    const CONTRITION_FORMULAS = {
+      breve: "Meu Deus, eu me arrependo de todo o coração de Vos ter ofendido, porque sois tão bom e amável. Prometo, com a Vossa graça, esforçar-me para não mais pecar, fugir das ocasiões próximas de pecado e fazer penitência. Meu Jesus, misericórdia!",
+      tradicional: "Senhor meu Jesus Cristo, Deus e homem verdadeiro, Criador e Redentor meu: por serdes Vós quem sois, sumamente bom e digno de ser amado sobre todas as coisas, e porque Vos amo e estimo, pesa-me, Senhor, de todo o meu coração, de Vos ter ofendido; pesa-me também de ter perdido o céu e merecido o inferno; e proponho firmemente, ajudado com os auxílios de Vossa divina graça, emendar-me e nunca mais Vos tornar a ofender. Espero alcançar o perdão de minhas culpas pela Vossa infinita misericórdia. Amém."
+    };
+
+    function setContritionFormula(formula) {
+      triggerHaptic('light');
+      contritionFormula = formula;
+      localStorage.setItem('contrition_formula', formula);
+      render();
+    }
+
+    function addCustomSin(text) {
+      const trimmed = (text || '').trim();
+      if (!trimmed) return;
+      triggerHaptic('medium');
+      const newSin = {
+        id: 'custom_' + Date.now(),
+        text: trimmed,
+        categoryTitle: 'Falta Pessoal',
+        isCustom: true
+      };
+      customSins.push(newSin);
+      saveSession();
+      render();
+    }
+
+    function removeCustomSin(id) {
+      triggerHaptic('light');
+      customSins = customSins.filter(s => s.id !== id);
+      delete questionNotes[id];
+      confessedQuestions.delete(id);
+      saveSession();
+      render();
+    }
+
     function toggleConfessed(qId) {
       triggerHaptic('medium');
       if (confessedQuestions.has(qId)) {
@@ -1364,6 +1403,55 @@
                 </div>
               `;
             }).join('')}
+
+            <!-- Adicionar Falta Pessoal / Personalizada -->
+            <div class="card" style="margin-top: 18px; border: 1px dashed rgba(212, 175, 55, 0.35); background: rgba(212, 175, 55, 0.03);">
+              <div class="rubric" style="color: #D4AF37;">FALTA PESSOAL / ESPECÍFICA</div>
+              <div style="font-size: 13px; color: #A8A29E; margin-bottom: 10px;">
+                Deseja acrescentar uma falta ou circunstância própria que não conste nas perguntas?
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <input 
+                  type="text" 
+                  id="custom-sin-input" 
+                  class="search-input" 
+                  style="padding-left: 14px; font-size: 13.5px;" 
+                  placeholder="Descreva a falta (ex: menti sobre...)"
+                  onkeydown="if(event.key==='Enter'){addCustomSin(this.value); this.value='';}"
+                />
+                <button class="btn-primary" style="width: auto; padding: 0 16px; font-size: 13px; white-space: nowrap;" onclick="const el = document.getElementById('custom-sin-input'); if(el){addCustomSin(el.value); el.value='';}">
+                  + Adicionar
+                </button>
+              </div>
+            </div>
+
+            ${customSins.length > 0 ? `
+              <div style="margin-top: 16px;">
+                <div class="rubric" style="color: #D4AF37;">SUAS FALTAS PESSOAIS ADICIONADAS (${customSins.length})</div>
+                ${customSins.map(cs => {
+                  const note = questionNotes[cs.id] || '';
+                  return `
+                    <div class="card card-highlighted" style="margin-bottom: 8px;">
+                      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                        <div style="flex: 1;">
+                          <div class="body-text" style="color: #FFF;">• ${cs.text}</div>
+                        </div>
+                        <button onclick="removeCustomSin('${cs.id}')" style="background: none; border: none; color: #EF4444; font-size: 14px; cursor: pointer; padding: 2px 6px;">✕</button>
+                      </div>
+                      <div class="note-box" style="margin-top: 8px;">
+                        <input 
+                          type="text" 
+                          class="note-input" 
+                          placeholder="Frequência ou nota (opcional)..." 
+                          value="${note}"
+                          onchange="updateNote('${cs.id}', this.value)"
+                        />
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            ` : ''}
           </div>
 
           ${totalSelected > 0 ? `
@@ -1383,6 +1471,9 @@
               markedList.push({ ...q, categoryTitle: c.title, note: questionNotes[q.id] || '' });
             }
           });
+        });
+        customSins.forEach(cs => {
+          markedList.push({ ...cs, note: questionNotes[cs.id] || '' });
         });
 
         const actContrition = CATALOG.prayers.find(p => p.id === 'ato-contricao');
@@ -1445,9 +1536,15 @@
 
             <!-- Ato de Contrição -->
             <div class="card">
-              <div class="rubric">ATO DE CONTRIÇÃO</div>
-              <div style="font-size: 14px; color: #FFF; line-height: 1.55;">
-                ${actContrition.body}
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="rubric">ATO DE CONTRIÇÃO</span>
+                <div style="display: flex; gap: 6px;">
+                  <button class="pill-cat ${contritionFormula === 'breve' ? 'active' : ''}" style="padding: 4px 10px; font-size: 11px;" onclick="setContritionFormula('breve')">Breve</button>
+                  <button class="pill-cat ${contritionFormula === 'tradicional' ? 'active' : ''}" style="padding: 4px 10px; font-size: 11px;" onclick="setContritionFormula('tradicional')">Tradicional</button>
+                </div>
+              </div>
+              <div style="font-family: 'EB Garamond', serif; font-size: 14.5px; font-style: italic; color: #FFF; line-height: 1.55;">
+                “${CONTRITION_FORMULAS[contritionFormula] || CONTRITION_FORMULAS.breve}”
               </div>
             </div>
 
