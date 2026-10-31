@@ -318,6 +318,38 @@
       box-shadow: 0 2px 10px rgba(255, 255, 255, 0.25);
     }
 
+    /* Category Progress Stepper */
+    .category-progress-container {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    .category-progress-track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .category-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #D4AF37, #F59E0B);
+      border-radius: 2px;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .category-progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+    }
+    .category-progress-text {
+      font-size: 11px;
+      font-weight: 600;
+      color: #A8A29E;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
     /* Question Item Row with Checkbox */
     .question-row {
       display: flex;
@@ -791,6 +823,44 @@
       }, 20);
     }
 
+    function nextCategory() {
+      if (activeCategoryIndex < CATALOG.categories.length - 1) {
+        setCategory(activeCategoryIndex + 1);
+      }
+    }
+
+    function prevCategory() {
+      if (activeCategoryIndex > 0) {
+        setCategory(activeCategoryIndex - 1);
+      }
+    }
+
+    // Touch gesture state for horizontal swipe navigation between categories
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    function handleTouchStart(e) {
+      if (!e.touches || e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }
+
+    function handleTouchEnd(e) {
+      if (currentScreen !== 'exam' || searchQuery) return;
+      if (!e.changedTouches || e.changedTouches.length !== 1) return;
+      const deltaX = e.changedTouches[0].clientX - touchStartX;
+      const deltaY = e.changedTouches[0].clientY - touchStartY;
+
+      // Minimum swipe distance of 45px and predominantly horizontal (deltaX > 1.4 * deltaY)
+      if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+        if (deltaX < 0) {
+          nextCategory();
+        } else {
+          prevCategory();
+        }
+      }
+    }
+
     function setScreen(screen) {
       currentScreen = screen;
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1134,7 +1204,7 @@
             </div>
           </div>
 
-          <div class="main-content">
+          <div class="main-content" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
             <!-- Barra de Busca Instantânea -->
             <div class="search-bar-wrapper">
               <span class="search-icon">🔍</span>
@@ -1149,8 +1219,19 @@
               ${searchQuery ? `<button class="search-clear" onclick="filterQuestions('')">✕</button>` : ''}
             </div>
 
-            <!-- Scroller de Categorias (oculto se buscando) -->
+            <!-- Indicador de Progresso de Categorias -->
             ${!searchQuery ? `
+              <div class="category-progress-container">
+                <div class="category-progress-track">
+                  <div class="category-progress-bar" style="width: ${((activeCategoryIndex + 1) / CATALOG.categories.length) * 100}%;"></div>
+                </div>
+                <div class="category-progress-meta">
+                  <span class="category-progress-text">Mandamento ${activeCategoryIndex + 1} de ${CATALOG.categories.length}</span>
+                  <span style="font-size: 11px; color: #78716C;">Deslize ‹ › para navegar</span>
+                </div>
+              </div>
+
+              <!-- Scroller de Categorias (oculto se buscando) -->
               <div class="category-scroll">
                 ${CATALOG.categories.map((c, idx) => `
                   <div class="pill-cat ${idx === activeCategoryIndex ? 'active' : ''}" onclick="setCategory(${idx})">
