@@ -684,6 +684,60 @@ const htmlContent = `<!DOCTYPE html>
       margin-bottom: 16px;
       box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
     }
+
+    /* Discreet Paper Guide / Print Stylesheet */
+    @media print {
+      body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        font-family: 'EB Garamond', Georgia, serif !important;
+        padding: 0 !important;
+      }
+      .sanctuary-halo,
+      .apple-nav,
+      .floating-bar,
+      #install-banner,
+      #sheet-modal,
+      #privacy-shield,
+      .btn-primary,
+      .btn-secondary,
+      .quick-freq-row,
+      .category-scroll,
+      .exam-sidebar-categories,
+      .search-bar-wrapper,
+      .category-progress-container,
+      .no-print {
+        display: none !important;
+      }
+      .app-viewport {
+        max-width: 100% !important;
+        background: #FFFFFF !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .card {
+        background: #FFFFFF !important;
+        border: 1px solid #D6D3D1 !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin-bottom: 10px !important;
+      }
+      .body-text, .nav-title, h1, h2, div, span {
+        color: #000000 !important;
+      }
+      .rubric {
+        color: #78716C !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+    }
+    @media screen {
+      .print-only {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1644,6 +1698,12 @@ const htmlContent = `<!DOCTYPE html>
               <span>Recebi a Absolvição</span>
               <span>✝</span>
             </button>
+
+            <div style="display: flex; gap: 8px; margin-top: 10px;" class="no-print">
+              <button class="btn-secondary" style="width: 100%; font-size: 13px;" onclick="window.print()">
+                📄 Imprimir / Guia em Papel (Discreto)
+              </button>
+            </div>
           </div>
         \`;
       } else if (currentScreen === 'peace') {
