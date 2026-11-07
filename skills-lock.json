@@ -6,6 +6,11 @@
       "sourceType": "github",
       "skillPath": "skills/apple-design/SKILL.md",
       "computedHash": "f3f1d2cbc8f3e79ccddff05f4e42d34d995f057fb30ff670e4edf8c87d568b69"
+    },
+    "readme-writer": {
+      "source": "nateberkopec/dotfiles",
+      "sourceType": "github",
+      "skillPath": "files/home/.claude/skills/readme-writer/SKILL.md"
     }
   }
 }
