@@ -1098,7 +1098,7 @@ const htmlContent = `<!DOCTYPE html>
     let contritionFormula = localStorage.getItem('contrition_formula') || 'breve';
 
     const CONTRITION_FORMULAS = {
-      breve: "Meu Deus, eu me arrependo de todo o coração de Vos ter ofendido, porque sois tão bom e amável. Prometo, com a Vossa graça, esforçar-me para não mais pecar, fugir das ocasiões próximas de pecado e fazer penitência. Meu Jesus, misericórdia!",
+      breve: "Senhor, me arrependo de todo o coração de vos ter ofendido, porque sois bom e amável. Prometo, com ajuda da vossa graça, esforçar-me para não mais pecar. Meu Jesus, misericórdia.",
       tradicional: "Senhor meu Jesus Cristo, Deus e homem verdadeiro, Criador e Redentor meu: por serdes Vós quem sois, sumamente bom e digno de ser amado sobre todas as coisas, e porque Vos amo e estimo, pesa-me, Senhor, de todo o meu coração, de Vos ter ofendido; pesa-me também de ter perdido o céu e merecido o inferno; e proponho firmemente, ajudado com os auxílios de Vossa divina graça, emendar-me e nunca mais Vos tornar a ofender. Espero alcançar o perdão de minhas culpas pela Vossa infinita misericórdia. Amém."
     };
 
